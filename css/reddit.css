@@ -135,8 +135,8 @@
         font-size: 15px;
         line-height: 16px;
     }
-    .thing .arrow.up:before { content: "\\25B2"; }
-    .thing .arrow.down:before { content: "\\25BC"; }
+    .thing .arrow.up:before { content: "\25B2"; }
+    .thing .arrow.down:before { content: "\25BC"; }
     .thing .thumbnail { display: none !important; }
     .thing .expando-button { display: none !important; }
     .thing .entry {
