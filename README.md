@@ -1,7 +1,7 @@
 # legacyProxy
 legacyProxy is a MITM proxy that fixes some websites on legacy iOS devices.
 Currently it fixes Reddit, Google Search and Wikipedia image loading.
-Tested on iOS 6 and iOS 8.
+Tested on iOS 6 and iOS 8. Fixes every browser that uses WebKit (Chrome, Opera Mini, Safari, etc).
 
 ## Reddit
 Redirects `reddit.com` URLs to `old.reddit.com` and modifies its CSS to work better on old Safari/WebKit.
