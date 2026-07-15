@@ -1,23 +1,19 @@
 from mitmproxy import http,options
 from mitmproxy.tools.dump import DumpMaster
 from google import GoogleCaptchaError,GoogleScraper
+from reddit import RedditProxy
 import asyncio
 import re
 from pathlib import Path
 from urllib.parse import urlsplit,urlunsplit
 
 GOOGLE_HOSTS = {"www.google.com","www.google.es","www.google.fr","www.google.de","www.google.co.uk","www.google.ca","www.google.com.au"}
-REDDIT_HOSTS = {"reddit.com","www.reddit.com"}
-REDDIT_MOBILE_CSS = f"""
-<style id="legacy-proxy-mobile">
-{open(Path(__file__).parent/"css"/"reddit.css","r",encoding="utf-8").read()}
-</style>
-"""
 WIKIPEDIA_HOSTS = {"en.wikipedia.org","es.wikipedia.org","fr.wikipedia.org","de.wikipedia.org"}
 
 class InterceptAddon:
     def __init__(self):
         self.google = GoogleScraper()
+        self.reddit = RedditProxy()
 
     async def request(self,flow):
         print(f"Intercepted request to: {flow.request.url}")
@@ -56,10 +52,7 @@ class InterceptAddon:
             )
             return
 
-        if (
-            host in WIKIPEDIA_HOSTS
-            and flow.request.path.startswith("/legacy-proxy-wikipedia-image/")
-        ):
+        if host in WIKIPEDIA_HOSTS and flow.request.path.startswith("/legacy-proxy-wikipedia-image/"):
             image_parts = urlsplit(url)
             image_path = "/"+image_parts.path[len("/legacy-proxy-wikipedia-image/"):]
             flow.request.url = urlunsplit(
@@ -91,39 +84,17 @@ class InterceptAddon:
             except Exception as e:
                 detail = f"{type(e).__name__}: {e}"
                 print(f"google intercept failed: {detail}")
-                
-        parts = urlsplit(url)
-        if host == "old.reddit.com" and parts.path.startswith("/legacy-proxy-image/"):
-            image_path = "/"+parts.path[len("/legacy-proxy-image/"):]
-            flow.request.url = urlunsplit(
-                ("https","preview.redd.it",image_path,parts.query,"")
-            )
-            flow.request.headers["Accept"] = "image/jpeg,image/png,image/*;q=0.8,*/*;q=0.5"
-            return
-
-        if host in REDDIT_HOSTS|{"old.reddit.com"} and parts.path.startswith("/gallery/"):
-            gallery_id = parts.path[len("/gallery/"):].split("/",1)[0]
-            if gallery_id:
-                redirect_url = urlunsplit(
-                    (parts.scheme,"old.reddit.com",f"/comments/{gallery_id}",parts.query,parts.fragment)
-                )
                 flow.response = http.Response.make(
-                    302,
-                    b"",
-                    {"Location": redirect_url,"Cache-Control": "no-store"},
+                    500,
+                    (
+                        "<!doctype html><meta charset=utf-8>"
+                        "<title>Google Intercept Failed</title>"
+                        f"<p>{detail}</p>"
+                    ).encode("utf-8"),
+                    {"Content-Type": "text/html; charset=utf-8"},
                 )
-                return
-
-        if host in REDDIT_HOSTS:
-            print(f"intercepting Reddit request: {url}")
-            redirect_url = urlunsplit(
-                (parts.scheme,"old.reddit.com",parts.path,parts.query,parts.fragment)
-            )
-            flow.response = http.Response.make(
-                302,
-                b"",
-                {"Location": redirect_url,"Cache-Control": "no-store"},
-            )
+                
+        if self.reddit.request(flow):
             return
         
     def response(self,flow):
@@ -143,30 +114,7 @@ class InterceptAddon:
             )
             flow.response.text = html
 
-        if flow.request.pretty_host == "old.reddit.com" and "text/html" in content_type:
-            html = flow.response.text
-            html = re.sub(
-                r'<link\b(?=[^>]*\bref=["\']applied_subreddit_stylesheet["\'])[^>]*>',
-                "",
-                html,
-                count=1,
-                flags=re.IGNORECASE,
-            )
-            html = html.replace(
-                '<meta name="viewport" content="width=1024">',
-                '<meta name="viewport" content="width=device-width,initial-scale=1.0">',
-                1,
-            )
-            html = html.replace(
-                "https://preview.redd.it/",
-                "https://old.reddit.com/legacy-proxy-image/",
-            )
-            html = html.replace(
-                "//preview.redd.it/",
-                "https://old.reddit.com/legacy-proxy-image/",
-            )
-            html = html.replace("</head>",REDDIT_MOBILE_CSS+"</head>",1)
-            flow.response.text = html
+        self.reddit.response(flow)
 
         print(f"intercepted response from: {flow.request.url}")
 
