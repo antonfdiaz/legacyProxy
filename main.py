@@ -7,7 +7,7 @@ import re
 from pathlib import Path
 from urllib.parse import urlsplit,urlunsplit
 
-VERSION = "0.3.3"
+VERSION = "0.3.4"
 
 GOOGLE_HOSTS = {"www.google.com","www.google.es","www.google.fr","www.google.de","www.google.co.uk","www.google.ca","www.google.com.au"}
 WIKIPEDIA_HOSTS = {"en.wikipedia.org","es.wikipedia.org","fr.wikipedia.org","de.wikipedia.org"}
