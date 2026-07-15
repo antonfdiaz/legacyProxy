@@ -21,4 +21,6 @@ To-do for website fixing. I will NOT be fixing websites that already work with a
 - [x] Google Search
 - [x] Reddit
 - [x] Wikipedia
+- [ ] Apple.com
+- [ ] GitHub
 - [ ] Amazon
