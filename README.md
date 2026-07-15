@@ -17,7 +17,7 @@ Rewrites Wikimedia image URLs through the proxy and removes the unsupported `src
 Wikipedia works correctly on every version I've tested.
 
 ## TODO
-To-do for website fixing:
+To-do for website fixing. I will NOT be fixing websites that already work with an app, such as eBay, YouTube, Instagram, etc.
 - [x] Google Search
 - [x] Reddit
 - [x] Wikipedia
