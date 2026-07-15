@@ -1,5 +1,5 @@
-## legacyProxy TODO:
+## legacyProxy TODO
 - [x] Google Search
 - [x] Reddit
-- [ ] Wikipedia
+- [x] Wikipedia
 - [ ] Amazon

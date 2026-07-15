@@ -6,13 +6,14 @@ import re
 from pathlib import Path
 from urllib.parse import urlsplit,urlunsplit
 
-GOOGLE_HOSTS = {"www.google.com","www.google.es"}
+GOOGLE_HOSTS = {"www.google.com","www.google.es","www.google.fr","www.google.de","www.google.co.uk","www.google.ca","www.google.com.au"}
 REDDIT_HOSTS = {"reddit.com","www.reddit.com"}
 REDDIT_MOBILE_CSS = f"""
 <style id="legacy-proxy-mobile">
 {open(Path(__file__).parent/"css"/"reddit.css","r",encoding="utf-8").read()}
 </style>
 """
+WIKIPEDIA_HOSTS = {"en.wikipedia.org","es.wikipedia.org","fr.wikipedia.org","de.wikipedia.org"}
 
 class InterceptAddon:
     def __init__(self):
@@ -53,6 +54,18 @@ class InterceptAddon:
                 (Path(__file__).parent/"css"/"google.css").read_bytes(),
                 {"Content-Type": "text/css","Cache-Control": "public,max-age=86400"},
             )
+            return
+
+        if (
+            host in WIKIPEDIA_HOSTS
+            and flow.request.path.startswith("/legacy-proxy-wikipedia-image/")
+        ):
+            image_parts = urlsplit(url)
+            image_path = "/"+image_parts.path[len("/legacy-proxy-wikipedia-image/"):]
+            flow.request.url = urlunsplit(
+                ("https","upload.wikimedia.org",image_path,image_parts.query,"")
+            )
+            flow.request.headers["Accept"] = "image/jpeg,image/png,image/*;q=0.8,*/*;q=0.5"
             return
 
         if host in GOOGLE_HOSTS and flow.request.path.startswith("/search?"):
@@ -112,9 +125,24 @@ class InterceptAddon:
                 {"Location": redirect_url,"Cache-Control": "no-store"},
             )
             return
-
+        
     def response(self,flow):
         content_type = flow.response.headers.get("Content-Type","")
+        if flow.request.pretty_host in WIKIPEDIA_HOSTS and "text/html" in content_type:
+            html = flow.response.text
+            image_prefix = (
+                "https://"+flow.request.pretty_host+"/legacy-proxy-wikipedia-image/"
+            )
+            html = html.replace("https://upload.wikimedia.org/",image_prefix)
+            html = html.replace("//upload.wikimedia.org/",image_prefix)
+            html = re.sub(
+                r'\s+(?:srcset|loading|decoding)=(?:"[^"]*"|\'[^\']*\')',
+                "",
+                html,
+                flags=re.IGNORECASE,
+            )
+            flow.response.text = html
+
         if flow.request.pretty_host == "old.reddit.com" and "text/html" in content_type:
             html = flow.response.text
             html = re.sub(
