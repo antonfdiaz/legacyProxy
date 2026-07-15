@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Google</title>
+    <link rel="stylesheet" href="/css/google.css">
+</head>
+<body>
+    <div id="options-menu">
+        <div class="flex"><h3>GoogleProxy</h3><button id="close-menu">&#x2715;</button></div>
+        <a href="https://www.google.com/">Home</a>
+        <a href="https://www.google.com/imghp">Images</a>
+        <a href="https://www.google.com/shopping">Shopping</a>
+        <a href="https://www.google.com/videohp">Videos</a>
+        <a href="#">Proxy Settings</a>
+    </div>
+    <div class="search-header">
+        <div class="top-bar">
+            <button class="menu-icon" type="button" aria-label="Abrir menú" aria-controls="options-menu" aria-expanded="false">&#9776;</button>
+            <img class="google-logo" src="/images/google.png" alt="Google">
+        </div>
+        <form class="search-form" action="/search" method="get">
+            <input class="search-input" type="text" name="q" placeholder="Buscar en Google">
+            <button class="search-button" type="submit" aria-label="Buscar"><span class="search-icon"></span></button>
+        </form>
+        <div class="search-tabs">
+            <a href="#" class="search-tab active">ALL</a>
+            <a href="https://www.google.com/imghp" class="search-tab">IMAGES</a>
+            <a href="https://www.google.com/shopping" class="search-tab">SHOPPING</a>
+            <a href="https://www.google.com/videohp" class="search-tab">VIDEOS</a>
+        </div>
+    </div>
+    <div id="results"></div>
+    <script>
+        (function () {
+            var menuIcon = document.getElementsByClassName("menu-icon")[0]
+            var optionsMenu = document.getElementById("options-menu")
+            var closeMenuButton = document.getElementById("close-menu")
+
+            function openMenu() {
+                optionsMenu.style.left = "0px"
+                menuIcon.setAttribute("aria-expanded","true")
+            }
+
+            function closeMenu() {
+                optionsMenu.style.left = "-200px"
+                menuIcon.setAttribute("aria-expanded","false")
+            }
+
+            menuIcon.onclick = function (event) {
+                event = event || window.event
+                if (event.stopPropagation) {
+                    event.stopPropagation()
+                } else {
+                    event.cancelBubble = true
+                }
+
+                if (optionsMenu.style.left === "0px") {
+                    closeMenu()
+                } else {
+                    openMenu()
+                }
+            }
+
+            optionsMenu.onclick = function (event) {
+                event = event || window.event
+                if (event.stopPropagation) {
+                    event.stopPropagation()
+                } else {
+                    event.cancelBubble = true
+                }
+            }
+
+            closeMenuButton.onclick = closeMenu
+            document.onclick = closeMenu
+        }())
+    </script>
+</body>
+</html>
