@@ -33,34 +33,18 @@ react-app > [data-target="react-app.reactRoot"] {
     margin-left: 0 !important;
 }
 
-header,
-nav,
-main,
-section,
-article,
-aside,
-footer,
-details,
-summary,
-react-app,
-react-partial,
-rails-partial,
-turbo-frame,
-include-fragment {
+header,nav,main,section,article,aside,footer,
+details,summary,react-app,react-partial,rails-partial,
+turbo-frame,include-fragment {
     display: block;
 }
 
-[hidden],
-template,
-.d-none,
-.sr-only,
-.prc-TooltipV2-Tooltip-tLeuB,
+[hidden],template,.d-none,.sr-only,.prc-TooltipV2-Tooltip-tLeuB,
 .prc-src-InternalVisuallyHidden-2YaI6 {
     display: none !important;
 }
 
-tool-tip,
-[role="tooltip"] {
+tool-tip,[role="tooltip"] {
     display: none !important;
 }
 
@@ -85,8 +69,7 @@ a {
     text-decoration: none;
 }
 
-a:hover,
-a:focus {
+a:hover,a:focus {
     text-decoration: underline;
 }
 
@@ -99,17 +82,12 @@ svg {
     vertical-align: text-bottom;
 }
 
-button,
-input,
-select,
-textarea {
+button,input,select,textarea {
     max-width: 100%;
     font: inherit;
 }
 
-button,
-.Button,
-[data-component="Button"] {
+button,.Button,[data-component="Button"] {
     display: inline-block;
     min-height: 30px;
     padding: 5px 10px !important;
@@ -121,7 +99,7 @@ button,
     text-align: center;
 }
 
-/* GitHub's logged-out navigation is too complex for old mobile WebKit. */
+/*github's logged-out navigation is too complex for old ios webkit. */
 .HeaderMktg {
     position: static !important;
     min-height: 44px;
@@ -163,14 +141,12 @@ button,
     fill: #fff;
 }
 
-.header-wrapper,
-.js-header-wrapper,
-.position-sticky,
-.sticky {
+.header-wrapper,.js-header-wrapper,
+.position-sticky,.sticky {
     position: static !important;
 }
 
-/* Repository title and star/fork controls. */
+/*repository title and star/fork controls*/
 #repository-container-header {
     display: block !important;
     padding: 12px 10px 0 !important;
@@ -203,7 +179,7 @@ button,
     border-bottom: 1px solid #d0d7de !important;
 }
 
-/* Repository tabs remain usable without flexbox or sticky positioning. */
+/*repository tabs remain usable without flexbox or sticky positioning. */
 .UnderlineNav {
     width: 100% !important;
     max-width: 100% !important;
@@ -250,9 +226,8 @@ button,
     display: none !important;
 }
 
-/* Replace GitHub's CSS-grid/flex repository layout with normal blocks. */
-.repository-content,
-#repo-content-pjax-container,
+/*replace github css grid/flex repository layout with normal blocks*/
+.repository-content,#repo-content-pjax-container,
 [data-component="SplitPageLayout"],
 [data-component="SplitPageLayout.Content"],
 [data-component="SplitPageLayout.Header"],
@@ -266,10 +241,7 @@ button,
     height: auto !important;
 }
 
-.container-xl,
-.container-lg,
-.container-md,
-.width-full {
+.container-xl,.container-lg,.container-md,.width-full {
     width: auto !important;
     max-width: none !important;
 }
@@ -296,7 +268,7 @@ button,
     display: none !important;
 }
 
-/* Branch selector, repository actions and latest commit area. */
+/*branch selector, repo actions and latest commit area*/
 [class*="OverviewContent-module__Box_1"],
 [class*="OverviewContent-module__Box_2"],
 [class*="OverviewContent-module__Box_3"],
@@ -341,7 +313,7 @@ button[aria-label$=" branch"] svg {
     margin-right: 4px;
 }
 
-/* Directory listing. */
+/*directory listing*/
 table[aria-labelledby="folders-and-files"] {
     width: 100% !important;
     table-layout: fixed;
@@ -411,7 +383,7 @@ a[aria-label^="View commit history"]:after {
     display: none !important;
 }
 
-/* README and rendered Markdown. */
+/*readme and rendered markdown*/
 [class*="OverviewRepoFiles-module__Box_1"] {
     margin-top: 12px !important;
     border: 1px solid #d0d7de;
@@ -454,47 +426,25 @@ button[aria-label="Outline"] {
     line-height: 1.6;
 }
 
-.markdown-body .anchor {
-    display: none !important;
-}
+.markdown-body .anchor { display: none !important; }
 
-.markdown-body .markdown-heading:first-child h1 {
-    margin-top: 0;
-}
+.markdown-body .markdown-heading:first-child h1 { margin-top: 0; }
 
-.markdown-body h1,
-.markdown-body h2 {
+.markdown-body h1,.markdown-body h2 {
     margin-top: 22px;
     padding-bottom: 6px;
     border-bottom: 1px solid #d8dee4;
 }
 
-.markdown-body h1 {
-    font-size: 24px;
-}
+.markdown-body h1 { font-size: 24px; }
+.markdown-body h2 { font-size: 20px; }
+.markdown-body h3 { font-size: 17px; }
+.markdown-body p { margin: 0 0 12px; }
+.markdown-body ul,.markdown-body ol { padding-left: 24px;}
 
-.markdown-body h2 {
-    font-size: 20px;
-}
-
-.markdown-body h3 {
-    font-size: 17px;
-}
-
-.markdown-body p {
-    margin: 0 0 12px;
-}
-
-.markdown-body ul,
-.markdown-body ol {
-    padding-left: 24px;
-}
-
-.markdown-body pre,
-.markdown-body code,
-.blob-code,
-.blob-code-inner {
-    font-family: Menlo, Monaco, Consolas, monospace;
+.markdown-body pre,.markdown-body code,
+.blob-code,.blob-code-inner {
+    font-family: Menlo,Monaco,Consolas,monospace;
 }
 
 .markdown-body code {
@@ -505,9 +455,7 @@ button[aria-label="Outline"] {
     word-break: break-all;
 }
 
-.markdown-body pre,
-.blob-wrapper,
-.highlight {
+.markdown-body pre,.blob-wrapper,.highlight {
     overflow: auto !important;
     -webkit-overflow-scrolling: touch;
 }
@@ -532,8 +480,7 @@ button[aria-label="Outline"] {
     border-collapse: collapse;
 }
 
-.markdown-body th,
-.markdown-body td {
+.markdown-body th,.markdown-body td {
     padding: 6px 10px;
     border: 1px solid #d0d7de;
 }
@@ -565,22 +512,25 @@ include-fragment[aria-label="Loading contributors"] {
     display: block !important;
 }
 
-.legacy-contributors {
+.legacy-contributors-fragment ul {
     margin: 0;
     padding: 0 !important;
     list-style: none;
 }
 
-.legacy-contributors li {
-    display: inline-block;
-    width: 49%;
+.legacy-contributors-fragment li {
+    display: block;
     min-height: 42px;
     margin: 0 0 10px !important;
-    padding-right: 6px;
-    vertical-align: top;
 }
 
-.legacy-contributors img {
+.legacy-contributors-fragment li:after {
+    display: table;
+    clear: both;
+    content: "";
+}
+
+.legacy-contributors-fragment img {
     float: left;
     width: 32px;
     height: 32px;
@@ -588,25 +538,25 @@ include-fragment[aria-label="Loading contributors"] {
     border-radius: 50%;
 }
 
-.legacy-contributor-name,
-.legacy-contributors small {
+.legacy-contributors-fragment li > span,
+.legacy-contributors-fragment li > span a,
+.legacy-contributors-fragment li > span span {
     display: block;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
 
-.legacy-contributor-name {
+.legacy-contributors-fragment strong {
     font-weight: bold;
 }
 
-.legacy-contributors small,
-.legacy-contributors-status {
+.legacy-contributors-fragment li > span span {
     color: #57606a;
     font-size: 12px;
 }
 
-/* Languages bar and legend. */
+/*languages bar and legend*/
 .legacy-language-progress {
     display: block !important;
     width: 100%;
@@ -664,11 +614,9 @@ include-fragment[aria-label="Loading contributors"] {
     vertical-align: top;
 }
 
-.legacy-languages .text-bold {
-    font-weight: bold;
-}
+.legacy-languages .text-bold { font-weight: bold; }
 
-/* File and code pages. */
+/*file and code pages*/
 .blob-num {
     width: 42px;
     padding: 0 8px;
@@ -682,9 +630,7 @@ include-fragment[aria-label="Loading contributors"] {
     white-space: pre;
 }
 
-.Box,
-.Box-header,
-.Box-body {
+.Box,.Box-header,.Box-body {
     max-width: 100%;
 }
 
@@ -740,19 +686,8 @@ include-fragment[aria-label="Loading contributors"] {
         padding: 8px !important;
     }
 
-    .markdown-body {
-        padding: 12px 10px !important;
-    }
+    .markdown-body { padding: 12px 10px !important; }
+    .markdown-body h1 { font-size: 21px; }
 
-    .markdown-body h1 {
-        font-size: 21px;
-    }
-
-    .legacy-contributors li {
-        width: 100%;
-    }
-
-    .legacy-languages li {
-        width: 100%;
-    }
+    .legacy-languages li { width: 100%; }
 }
