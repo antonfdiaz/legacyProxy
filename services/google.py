@@ -264,7 +264,7 @@ class GoogleScraper:
         if cached:
             return cached
 
-        await self._start()
+        await self.start()
         response = await self.context.request.get(
             url,
             headers={
