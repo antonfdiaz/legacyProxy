@@ -8,7 +8,7 @@ import asyncio
 from pathlib import Path
 from urllib.parse import parse_qs,urlparse
 
-VERSION = "0.5.3"
+VERSION = "0.5.4"
 
 GOOGLE_HOSTS = {"www.google.com","www.google.es","www.google.fr","www.google.de","www.google.co.uk","www.google.ca","www.google.com.au"}
 
@@ -21,7 +21,6 @@ class InterceptAddon:
         self.wikipedia = WikipediaProxy()
 
     async def request(self,flow):
-        print(f"[INFO] intercepted request to: {flow.request.url}")
         host = flow.request.pretty_host
         url = flow.request.url
         
