@@ -91,6 +91,6 @@ class RedditProxy:
             "//preview.redd.it/",
             "https://old.reddit.com/legacy-proxy-image/",
         )
-        html = html.replace("</head>",REDDIT_MOBILE_CSS+"</head>",1)
+        html = html.replace("</head>",REDDIT_MOBILE_CSS+"</head>",1) #inject custom css
         flow.response.text = html
         return True
