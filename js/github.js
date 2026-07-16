@@ -7,6 +7,7 @@
         'include-fragment[src*="/releases/expanded_assets/"]'
     )
     var issueSearch = document.getElementById("repository-input")
+    var issueViewer = document.querySelector('[data-testid="issue-viewer-container"]')
     var sibling
     var i
 
@@ -100,5 +101,9 @@
                 issueStateLinks[i].href = issueQuery("closed")
             }
         }
+    }
+
+    if (issueViewer) {
+        document.body.className += " legacy-issue-detail"
     }
 }())

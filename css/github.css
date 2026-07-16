@@ -1001,6 +1001,171 @@ section[aria-label="All issues"] [class*="MetadataContainer-module"] {
     display: none !important;
 }
 
+/*individual issue and its conversation*/
+.legacy-issue-detail [data-testid="issue-viewer-container"],
+.legacy-issue-detail [class*="IssueViewer-module__issueViewerContainer"],
+.legacy-issue-detail [class*="ContentWrapper-module__contentContainer"],
+.legacy-issue-detail [class*="IssueViewer-module__contentAndSidebarWrapper"],
+.legacy-issue-detail [class*="IssueViewer-module__contentArea"],
+.legacy-issue-detail [data-testid="issue-viewer-issue-container"],
+.legacy-issue-detail [data-testid="issue-body"],
+.legacy-issue-detail [class*="IssueBody-module__outerContainer"] {
+    display: block !important;
+    position: static !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    height: auto !important;
+    margin: 0 !important;
+}
+
+.legacy-issue-detail [data-testid="issue-header"] {
+    display: block !important;
+    padding: 16px 10px 8px;
+}
+
+.legacy-issue-detail [data-testid="issue-header"] [data-component="PageHeader"] {
+    display: block !important;
+}
+
+.legacy-issue-detail [data-testid="issue-header"] h1 {
+    display: block !important;
+    margin: 0;
+    font-size: 22px;
+    line-height: 1.25;
+}
+
+.legacy-issue-detail [data-testid="issue-header"] [data-component="PageHeader.ContextArea"],
+.legacy-issue-detail [data-testid="issue-header"] [data-component="PH_Actions"],
+.legacy-issue-detail [data-testid="issue-metadata-sticky"],
+.legacy-issue-detail [class*="Header-module__sticky"],
+.legacy-issue-detail [class*="Header-module__HeaderContentWrapper"],
+.legacy-issue-detail [class*="IssueViewer-module__stickyHeader"],
+.legacy-issue-detail [data-testid="issue-viewer-metadata-container"] {
+    display: none !important;
+}
+
+.legacy-issue-detail [data-testid="issue-metadata-fixed"] {
+    display: block !important;
+    padding: 0 10px 14px;
+}
+
+.legacy-issue-detail [data-testid="issue-metadata-fixed"] [data-testid="header-state"] {
+    display: inline-block !important;
+    padding: 5px 10px;
+    border-radius: 16px;
+    background: #1a7f37;
+    color: #fff;
+    font-weight: bold;
+}
+
+.legacy-issue-detail [data-testid="issue-metadata-fixed"] [data-status="issueClosed"] {
+    background: #8250df;
+}
+
+.legacy-issue-detail [data-testid="issue-metadata-fixed"] svg {
+    margin-right: 5px;
+    fill: currentColor;
+}
+
+.legacy-issue-detail [data-testid="issue-body"] {
+    margin: 0 10px 16px !important;
+    overflow: hidden;
+    border: 1px solid #d0d7de;
+    border-radius: 6px;
+}
+
+.legacy-issue-detail [class*="IssueBody-module__headerRow"],
+.legacy-issue-detail [class*="IssueBody-module__commentBorder"],
+.legacy-issue-detail [class*="IssueBodyHeader-module__IssueBodyHeaderContainer"],
+.legacy-issue-detail [class*="ActivityHeader-module__activityHeader"] {
+    display: block !important;
+    position: static !important;
+    width: auto !important;
+    min-width: 0 !important;
+    margin: 0 !important;
+}
+
+.legacy-issue-detail [class*="ActivityHeader-module__activityHeader"] {
+    min-height: 42px;
+    padding: 8px 42px 8px 42px;
+    border-bottom: 1px solid #d0d7de;
+    background: #f6f8fa;
+}
+
+.legacy-issue-detail [class*="IssueBodyHeader-module__avatarContainer"] {
+    float: left;
+    margin: 0 0 0 -34px;
+}
+
+.legacy-issue-detail [class*="IssueBodyHeader-module__avatarContainer"] img {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+}
+
+.legacy-issue-detail [class*="IssueBodyHeader-module__titleSection"],
+.legacy-issue-detail [class*="IssueBodyHeader-module__footerSection"] {
+    display: inline !important;
+}
+
+.legacy-issue-detail [data-testid="issue-body-header-author"] {
+    margin-right: 4px;
+    font-weight: bold;
+}
+
+.legacy-issue-detail [class*="IssueBodyHeader-module__actionsWrapper"] {
+    display: none !important;
+}
+
+.legacy-issue-detail [data-testid="issue-body-viewer"] {
+    display: block !important;
+    padding: 4px 0 8px;
+}
+
+.legacy-issue-detail [data-testid="issue-body-viewer"] > .markdown-body {
+    padding: 12px !important;
+}
+
+.legacy-issue-detail [class*="IssueBodyViewer-module__IssueBodyTaskList"] {
+    display: none !important;
+}
+
+.legacy-issue-detail .legacy-issue-timeline {
+    display: block;
+    margin: 0 10px 18px;
+}
+
+.legacy-issue-detail .legacy-issue-comment {
+    margin: 0 0 14px;
+    overflow: hidden;
+    border: 1px solid #d0d7de;
+    border-radius: 6px;
+}
+
+.legacy-issue-detail .legacy-issue-comment-header {
+    padding: 8px 10px;
+    border-bottom: 1px solid #d0d7de;
+    background: #f6f8fa;
+    color: #57606a;
+}
+
+.legacy-issue-detail .legacy-issue-comment-header a {
+    color: #24292f;
+    font-weight: bold;
+}
+
+.legacy-issue-detail .legacy-issue-comment .markdown-body {
+    padding: 12px !important;
+}
+
+.legacy-issue-detail .legacy-issue-event {
+    margin: 0 0 14px;
+    padding: 8px 10px;
+    border-left: 3px solid #d0d7de;
+    color: #57606a;
+}
+
 .footer {
     margin-top: 24px;
     padding: 16px 10px !important;
