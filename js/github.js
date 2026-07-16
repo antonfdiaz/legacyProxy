@@ -6,6 +6,7 @@
     var releaseAssets = document.querySelectorAll(
         'include-fragment[src*="/releases/expanded_assets/"]'
     )
+    var issueSearch = document.getElementById("repository-input")
     var sibling
     var i
 
@@ -35,6 +36,21 @@
         request.send(null)
     }
 
+    function issueQuery(state) {
+        var query = issueSearch.value || "is:issue state:open"
+
+        query = query.replace(/state:(open|closed)/,"state:" + state)
+        if (query.indexOf("state:") === -1) {
+            query += " state:" + state
+        }
+        return window.location.pathname + "?q=" + encodeURIComponent(query)
+    }
+
+    function submitIssueSearch() {
+        window.location.href = window.location.pathname + "?q=" +
+            encodeURIComponent(issueSearch.value)
+    }
+
     for (i = 0; i < progressBars.length; i += 1) {
         sibling = progressBars[i].parentNode.nextSibling;
         while (sibling && sibling.nodeType !== 1) {
@@ -52,5 +68,37 @@
 
     for (i = 0; i < releaseAssets.length; i += 1) {
         loadFragment(releaseAssets[i],"legacy-release-assets")
+    }
+
+    if (issueSearch) {
+        document.body.className += " legacy-issues-page"
+
+        var issueSection = document.querySelector('section[aria-label="All issues"]')
+        var issueSearchButton = document.querySelector(
+            '#repository button[data-component="IconButton"]'
+        )
+        var issueStateLinks = issueSection ? issueSection.querySelectorAll(
+            'a[data-component="Text"]'
+        ) : []
+
+        issueSearch.onkeydown = function (event) {
+            event = event || window.event
+            if (event.keyCode === 13) {
+                submitIssueSearch()
+                return false
+            }
+        }
+
+        if (issueSearchButton) {
+            issueSearchButton.onclick = submitIssueSearch
+        }
+
+        for (i = 0; i < issueStateLinks.length; i += 1) {
+            if (issueStateLinks[i].textContent.indexOf("Open") !== -1) {
+                issueStateLinks[i].href = issueQuery("open")
+            } else if (issueStateLinks[i].textContent.indexOf("Closed") !== -1) {
+                issueStateLinks[i].href = issueQuery("closed")
+            }
+        }
     }
 }())
