@@ -20,6 +20,22 @@ Wikipedia works correctly on every version I've tested.
 Injects a compatible stylesheet into GitHub pages. Repo headers, navigation, file listings, README files and sidebars use a simple single-column layout that doesn't depend on modern CSS grid or flexbox support.  
 GitHub works better on iOS 6+.
 
+## Usage
+### How to run
+- Make a venv inside the proxy folder: `python3 -m venv .venv`
+- Activate it: `source .venv/bin/activate` (`.venv/Scripts/activate` on Windows)
+- Install libraries: `pip install -r requirements.txt`
+- Start the proxy: `python main.py`
+
+### Configure Device
+Go to Settings -> Wi-Fi -> The button next to the selected network -> Go to the bottom -> HTTP Proxy:
+- Set it to `Manual`
+- Server: Your PC's IP address
+- Port: `8080`
+- Authentication: OFF
+
+That's it! You can now use Google, Reddit and more on your old iPhone!
+
 ## TODO
 To-do for website fixing. I will NOT be fixing websites that already work with an app, such as eBay, YouTube, Instagram, etc.
 - [x] Google Search
