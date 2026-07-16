@@ -21,6 +21,7 @@ class GoogleScraper:
         self.page = None
         self.lock = asyncio.Lock()
         self.cache = {}
+        self.image_cache = {}
         self.html_template = TEMPLATE_PATH.read_text(encoding="utf-8")
         self.image_home = IMAGE_TEMPLATE_PATH.read_text(encoding="utf-8")
 
@@ -182,7 +183,9 @@ class GoogleScraper:
                 let anchorUrl = null
                 try {
                     anchorUrl = new URL(link)
-                    imageUrl = anchorUrl.searchParams.get("imgurl") || imageUrl
+                    if (!imageUrl?.startsWith("http")) {
+                        imageUrl = anchorUrl.searchParams.get("imgurl") || imageUrl
+                    }
                     link = anchorUrl.searchParams.get("imgrefurl") ||
                         anchorUrl.searchParams.get("url") ||
                         link
@@ -255,6 +258,32 @@ class GoogleScraper:
         for tab in tabs:
             tab["class"] = [name for name in tab.get("class",[]) if name != "active"]
         tabs[1 if images else 0]["class"].append("active")
+
+    async def fetch_image(self,url):
+        cached = self.image_cache.get(url)
+        if cached:
+            return cached
+
+        await self._start()
+        response = await self.context.request.get(
+            url,
+            headers={
+                "Accept": "image/jpeg,image/png,image/gif,image/*;q=0.8,*/*;q=0.5",
+                "Referer": "https://www.google.com/",
+            },
+            timeout=30000,
+        )
+        content_type = response.headers.get("content-type","").split(";",1)[0]
+        if not response.ok or not content_type.startswith("image/"):
+            print(
+                f"Google image fetch failed: {response.status} "
+                f"{content_type or 'unknown'} {url}"
+            )
+            return None
+
+        image = (await response.body(),content_type)
+        self.image_cache[url] = image
+        return image
         
     async def close(self):
         if self.context:

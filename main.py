@@ -25,8 +25,19 @@ class InterceptAddon:
         if host in GOOGLE_HOSTS and urlparse(url).path == "/legacy-proxy-google-image":
             image_url = parse_qs(urlparse(url).query).get("url",[""])[0]
             if urlparse(image_url).scheme in {"http","https"}:
-                flow.request.url = image_url
-                flow.request.headers["Accept"] = "image/jpeg,image/png,image/*;q=0.8,*/*;q=0.5"
+                image = await self.google.fetch_image(image_url)
+                if image:
+                    content,content_type = image
+                    flow.response = http.Response.make(
+                        200,
+                        content,
+                        {
+                            "Content-Type": content_type,
+                            "Cache-Control": "public,max-age=86400",
+                        },
+                    )
+                else:
+                    flow.response = http.Response.make(404,b"")
                 return
 
         if host in GOOGLE_HOSTS and flow.request.path == "/images/google.png":
