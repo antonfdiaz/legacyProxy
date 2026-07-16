@@ -5,12 +5,14 @@ WIKIPEDIA_HOSTS = {"en.wikipedia.org","es.wikipedia.org","fr.wikipedia.org","de.
 
 class WikipediaProxy:
     def request(self,flow):
+        #if the request is not for a wikipedia image, ignore it
         if (
             flow.request.pretty_host not in WIKIPEDIA_HOSTS
             or not flow.request.path.startswith("/legacy-proxy-wikipedia-image/")
         ):
             return False
 
+        #rewrite the request to point to the original image
         image_parts = urlsplit(flow.request.url)
         image_path = "/"+image_parts.path[len("/legacy-proxy-wikipedia-image/"):]
         flow.request.url = urlunsplit(

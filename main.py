@@ -8,12 +8,13 @@ import asyncio
 from pathlib import Path
 from urllib.parse import parse_qs,urlparse
 
-VERSION = "0.5.1"
+VERSION = "0.5.2"
 
 GOOGLE_HOSTS = {"www.google.com","www.google.es","www.google.fr","www.google.de","www.google.co.uk","www.google.ca","www.google.com.au"}
 
 class InterceptAddon:
     def __init__(self):
+        #initialize proxy services
         self.github = GitHubProxy()
         self.google = GoogleScraper()
         self.reddit = RedditProxy()
@@ -23,7 +24,7 @@ class InterceptAddon:
         print(f"[INFO] intercepted request to: {flow.request.url}")
         host = flow.request.pretty_host
         url = flow.request.url
-
+        
         if host in GOOGLE_HOSTS and urlparse(url).path == "/legacy-proxy-google-image":
             image_url = parse_qs(urlparse(url).query).get("url",[""])[0]
             if urlparse(image_url).scheme in {"http","https"}:
@@ -95,7 +96,7 @@ class InterceptAddon:
                     {"Content-Type": "text/html; charset=utf-8"},
                 )
             except GoogleCaptchaError as e:
-                print(f"[WARN] google CAPTCHA detected: {e}")
+                print(f"[WARN] Google CAPTCHA detected: {e}")
                 flow.response = http.Response.make(
                     503,
                     (
@@ -107,7 +108,7 @@ class InterceptAddon:
                 )
             except Exception as e:
                 detail = f"{type(e).__name__}: {e}"
-                print(f"[ERROR] google intercept failed: {detail}")
+                print(f"[ERROR] Google intercept failed: {detail}")
                 flow.response = http.Response.make(
                     500,
                     (
@@ -122,6 +123,7 @@ class InterceptAddon:
             return
         
     def response(self,flow):
+        #handle responses for proxy services
         self.github.response(flow)
         self.wikipedia.response(flow)
         self.reddit.response(flow)

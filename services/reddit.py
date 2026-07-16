@@ -17,6 +17,7 @@ class RedditProxy:
         parts = urlsplit(url)
 
         if host == "old.reddit.com" and parts.path.startswith("/legacy-proxy-image/"):
+            #rewrite request to point to the original image
             image_path = "/"+parts.path[len("/legacy-proxy-image/"):]
             flow.request.url = urlunsplit(
                 ("https","preview.redd.it",image_path,parts.query,"")
