@@ -17,12 +17,21 @@ Rewrites Wikimedia image URLs through the proxy and removes the unsupported `src
 Wikipedia works correctly on every version I've tested.
 
 ## GitHub
-Injects a small, legacy-compatible stylesheet into GitHub pages. Repository headers, navigation, file listings, README files and sidebars use a simple single-column layout that does not depend on modern CSS grid or flexbox support.
+Injects a compatible stylesheet into GitHub pages. Repo headers, navigation, file listings, README files and sidebars use a simple single-column layout that doesn't depend on modern CSS grid or flexbox support.
 
 ## TODO
 To-do for website fixing. I will NOT be fixing websites that already work with an app, such as eBay, YouTube, Instagram, etc.
 - [x] Google Search
+  - [x] Web search
+  - [x] Image search
+  - [ ] Video search
 - [x] Reddit
+  - [x] Browse Reddit
+  - [ ] Login
 - [x] Wikipedia
 - [x] GitHub
+  - [x] Repo page
+  - [ ] Issue pages
+  - [ ] PRs page
+  - [ ] Login
 - [ ] Amazon
