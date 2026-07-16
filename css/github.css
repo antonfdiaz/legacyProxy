@@ -217,7 +217,7 @@ button,
 .UnderlineNav-body,
 [class*="prc-UnderlineNav-ItemsList"] {
     display: block !important;
-    min-width: 620px;
+    min-width: 0;
     margin: 0;
     padding: 0;
     list-style: none;
@@ -322,11 +322,7 @@ a[aria-label="Go to Tags page"],
 }
 
 [class*="BranchInfoBar-module__branchInfoBar"] {
-    margin: 8px 0;
-    padding: 8px;
-    border: 1px solid #d0d7de;
-    border-radius: 6px;
-    background: #f6f8fa;
+    display: none !important;
 }
 
 button[aria-label$=" branch"] {
@@ -355,10 +351,15 @@ table[aria-labelledby="folders-and-files"] {
 
 table[aria-labelledby="folders-and-files"] th,
 table[aria-labelledby="folders-and-files"] td {
-    padding: 7px 9px !important;
+    height: 30px;
+    padding: 4px 8px !important;
     border-top: 1px solid #d8dee4;
     text-align: left;
     vertical-align: middle;
+}
+
+table[aria-labelledby="folders-and-files"] thead th {
+    height: 34px;
 }
 
 table[aria-labelledby="folders-and-files"] th,
@@ -406,25 +407,59 @@ a[aria-label^="View commit history"]:after {
     content: "History";
 }
 
+[data-testid="view-all-files-row"] {
+    display: none !important;
+}
+
 /* README and rendered Markdown. */
-[class*="OverviewRepoFiles-module__Box_1"],
-[class*="DirectoryRichtextContent-module__"] {
-    margin-top: 16px !important;
+[class*="OverviewRepoFiles-module__Box_1"] {
+    margin-top: 12px !important;
     border: 1px solid #d0d7de;
     border-radius: 6px;
 }
 
 [class*="OverviewRepoFiles-module__Box_2"] {
-    padding: 0 12px !important;
+    padding: 0 !important;
+    border: 0 !important;
+}
+
+nav[aria-label="Repository files"] {
+    overflow: hidden !important;
+    padding: 0 10px !important;
     border-bottom: 1px solid #d0d7de;
 }
 
+nav[aria-label="Repository files"] ul {
+    min-width: 0 !important;
+    white-space: nowrap;
+}
+
+nav[aria-label="Repository files"] li[aria-hidden="true"],
+button[aria-label="Outline"] {
+    display: none !important;
+}
+
+[class*="DirectoryRichtextContent-module__"] {
+    margin: 0 !important;
+    border: 0 !important;
+    border-radius: 0 !important;
+}
+
 .markdown-body {
+    width: 100% !important;
     padding: 16px !important;
     color: #1f2328 !important;
     background: #fff !important;
     font-size: 14px;
     line-height: 1.6;
+}
+
+.markdown-body .anchor {
+    display: none !important;
+}
+
+.markdown-body .markdown-heading:first-child h1 {
+    margin-top: 0;
 }
 
 .markdown-body h1,
@@ -446,6 +481,15 @@ a[aria-label^="View commit history"]:after {
     font-size: 17px;
 }
 
+.markdown-body p {
+    margin: 0 0 12px;
+}
+
+.markdown-body ul,
+.markdown-body ol {
+    padding-left: 24px;
+}
+
 .markdown-body pre,
 .markdown-body code,
 .blob-code,
@@ -457,6 +501,8 @@ a[aria-label^="View commit history"]:after {
     padding: 2px 4px;
     border-radius: 3px;
     background: #eff1f3;
+    white-space: normal;
+    word-break: break-all;
 }
 
 .markdown-body pre,
@@ -475,6 +521,8 @@ a[aria-label^="View commit history"]:after {
 .markdown-body pre code {
     padding: 0;
     background: transparent;
+    white-space: pre;
+    word-break: normal;
 }
 
 .markdown-body table {
@@ -497,7 +545,21 @@ a[aria-label^="View commit history"]:after {
 }
 
 [data-component="SplitPageLayout.Pane"] ul {
-    padding-left: 20px;
+    padding-left: 0;
+    list-style: none;
+}
+
+[data-component="SplitPageLayout.Pane"] li {
+    margin: 4px 0;
+}
+
+[data-component="SplitPageLayout.Pane"] svg {
+    margin-right: 4px;
+}
+
+include-fragment[aria-label="Loading latest packages"],
+include-fragment[aria-label="Loading contributors"] {
+    display: none !important;
 }
 
 /* File and code pages. */
@@ -537,9 +599,24 @@ a[aria-label^="View commit history"]:after {
 
 .footer {
     margin-top: 24px;
-    padding: 20px 10px !important;
+    padding: 16px 10px !important;
     border-top: 1px solid #d0d7de;
     text-align: center;
+}
+
+.footer ul {
+    margin: 10px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.footer li {
+    display: inline-block;
+    margin: 3px 6px;
+}
+
+.footer cookie-consent-link {
+    display: none !important;
 }
 
 @media only screen and (max-width: 600px) {
@@ -549,7 +626,7 @@ a[aria-label^="View commit history"]:after {
 
     .UnderlineNav-body,
     [class*="prc-UnderlineNav-ItemsList"] {
-        min-width: 560px;
+        min-width: 0;
     }
 
     [data-component="SplitPageLayout.Header"],
@@ -558,7 +635,7 @@ a[aria-label^="View commit history"]:after {
     }
 
     .markdown-body {
-        padding: 12px !important;
+        padding: 12px 10px !important;
     }
 
     .markdown-body h1 {
