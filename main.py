@@ -7,7 +7,7 @@ import asyncio
 from pathlib import Path
 from urllib.parse import parse_qs,urlparse
 
-VERSION = "0.4.0"
+VERSION = "0.4.1"
 
 GOOGLE_HOSTS = {"www.google.com","www.google.es","www.google.fr","www.google.de","www.google.co.uk","www.google.ca","www.google.com.au"}
 
