@@ -1,7 +1,4 @@
-@font-face {
-    font-family: "Google Sans";
-    src: url("/fonts/googlesans.ttf") format("truetype");
-}
+
 * {
     -webkit-box-sizing: border-box;
     box-sizing: border-box;
@@ -11,7 +8,7 @@ html,body {
     padding: 0;
     background: #f1f3f4;
     color: #202124;
-    font-family: "Google Sans",Arial,sans-serif;
+    font-family: Arial,sans-serif;
     font-size: 14px;
 }
 .search-header {
@@ -53,16 +50,18 @@ html,body {
     display: -webkit-box;
     display: -webkit-flex;
     display: flex;
+    position: relative;
 }
 .search-input {
     display: block;
     height: 42px;
     margin: 0;
-    padding: 0 14px;
+    padding: 0 52px 0 14px;
     border: 1px solid #dfe1e5;
-    border-right: 0;
-    border-radius: 22px 0 0 22px;
+    border-radius: 22px;
     background: #fff;
+    box-shadow: 0px 2px 6px rgba(60,64,67,0.16);
+    -webkit-box-shadow: 0px 2px 6px rgba(60,64,67,0.16);
     color: #202124;
     font-family: Arial,sans-serif;
     font-size: 16px;
@@ -82,17 +81,20 @@ html,body {
     margin: 0;
     padding: 0;
     border: 0;
-    border-radius: 0 22px 22px 0;
-    background: #4285f4;
+    background: transparent;
     cursor: pointer;
     appearance: none;
     -webkit-appearance: none;
+    position: absolute;
+    top: 0;
+    right: 10px;
+    z-index: 1;
 }
 .search-icon {
     display: inline-block;
     width: 14px;
     height: 14px;
-    border: 2px solid #fff;
+    border: 2px solid #474747;
     border-radius: 50%;
     position: relative;
 }
@@ -100,7 +102,7 @@ html,body {
     content: "";
     width: 7px;
     height: 2px;
-    background: #fff;
+    background: #474747;
     position: absolute;
     right: -6px;
     bottom: -3px;
@@ -117,37 +119,31 @@ html,body {
 .search-tab {
     display: table-cell;
     height: 38px;
-    color: #5f6368;
-    font-size: 11px;
+    color: #636363;
+    font-size: 14px;
+    font-weight: bold;
     text-align: center;
     vertical-align: middle;
     position: relative;
     text-decoration: none;
 }
 .search-tab.active {
-    color: #1a73e8;
-    font-weight: bold;
+    color: #000;
 }
 .search-tab.active:after {
     content: "";
     position: absolute;
-    right: 8px;
-    bottom: 0;
-    left: 8px;
+    bottom: 0px;
+    left: 27.5%;
     height: 3px;
-    background: #1a73e8;
-}
-#results {
-    padding: 8px 6px 20px;
+    width: 45%;
+    background: #000;
+    transform: translateX(-50%);
 }
 .result {
     margin: 0 0 8px;
     padding: 14px 12px;
-    border: 1px solid #dfe1e5;
-    border-radius: 10px;
     background: #fff;
-    -webkit-box-shadow: 0 1px 2px rgba(60,64,67,.18);
-    box-shadow: 0 1px 2px rgba(60,64,67,.18);
 }
 .result h3 {
     margin: 0 0 5px;

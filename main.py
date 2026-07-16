@@ -6,7 +6,7 @@ from services.wikipedia import WikipediaProxy
 import asyncio
 from pathlib import Path
 
-VERSION = "0.3.5"
+VERSION = "0.3.6"
 
 GOOGLE_HOSTS = {"www.google.com","www.google.es","www.google.fr","www.google.de","www.google.co.uk","www.google.ca","www.google.com.au"}
 
