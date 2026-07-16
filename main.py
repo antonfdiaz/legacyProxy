@@ -20,19 +20,27 @@ class InterceptAddon:
         print(f"[INFO] intercepted request to: {flow.request.url}")
         host = flow.request.pretty_host
         url = flow.request.url
+        
+        if host in GOOGLE_HOSTS and flow.request.path == "/fonts/googlesans.ttf":
+            flow.response = http.Response.make(
+                200,
+                (Path(__file__).parent/"fonts"/"googlesans.ttf").read_bytes(),
+                {"Content-Type": "font/ttf; charset=utf-8","Cache-Control": "public,max-age=86400"},
+            )
+            return
+        
+        if host in GOOGLE_HOSTS and flow.request.path == "/fonts/roboto.ttf":
+            flow.response = http.Response.make(
+                200,
+                (Path(__file__).parent/"fonts"/"roboto.ttf").read_bytes(),
+                {"Content-Type": "font/ttf; charset=utf-8","Cache-Control": "public,max-age=86400"},
+            )
+            return
 
         if host in GOOGLE_HOSTS and flow.request.path == "/images/google.png":
             flow.response = http.Response.make(
                 200,
                 (Path(__file__).parent/"images"/"google.png").read_bytes(),
-                {"Content-Type": "image/png","Cache-Control": "public,max-age=86400"},
-            )
-            return
-        
-        if host in GOOGLE_HOSTS and flow.request.path == "/images/search.png":
-            flow.response = http.Response.make(
-                200,
-                (Path(__file__).parent/"images"/"search.png").read_bytes(),
                 {"Content-Type": "image/png","Cache-Control": "public,max-age=86400"},
             )
             return
