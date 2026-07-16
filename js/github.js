@@ -1,12 +1,39 @@
 (function () {
     var progressBars = document.querySelectorAll(".Progress")
-    var container = document.querySelector(
+    var contributors = document.querySelector(
         'include-fragment[aria-label="Loading contributors"]'
+    )
+    var releaseAssets = document.querySelectorAll(
+        'include-fragment[src*="/releases/expanded_assets/"]'
     )
     var sibling
     var i
-    var request
-    var source
+
+    function loadFragment(container,className) {
+        var request
+        var source = container.getAttribute("src")
+
+        if (!source) {
+            return
+        }
+
+        request = new XMLHttpRequest()
+        request.open("GET",source,true)
+        request.setRequestHeader("Accept","text/fragment+html")
+        request.onreadystatechange = function () {
+            if (request.readyState !== 4) {
+                return
+            }
+
+            if (request.status < 200 || request.status >= 300) {
+                return
+            }
+
+            container.innerHTML = request.responseText
+            container.className += " " + className
+        }
+        request.send(null)
+    }
 
     for (i = 0; i < progressBars.length; i += 1) {
         sibling = progressBars[i].parentNode.nextSibling;
@@ -19,28 +46,11 @@
         }
     }
 
-    if (!container) {
-        return
+    if (contributors) {
+        loadFragment(contributors,"legacy-contributors-fragment")
     }
 
-    source = container.getAttribute("src")
-    if (!source) {
-        return
+    for (i = 0; i < releaseAssets.length; i += 1) {
+        loadFragment(releaseAssets[i],"legacy-release-assets")
     }
-
-    request = new XMLHttpRequest()
-    request.open("GET",source,true)
-    request.onreadystatechange = function () {
-        if (request.readyState !== 4) {
-            return
-        }
-
-        if (request.status < 200 || request.status >= 300) {
-            return
-        }
-
-        container.innerHTML = request.responseText
-        container.className += " legacy-contributors-fragment"
-    }
-    request.send(null)
 }())

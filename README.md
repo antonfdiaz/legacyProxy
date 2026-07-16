@@ -50,6 +50,7 @@ To-do for website fixing. I will NOT be fixing websites that already work with a
   - [ ] Fix CSS
 - [x] GitHub
   - [x] Repo page
+  - [x] Releases/Tags
   - [ ] Issue pages
   - [ ] PRs page
   - [ ] User page

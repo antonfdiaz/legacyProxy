@@ -48,6 +48,13 @@ tool-tip,[role="tooltip"] {
     display: none !important;
 }
 
+/* Old WebKit renders unsupported popovers and dialogs as normal page content. */
+dialog,
+anchored-position[popover],
+[data-show-dialog-id] {
+    display: none !important;
+}
+
 .show-on-focus {
     position: absolute !important;
     left: -10000px !important;
@@ -647,6 +654,149 @@ include-fragment[aria-label="Loading contributors"] {
 
 .Box-body {
     padding: 10px;
+}
+
+/* releases and tags */
+nav[aria-label="Releases and Tags"] {
+    display: block !important;
+    margin: 0 0 12px;
+    border-bottom: 1px solid #d0d7de;
+}
+
+nav[aria-label="Releases and Tags"] .subnav-item {
+    display: inline-block;
+    padding: 8px 10px;
+    color: #0969da;
+}
+
+nav[aria-label="Releases and Tags"] .selected {
+    border-bottom: 2px solid #fd8c73;
+    color: #24292f;
+    font-weight: bold;
+}
+
+#release-filter {
+    display: block;
+    width: 100%;
+    height: 34px;
+    padding: 5px 10px;
+    border: 1px solid #d0d7de;
+    border-radius: 6px;
+    background: #fff;
+}
+
+.subnav-search-icon {
+    display: none !important;
+}
+
+[data-release-anchor] {
+    display: block;
+    margin: 0 0 18px;
+}
+
+#release_page_title ~ div action-menu,
+[data-release-anchor] select-panel,
+[data-release-anchor] .js-comment {
+    display: none !important;
+}
+
+[data-release-anchor] .Box-footer {
+    padding: 10px;
+    border-top: 1px solid #d0d7de;
+}
+
+[data-release-anchor] summary {
+    display: block;
+    padding: 4px 0;
+}
+
+[data-release-anchor] .markdown-body {
+    padding: 0 !important;
+}
+
+.legacy-release-assets {
+    display: block !important;
+}
+
+.legacy-release-assets > span,
+.legacy-release-assets [data-show-on-forbidden-error],
+.legacy-release-assets clipboard-copy,
+.legacy-release-assets .text-mono {
+    display: none !important;
+}
+
+.legacy-release-assets .Box {
+    margin-top: 8px;
+}
+
+.legacy-release-assets ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.legacy-release-assets .Box-row {
+    display: block !important;
+    padding: 10px !important;
+    border-top: 1px solid #d0d7de;
+}
+
+.legacy-release-assets .Box-row:first-child {
+    border-top: 0;
+}
+
+.legacy-release-assets .Box-row > div {
+    display: block !important;
+    width: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.legacy-release-assets .Box-row > div:first-child svg {
+    float: left;
+    margin: 2px 7px 0 0;
+}
+
+.legacy-release-assets .Box-row > div:first-child a {
+    display: block;
+    overflow: hidden;
+}
+
+.legacy-release-assets .Box-row > div + div {
+    margin: 4px 0 0 23px !important;
+    color: #57606a;
+    font-size: 12px;
+}
+
+.legacy-release-assets .Box-row > div + div > div {
+    display: none !important;
+}
+
+.legacy-release-assets .Box-row > div + div > span {
+    display: inline;
+    min-width: 0 !important;
+    margin: 0 10px 0 0 !important;
+}
+
+.commit {
+    padding: 10px;
+}
+
+.commit > .d-flex,
+.commit > .d-flex > .d-flex {
+    display: block !important;
+    width: auto !important;
+}
+
+.commit-desc pre {
+    margin: 6px 0;
+    white-space: pre-wrap;
+}
+
+.commit ul {
+    margin: 6px 0 0;
+    padding: 0;
+    list-style: none;
 }
 
 .footer {
