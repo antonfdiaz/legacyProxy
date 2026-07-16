@@ -24,6 +24,9 @@ class RedditProxy:
             flow.request.headers["Accept"] = "image/jpeg,image/png,image/*;q=0.8,*/*;q=0.5"
             return True
 
+        if host in REDDIT_HOSTS and self.is_api_request(flow,parts.path):
+            return False
+
         if host in REDDIT_HOSTS|{"old.reddit.com"} and parts.path.startswith("/gallery/"):
             gallery_id = parts.path[len("/gallery/"):].split("/",1)[0]
             if gallery_id:
@@ -50,6 +53,16 @@ class RedditProxy:
             return True
 
         return False
+
+    def is_api_request(self,flow,path):
+        accept = flow.request.headers.get("Accept","")
+        return (
+            flow.request.method not in {"GET","HEAD"}
+            or path.startswith("/api/")
+            or path.endswith(".json")
+            or "application/json" in accept
+            or "Authorization" in flow.request.headers
+        )
 
     def response(self,flow):
         content_type = flow.response.headers.get("Content-Type","")
