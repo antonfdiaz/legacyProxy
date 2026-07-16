@@ -8,7 +8,7 @@ import asyncio
 from pathlib import Path
 from urllib.parse import parse_qs,urlparse
 
-VERSION = "0.5.0"
+VERSION = "0.5.1"
 
 GOOGLE_HOSTS = {"www.google.com","www.google.es","www.google.fr","www.google.de","www.google.co.uk","www.google.ca","www.google.com.au"}
 
@@ -63,6 +63,14 @@ class InterceptAddon:
                 200,
                 (Path(__file__).parent/"css"/"google_imgs.css").read_bytes(),
                 {"Content-Type": "text/css","Cache-Control": "public,max-age=86400"},
+            )
+            return
+        
+        if host in GOOGLE_HOSTS and flow.request.path == "/js/google.js":
+            flow.response = http.Response.make(
+                200,
+                (Path(__file__).parent/"js"/"google.js").read_bytes(),
+                {"Content-Type": "application/javascript","Cache-Control": "public,max-age=86400"},
             )
             return
 
