@@ -8,6 +8,11 @@ GITHUB_CSS = f"""
 {(Path(__package__).parent/"css"/"github.css").read_text(encoding="utf-8")}
 </style>
 """
+GITHUB_JS = f"""
+<script id="legacy-proxy-github-script">
+{(Path(__package__).parent/"js"/"github.js").read_text(encoding="utf-8")}
+</script>
+"""
 
 class GitHubProxy:
     def response(self,flow):
@@ -35,5 +40,17 @@ class GitHubProxy:
             flags=re.IGNORECASE,
         )
         html = html.replace("</head>",GITHUB_CSS+"</head>",1)
+        html = html.replace("</body>",GITHUB_JS+"</body>",1)
         flow.response.text = html
+
+        content_security_policy = flow.response.headers.get("Content-Security-Policy","")
+        script_policy = re.search(r"script-src\s+([^;]+)",content_security_policy)
+        if script_policy and "'unsafe-inline'" not in script_policy.group(1):
+            content_security_policy = re.sub(
+                r"script-src\s+",
+                "script-src 'unsafe-inline' ",
+                content_security_policy,
+                count=1,
+            )
+            flow.response.headers["Content-Security-Policy"] = content_security_policy
         return True
