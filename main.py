@@ -5,6 +5,7 @@ from services.reddit import RedditProxy
 from services.wikipedia import WikipediaProxy
 import asyncio
 from pathlib import Path
+from urllib.parse import parse_qs,urlparse
 
 VERSION = "0.3.6"
 
@@ -21,6 +22,13 @@ class InterceptAddon:
         host = flow.request.pretty_host
         url = flow.request.url
 
+        if host in GOOGLE_HOSTS and urlparse(url).path == "/legacy-proxy-google-image":
+            image_url = parse_qs(urlparse(url).query).get("url",[""])[0]
+            if urlparse(image_url).scheme in {"http","https"}:
+                flow.request.url = image_url
+                flow.request.headers["Accept"] = "image/jpeg,image/png,image/*;q=0.8,*/*;q=0.5"
+                return
+
         if host in GOOGLE_HOSTS and flow.request.path == "/images/google.png":
             flow.response = http.Response.make(
                 200,
@@ -34,6 +42,22 @@ class InterceptAddon:
                 200,
                 (Path(__file__).parent/"css"/"google.css").read_bytes(),
                 {"Content-Type": "text/css","Cache-Control": "public,max-age=86400"},
+            )
+            return
+
+        if host in GOOGLE_HOSTS and flow.request.path == "/css/google_imgs.css":
+            flow.response = http.Response.make(
+                200,
+                (Path(__file__).parent/"css"/"google_imgs.css").read_bytes(),
+                {"Content-Type": "text/css","Cache-Control": "public,max-age=86400"},
+            )
+            return
+
+        if host in GOOGLE_HOSTS and flow.request.path.startswith("/imghp"):
+            flow.response = http.Response.make(
+                200,
+                self.google.image_home.encode("utf-8"),
+                {"Content-Type": "text/html; charset=utf-8"},
             )
             return
 
