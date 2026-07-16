@@ -2,7 +2,7 @@
     var progressBars = document.querySelectorAll(".Progress")
     var container = document.querySelector(
         'include-fragment[aria-label="Loading contributors"]'
-    );
+    )
     var sibling
     var i
     var request
