@@ -1,5 +1,6 @@
 from mitmproxy import http,options
 from mitmproxy.tools.dump import DumpMaster
+from services.github import GitHubProxy
 from services.google import GoogleCaptchaError,GoogleScraper
 from services.reddit import RedditProxy
 from services.wikipedia import WikipediaProxy
@@ -13,6 +14,7 @@ GOOGLE_HOSTS = {"www.google.com","www.google.es","www.google.fr","www.google.de"
 
 class InterceptAddon:
     def __init__(self):
+        self.github = GitHubProxy()
         self.google = GoogleScraper()
         self.reddit = RedditProxy()
         self.wikipedia = WikipediaProxy()
@@ -112,6 +114,7 @@ class InterceptAddon:
             return
         
     def response(self,flow):
+        self.github.response(flow)
         self.wikipedia.response(flow)
         self.reddit.response(flow)
 

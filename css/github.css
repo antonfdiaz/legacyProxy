@@ -1,0 +1,567 @@
+html {
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 100%;
+    -webkit-text-size-adjust: 100%;
+}
+
+body {
+    width: 100% !important;
+    min-width: 0 !important;
+    min-height: 100%;
+    margin: 0;
+    overflow-x: hidden;
+    background: #fff !important;
+    color: #1f2328 !important;
+    font: 14px/1.5 -apple-system, "Helvetica Neue", Arial, sans-serif;
+    word-wrap: break-word;
+}
+
+.logged-out,
+.application-main,
+#js-repo-pjax-container,
+#repo-content-turbo-frame,
+#repo-content-pjax-container,
+react-app,
+react-app > [data-target="react-app.reactRoot"] {
+    display: block !important;
+    position: static !important;
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    margin-right: 0 !important;
+    margin-left: 0 !important;
+}
+
+header,
+nav,
+main,
+section,
+article,
+aside,
+footer,
+details,
+summary,
+react-app,
+react-partial,
+rails-partial,
+turbo-frame,
+include-fragment {
+    display: block;
+}
+
+[hidden],
+template,
+.d-none,
+.sr-only,
+.prc-TooltipV2-Tooltip-tLeuB,
+.prc-src-InternalVisuallyHidden-2YaI6 {
+    display: none !important;
+}
+
+tool-tip,
+[role="tooltip"] {
+    display: none !important;
+}
+
+.show-on-focus {
+    position: absolute !important;
+    left: -10000px !important;
+}
+
+.show-on-focus:focus {
+    top: 8px !important;
+    left: 8px !important;
+    z-index: 1000;
+}
+
+* {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+a {
+    color: #0969da;
+    text-decoration: none;
+}
+
+a:hover,
+a:focus {
+    text-decoration: underline;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+}
+
+svg {
+    vertical-align: text-bottom;
+}
+
+button,
+input,
+select,
+textarea {
+    max-width: 100%;
+    font: inherit;
+}
+
+button,
+.Button,
+[data-component="Button"] {
+    display: inline-block;
+    min-height: 30px;
+    padding: 5px 10px !important;
+    border: 1px solid #d0d7de !important;
+    border-radius: 6px !important;
+    background: #f6f8fa !important;
+    color: #24292f !important;
+    line-height: 18px;
+    text-align: center;
+}
+
+/* GitHub's logged-out navigation is too complex for old mobile WebKit. */
+.HeaderMktg {
+    position: static !important;
+    min-height: 44px;
+    padding: 7px 10px !important;
+    border-bottom: 1px solid #57606a;
+    background: #24292f !important;
+    color: #fff !important;
+}
+
+.HeaderMktg a {
+    color: #fff;
+}
+
+.HeaderMktg .HeaderMenu,
+.HeaderMktg-backdrop,
+.HeaderMktg .AppHeader-appearanceSettings,
+.HeaderMktg .js-header-menu-toggle {
+    display: none !important;
+}
+
+.HeaderMktg a[aria-label="Homepage"] {
+    display: inline-block;
+}
+
+.HeaderMktg .text-right.d-lg-none {
+    display: block !important;
+    float: right;
+}
+
+.HeaderMktg:after {
+    display: table;
+    clear: both;
+    content: "";
+}
+
+.HeaderMktg svg.octicon-mark-github {
+    width: 28px;
+    height: 28px;
+    fill: #fff;
+}
+
+.header-wrapper,
+.js-header-wrapper,
+.position-sticky,
+.sticky {
+    position: static !important;
+}
+
+/* Repository title and star/fork controls. */
+#repository-container-header {
+    display: block !important;
+    padding: 12px 10px 0 !important;
+    border-bottom: 1px solid #d0d7de;
+    background: #f6f8fa !important;
+}
+
+#repository-container-header h1,
+#repository-container-header strong {
+    font-size: 19px;
+}
+
+#repository-container-header .d-flex {
+    display: block !important;
+}
+
+#repository-container-header ul {
+    margin: 8px 0;
+    padding: 0;
+    list-style: none;
+}
+
+#repository-container-header li {
+    display: inline-block;
+    margin: 0 5px 6px 0;
+    vertical-align: top;
+}
+
+.border-bottom {
+    border-bottom: 1px solid #d0d7de !important;
+}
+
+/* Repository tabs remain usable without flexbox or sticky positioning. */
+.UnderlineNav {
+    width: 100% !important;
+    max-width: 100% !important;
+    overflow-x: auto !important;
+    padding: 0 10px !important;
+    border-bottom: 1px solid #d0d7de;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+}
+
+.UnderlineNav-body,
+[class*="prc-UnderlineNav-ItemsList"] {
+    display: block !important;
+    min-width: 620px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.UnderlineNav-body li,
+[class*="prc-UnderlineNav-UnderlineNavItem"] {
+    display: inline-block !important;
+}
+
+.UnderlineNav-item,
+[class*="prc-components-UnderlineItem"] {
+    display: inline-block !important;
+    padding: 9px 10px !important;
+    border: 0 !important;
+    border-bottom: 2px solid transparent !important;
+    background: transparent !important;
+    color: #24292f !important;
+}
+
+.UnderlineNav-item.selected,
+.UnderlineNav-item[aria-current="page"],
+[class*="prc-components-UnderlineItem"][aria-current="page"] {
+    border-bottom-color: #fd8c73 !important;
+    font-weight: bold;
+}
+
+.UnderlineNav-actions,
+[class*="prc-UnderlineNav-MoreButton"] {
+    display: none !important;
+}
+
+/* Replace GitHub's CSS-grid/flex repository layout with normal blocks. */
+.repository-content,
+#repo-content-pjax-container,
+[data-component="SplitPageLayout"],
+[data-component="SplitPageLayout.Content"],
+[data-component="SplitPageLayout.Header"],
+[data-component="SplitPageLayout.Pane"],
+[class*="prc-PageLayout-"] {
+    display: block !important;
+    position: static !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    height: auto !important;
+}
+
+.container-xl,
+.container-lg,
+.container-md,
+.width-full {
+    width: auto !important;
+    max-width: none !important;
+}
+
+[data-selector="repos-split-pane-content"],
+[class*="OverviewContent-module__Box"] {
+    min-width: 0 !important;
+    margin: 0 !important;
+}
+
+[data-component="SplitPageLayout.Header"],
+[data-component="SplitPageLayout.Content"] {
+    padding: 10px !important;
+}
+
+[data-component="SplitPageLayout.Pane"] {
+    margin-top: 18px !important;
+    padding: 16px 10px 0 !important;
+    border-top: 1px solid #d0d7de;
+}
+
+[class*="PageLayout-VerticalDivider"],
+[class*="PageLayout-HorizontalDivider"] {
+    display: none !important;
+}
+
+/* Branch selector, repository actions and latest commit area. */
+[class*="OverviewContent-module__Box_1"],
+[class*="OverviewContent-module__Box_2"],
+[class*="OverviewContent-module__Box_3"],
+[class*="OverviewContent-module__Box_4"],
+[class*="OverviewContent-module__Box_5"],
+[class*="OverviewContent-module__Box_6"],
+[class*="OverviewContent-module__Box_7"],
+[class*="OverviewContent-module__Box_8"],
+[class*="OverviewContent-module__Box_9"],
+[class*="OverviewContent-module__Box_10"],
+[class*="OverviewContent-module__Box_11"] {
+    display: block !important;
+    width: auto !important;
+    min-width: 0 !important;
+    margin: 0 0 8px !important;
+}
+
+a[aria-label="Go to Branches page"],
+a[aria-label="Go to Tags page"],
+[class*="OverviewContent-module__Box_10"],
+[aria-label="Open more actions menu"] {
+    display: none !important;
+}
+
+[class*="BranchInfoBar-module__branchInfoBar"] {
+    margin: 8px 0;
+    padding: 8px;
+    border: 1px solid #d0d7de;
+    border-radius: 6px;
+    background: #f6f8fa;
+}
+
+button[aria-label$=" branch"] {
+    width: auto !important;
+    min-height: 32px;
+    padding: 5px 9px !important;
+}
+
+button[aria-label$=" branch"] span,
+button[aria-label$=" branch"] div {
+    display: inline !important;
+    width: auto !important;
+}
+
+button[aria-label$=" branch"] svg {
+    margin-right: 4px;
+}
+
+/* Directory listing. */
+table[aria-labelledby="folders-and-files"] {
+    width: 100% !important;
+    table-layout: fixed;
+    border-collapse: collapse;
+    border: 1px solid #d0d7de;
+}
+
+table[aria-labelledby="folders-and-files"] th,
+table[aria-labelledby="folders-and-files"] td {
+    padding: 7px 9px !important;
+    border-top: 1px solid #d8dee4;
+    text-align: left;
+    vertical-align: middle;
+}
+
+table[aria-labelledby="folders-and-files"] th,
+.react-directory-row > td {
+    display: none !important;
+}
+
+table[aria-labelledby="folders-and-files"] th:first-child,
+.react-directory-row > td:first-child,
+.react-directory-row-name-cell-small-screen {
+    display: table-cell !important;
+    width: 100%;
+}
+
+.react-directory-row-name-cell-large-screen,
+.react-directory-row-commit-cell,
+.react-directory-commit-age,
+.truncate-for-mobile > td:last-child {
+    display: none !important;
+}
+
+.react-directory-filename-column,
+.react-directory-filename-cell,
+.react-directory-truncate {
+    display: block !important;
+    min-width: 0 !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.react-directory-filename-column svg {
+    float: left;
+    margin: 2px 8px 0 0;
+}
+
+.react-directory-filename-column:after {
+    display: table;
+    clear: both;
+    content: "";
+}
+
+a[aria-label^="View commit history"]:after {
+    margin-left: 5px;
+    content: "History";
+}
+
+/* README and rendered Markdown. */
+[class*="OverviewRepoFiles-module__Box_1"],
+[class*="DirectoryRichtextContent-module__"] {
+    margin-top: 16px !important;
+    border: 1px solid #d0d7de;
+    border-radius: 6px;
+}
+
+[class*="OverviewRepoFiles-module__Box_2"] {
+    padding: 0 12px !important;
+    border-bottom: 1px solid #d0d7de;
+}
+
+.markdown-body {
+    padding: 16px !important;
+    color: #1f2328 !important;
+    background: #fff !important;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.markdown-body h1,
+.markdown-body h2 {
+    margin-top: 22px;
+    padding-bottom: 6px;
+    border-bottom: 1px solid #d8dee4;
+}
+
+.markdown-body h1 {
+    font-size: 24px;
+}
+
+.markdown-body h2 {
+    font-size: 20px;
+}
+
+.markdown-body h3 {
+    font-size: 17px;
+}
+
+.markdown-body pre,
+.markdown-body code,
+.blob-code,
+.blob-code-inner {
+    font-family: Menlo, Monaco, Consolas, monospace;
+}
+
+.markdown-body code {
+    padding: 2px 4px;
+    border-radius: 3px;
+    background: #eff1f3;
+}
+
+.markdown-body pre,
+.blob-wrapper,
+.highlight {
+    overflow: auto !important;
+    -webkit-overflow-scrolling: touch;
+}
+
+.markdown-body pre {
+    padding: 12px;
+    background: #f6f8fa;
+    white-space: pre;
+}
+
+.markdown-body pre code {
+    padding: 0;
+    background: transparent;
+}
+
+.markdown-body table {
+    display: block;
+    max-width: 100%;
+    overflow: auto;
+    border-collapse: collapse;
+}
+
+.markdown-body th,
+.markdown-body td {
+    padding: 6px 10px;
+    border: 1px solid #d0d7de;
+}
+
+/* Repository sidebar. */
+[data-component="SplitPageLayout.Pane"] h2,
+[data-component="SplitPageLayout.Pane"] h3 {
+    margin: 18px 0 8px;
+}
+
+[data-component="SplitPageLayout.Pane"] ul {
+    padding-left: 20px;
+}
+
+/* File and code pages. */
+.blob-num {
+    width: 42px;
+    padding: 0 8px;
+    color: #57606a;
+    text-align: right;
+    vertical-align: top;
+}
+
+.blob-code {
+    padding: 0 8px;
+    white-space: pre;
+}
+
+.Box,
+.Box-header,
+.Box-body {
+    max-width: 100%;
+}
+
+.Box {
+    border: 1px solid #d0d7de;
+    border-radius: 6px;
+}
+
+.Box-header {
+    padding: 10px;
+    border-bottom: 1px solid #d0d7de;
+    background: #f6f8fa;
+}
+
+.Box-body {
+    padding: 10px;
+}
+
+.footer {
+    margin-top: 24px;
+    padding: 20px 10px !important;
+    border-top: 1px solid #d0d7de;
+    text-align: center;
+}
+
+@media only screen and (max-width: 600px) {
+    #repository-container-header {
+        padding-top: 8px !important;
+    }
+
+    .UnderlineNav-body,
+    [class*="prc-UnderlineNav-ItemsList"] {
+        min-width: 560px;
+    }
+
+    [data-component="SplitPageLayout.Header"],
+    [data-component="SplitPageLayout.Content"] {
+        padding: 8px !important;
+    }
+
+    .markdown-body {
+        padding: 12px !important;
+    }
+
+    .markdown-body h1 {
+        font-size: 21px;
+    }
+}
