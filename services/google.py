@@ -25,7 +25,7 @@ class GoogleScraper:
         self.html_template = TEMPLATE_PATH.read_text(encoding="utf-8")
         self.image_home = IMAGE_TEMPLATE_PATH.read_text(encoding="utf-8")
 
-    async def _start(self):
+    async def start(self):
         if self.context:
             return
 
@@ -68,7 +68,7 @@ class GoogleScraper:
             if cached and monotonic()-cached[0] < CACHE_TTL_SECONDS:
                 return cached[1]
 
-            await self._start()
+            await self.start()
             if await self._captcha_present():
                 raise GoogleCaptchaError(
                     "Google requires a manual CAPTCHA in the Patchright window"
@@ -116,7 +116,7 @@ class GoogleScraper:
                     "google requires a manual captcha in the patchright window"
                 )
             if tbm == "isch":
-                return await self._image_results(query,cache_key)
+                return await self.image_results(query,cache_key)
 
             await self.page.locator("h3").first.wait_for(timeout=30000)
             
@@ -165,7 +165,7 @@ class GoogleScraper:
             
             return html_results
 
-    async def _image_results(self,query,cache_key):
+    async def image_results(self,query,cache_key):
         images = self.page.locator(
             'img.YQ4gaf,img[src*="encrypted-tbn"],img[data-src*="encrypted-tbn"],'
             'a[href*="imgurl="] img,a[href*="imgrefurl="] img,a[href^="/imgres"] img'
