@@ -46,6 +46,8 @@ To-do for website fixing. I will NOT be fixing websites that already work with a
   - [x] Browse Reddit
   - [ ] Login
 - [x] Wikipedia
+  - [x] Image loading
+  - [ ] Fix CSS
 - [x] GitHub
   - [x] Repo page
   - [ ] Issue pages
