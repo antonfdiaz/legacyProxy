@@ -6,7 +6,7 @@ from mitmproxy import http
 REDDIT_HOSTS = {"reddit.com","www.reddit.com"}
 REDDIT_MOBILE_CSS = f"""
 <style id="legacy-proxy-mobile">
-{(Path(__file__).parent/"css"/"reddit.css").read_text(encoding="utf-8")}
+{(Path(__package__).parent/"css"/"reddit.css").read_text(encoding="utf-8")}
 </style>
 """
 

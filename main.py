@@ -1,21 +1,20 @@
 from mitmproxy import http,options
 from mitmproxy.tools.dump import DumpMaster
-from google import GoogleCaptchaError,GoogleScraper
-from reddit import RedditProxy
+from services.google import GoogleCaptchaError,GoogleScraper
+from services.reddit import RedditProxy
+from services.wikipedia import WikipediaProxy
 import asyncio
-import re
 from pathlib import Path
-from urllib.parse import urlsplit,urlunsplit
 
-VERSION = "0.3.4"
+VERSION = "0.3.5"
 
 GOOGLE_HOSTS = {"www.google.com","www.google.es","www.google.fr","www.google.de","www.google.co.uk","www.google.ca","www.google.com.au"}
-WIKIPEDIA_HOSTS = {"en.wikipedia.org","es.wikipedia.org","fr.wikipedia.org","de.wikipedia.org"}
 
 class InterceptAddon:
     def __init__(self):
         self.google = GoogleScraper()
         self.reddit = RedditProxy()
+        self.wikipedia = WikipediaProxy()
 
     async def request(self,flow):
         print(f"[INFO] intercepted request to: {flow.request.url}")
@@ -54,13 +53,7 @@ class InterceptAddon:
             )
             return
 
-        if host in WIKIPEDIA_HOSTS and flow.request.path.startswith("/legacy-proxy-wikipedia-image/"):
-            image_parts = urlsplit(url)
-            image_path = "/"+image_parts.path[len("/legacy-proxy-wikipedia-image/"):]
-            flow.request.url = urlunsplit(
-                ("https","upload.wikimedia.org",image_path,image_parts.query,"")
-            )
-            flow.request.headers["Accept"] = "image/jpeg,image/png,image/*;q=0.8,*/*;q=0.5"
+        if self.wikipedia.request(flow):
             return
 
         if host in GOOGLE_HOSTS and flow.request.path.startswith("/search?"):
@@ -100,22 +93,7 @@ class InterceptAddon:
             return
         
     def response(self,flow):
-        content_type = flow.response.headers.get("Content-Type","")
-        if flow.request.pretty_host in WIKIPEDIA_HOSTS and "text/html" in content_type:
-            html = flow.response.text
-            image_prefix = (
-                "https://"+flow.request.pretty_host+"/legacy-proxy-wikipedia-image/"
-            )
-            html = html.replace("https://upload.wikimedia.org/",image_prefix)
-            html = html.replace("//upload.wikimedia.org/",image_prefix)
-            html = re.sub(
-                r'\s+(?:srcset|loading|decoding)=(?:"[^"]*"|\'[^\']*\')',
-                "",
-                html,
-                flags=re.IGNORECASE,
-            )
-            flow.response.text = html
-
+        self.wikipedia.response(flow)
         self.reddit.response(flow)
 
         print(f"[INFO] intercepted response from: {flow.request.url}")

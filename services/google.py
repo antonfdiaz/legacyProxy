@@ -5,7 +5,7 @@ from urllib.parse import parse_qs,urlparse
 from patchright.async_api import async_playwright
 import bs4
 
-TEMPLATE_PATH = Path(__file__).parent/"html"/"google.html"
+TEMPLATE_PATH = Path(__package__).parent/"html"/"google.html"
 PROFILE_PATH = Path.home()/".legacyProxy-google-profile"
 CHROME_PATH = Path("/Applications/Google Chrome.app")
 CACHE_TTL_SECONDS = 300
