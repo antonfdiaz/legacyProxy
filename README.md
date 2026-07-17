@@ -34,7 +34,7 @@ Go to Settings -> Wi-Fi -> The button next to the selected network -> Go to the 
 - Port: `8080`
 - Authentication: OFF
 
-That's it! You can now use Google, Reddit and more on your old iPhone!
+That's it! You can now use Google, Reddit, GitHub and more on your old iPhone!
 
 ## TODO
 To-do for website fixing. I will NOT be fixing websites that already work with an app, such as eBay, YouTube, Instagram, etc.
