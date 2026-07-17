@@ -507,7 +507,14 @@ nav[aria-label="Repository files"] {
 
 nav[aria-label="Repository files"] ul {
     min-width: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
     white-space: nowrap;
+}
+
+nav[aria-label="Repository files"] li {
+    margin: 0 !important;
+    vertical-align: top;
 }
 
 nav[aria-label="Repository files"] li[aria-hidden="true"],

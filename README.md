@@ -52,7 +52,7 @@ To-do for website fixing. I will NOT be fixing websites that already work with a
   - [x] Repo page
   - [x] Releases/Tags
   - [x] Issue pages
-  - [ ] PRs page
+  - [x] PRs page
   - [ ] User page
   - [ ] Login
 - [ ] Amazon
