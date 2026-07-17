@@ -830,7 +830,6 @@ aside[aria-label="Issues sidebar navigation"] {
 }
 
 .legacy-issues-page div[data-component="PageLayout"][data-has-sidebar="true"] header [data-component="PH_Actions"] {
-    display: inline-block !important;
     float: right;
 }
 
@@ -1166,6 +1165,425 @@ section[aria-label="All issues"] [class*="MetadataContainer-module"] {
     color: #57606a;
 }
 
+/* Pull request list */
+.legacy-pulls-page .new-discussion-timeline {
+    display: block;
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 12px 10px !important;
+}
+
+.legacy-pulls-page .new-discussion-timeline > .d-flex {
+    display: block !important;
+}
+
+.legacy-pulls-page form.subnav-search {
+    display: block !important;
+    position: relative;
+    width: auto !important;
+    margin: 0 0 10px !important;
+}
+
+.legacy-pulls-page #js-issues-search {
+    display: block;
+    box-sizing: border-box;
+    width: 100% !important;
+    height: 38px;
+    padding: 7px 10px 7px 34px;
+    border: 1px solid #8c959f;
+    border-radius: 6px;
+    font-size: 16px;
+    background: #fff;
+}
+
+.legacy-pulls-page .subnav-search-icon {
+    position: absolute;
+    top: 11px;
+    left: 11px;
+}
+
+.legacy-pulls-page nav[aria-label="Issue"],
+.legacy-pulls-page #js-issues-toolbar details,
+.legacy-pulls-page .js-issue-row .hide-sm,
+.legacy-pulls-page .js-issue-row a[aria-label^="Link to Issue."] {
+    display: none !important;
+}
+
+.legacy-pulls-page .new-discussion-timeline > .d-flex > div:last-child {
+    display: block !important;
+    width: auto !important;
+    margin: 0 0 10px !important;
+    text-align: right;
+}
+
+.legacy-pulls-page a[data-ga-click*="New pull request"] {
+    display: inline-block;
+    padding: 7px 12px;
+    border: 1px solid #1f883d;
+    border-radius: 6px;
+    background: #1f883d;
+    color: #fff;
+    font-weight: bold;
+}
+
+.legacy-pulls-page a[data-ga-click*="New pull request"] .d-none {
+    display: inline !important;
+}
+
+.legacy-pulls-page a[data-ga-click*="New pull request"] .d-block {
+    display: none !important;
+}
+
+.legacy-pulls-page .new-discussion-timeline > .d-block.d-lg-none {
+    display: none !important;
+}
+
+.legacy-pulls-page .Box {
+    margin-top: 0 !important;
+    overflow: hidden;
+    border: 1px solid #d0d7de;
+    border-radius: 6px;
+}
+
+.legacy-pulls-page #js-issues-toolbar {
+    display: block !important;
+    padding: 10px;
+    border-bottom: 1px solid #d0d7de;
+    background: #f6f8fa;
+}
+
+.legacy-pulls-page #js-issues-toolbar .table-list-filters > .flex-auto {
+    display: block !important;
+}
+
+.legacy-pulls-page #js-issues-toolbar .table-list-header-toggle {
+    display: block !important;
+}
+
+.legacy-pulls-page #js-issues-toolbar .states a {
+    display: inline-block;
+    margin-right: 16px;
+    color: #57606a;
+}
+
+.legacy-pulls-page #js-issues-toolbar .states a.selected {
+    color: #24292f;
+    font-weight: bold;
+}
+
+.legacy-pulls-page .js-issue-row {
+    display: block;
+    border-top: 1px solid #d8dee4;
+}
+
+.legacy-pulls-page .js-issue-row:first-child {
+    border-top: 0;
+}
+
+.legacy-pulls-page .js-issue-row > .d-flex {
+    display: block !important;
+    position: relative;
+    min-height: 45px;
+    padding: 10px 10px 10px 36px;
+}
+
+.legacy-pulls-page .js-issue-row > .d-flex > div:first-child {
+    position: absolute;
+    top: 12px;
+    left: 10px;
+    padding: 0 !important;
+}
+
+.legacy-pulls-page .js-issue-row .flex-auto {
+    display: block !important;
+    padding: 0 !important;
+}
+
+.legacy-pulls-page .js-issue-row .markdown-title {
+    display: inline;
+    font-size: 16px;
+    font-weight: bold;
+    line-height: 1.3;
+}
+
+.legacy-pulls-page .js-issue-row .opened-by {
+    display: block;
+    margin-top: 4px;
+    color: #57606a;
+    font-size: 12px;
+    line-height: 1.4;
+    word-break: normal;
+}
+
+/* Pull request conversation */
+.legacy-pr-detail header[data-component="SplitPageLayout.Header"] {
+    display: block !important;
+    padding: 14px 10px 0 !important;
+}
+
+.legacy-pr-detail header[data-component="SplitPageLayout.Header"] [data-component="PageHeader"] {
+    display: block !important;
+}
+
+.legacy-pr-detail header[data-component="SplitPageLayout.Header"] h1 {
+    display: block;
+    margin: 0 0 10px;
+    font-size: 24px !important;
+    line-height: 1.25;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+}
+
+.legacy-pr-detail header[data-component="SplitPageLayout.Header"] [data-component="PageHeader.Description"] {
+    display: block !important;
+    color: #57606a;
+    font-size: 13px;
+    line-height: 1.5;
+}
+
+.legacy-pr-detail header[data-component="SplitPageLayout.Header"] [data-status="pullOpened"] {
+    display: inline-block;
+    margin: 0 0 8px;
+    padding: 4px 9px;
+    border-radius: 20px;
+    background: #1f883d;
+    color: #fff;
+    font-weight: bold;
+}
+
+.legacy-pr-detail header[data-component="SplitPageLayout.Header"] [data-component="PageHeader.Description"] .d-flex,
+.legacy-pr-detail header[data-component="SplitPageLayout.Header"] [class*="summaryContainer"] {
+    display: block !important;
+    overflow: visible !important;
+}
+
+.legacy-pr-detail [class*="use-sticky-header-module__stickyHeader"] {
+    display: none !important;
+}
+
+.legacy-pr-detail header[data-component="SplitPageLayout.Header"] > div > [data-component="PageHeader"] {
+    display: none !important;
+}
+
+.legacy-pr-detail header[data-component="SplitPageLayout.Header"] h1 > span + span {
+    margin-left: 6px;
+}
+
+.legacy-pr-detail header[data-component="SplitPageLayout.Header"] [class*="summaryContainer"] a[class*="branchName"] {
+    display: inline-block;
+    margin: 2px 4px;
+}
+
+.legacy-pr-detail [data-component="PH_Navigation"] {
+    display: block;
+    margin: 12px -10px 0;
+    overflow-x: auto;
+    white-space: nowrap;
+    border-top: 1px solid #d0d7de;
+    border-bottom: 1px solid #d0d7de;
+}
+
+.legacy-pr-detail nav[aria-label="Pull request navigation tabs"],
+.legacy-pr-detail nav[aria-label="Pull request navigation tabs"] [role="tablist"] {
+    display: block !important;
+    min-width: 455px;
+}
+
+.legacy-pr-detail nav[aria-label="Pull request navigation tabs"] a {
+    display: inline-block;
+    box-sizing: border-box;
+    padding: 10px 12px;
+    color: #24292f;
+}
+
+.legacy-pr-detail nav[aria-label="Pull request navigation tabs"] a[aria-selected="true"] {
+    border-bottom: 3px solid #fd8c73;
+    font-weight: bold;
+}
+
+.legacy-pr-detail [class*="Conversations-module__layout"],
+.legacy-pr-detail [class*="Conversations-module__wrapper"],
+.legacy-pr-detail [class*="Conversations-module__content"],
+.legacy-pr-detail [data-component="SplitPageLayout.Content"] {
+    display: block !important;
+    width: auto !important;
+    max-width: none !important;
+    padding: 0 !important;
+}
+
+.legacy-pr-detail [class*="Conversations-module__pane"],
+.legacy-pr-detail #pr-conversation-sidebar {
+    display: none !important;
+}
+
+.legacy-pr-detail .pull-discussion-timeline {
+    display: block;
+    max-width: 900px;
+    margin: 0 auto;
+    padding: 14px 10px;
+}
+
+.legacy-pr-detail .js-discussion,
+.legacy-pr-detail rails-partial {
+    display: block !important;
+    margin: 0 !important;
+    padding: 0 !important;
+}
+
+.legacy-pr-detail .TimelineItem {
+    display: block !important;
+    position: static !important;
+    margin: 0 0 14px !important;
+    padding: 0 !important;
+}
+
+.legacy-pr-detail .TimelineItem-avatar {
+    display: none !important;
+}
+
+.legacy-pr-detail .timeline-comment-group,
+.legacy-pr-detail .TimelineItem-body {
+    display: block !important;
+    box-sizing: border-box;
+    width: auto !important;
+    max-width: none !important;
+    margin: 0 !important;
+}
+
+.legacy-pr-detail .timeline-comment {
+    display: block;
+    overflow: hidden;
+    border: 1px solid #d0d7de;
+    border-radius: 6px;
+    background: #fff;
+}
+
+.legacy-pr-detail .timeline-comment-header {
+    display: block !important;
+    padding: 8px 10px;
+    border-bottom: 1px solid #d0d7de;
+    background: #f6f8fa;
+    color: #57606a;
+    font-size: 13px;
+}
+
+.legacy-pr-detail .timeline-comment-header h3,
+.legacy-pr-detail .timeline-comment-header h3 > div {
+    display: block !important;
+    margin: 0;
+    padding: 0 !important;
+}
+
+.legacy-pr-detail .timeline-comment-actions,
+.legacy-pr-detail .timeline-comment-header > div:last-child,
+.legacy-pr-detail .js-comment-edit-history,
+.legacy-pr-detail .previewable-comment-form,
+.legacy-pr-detail #issue-comment-box {
+    display: none !important;
+}
+
+.legacy-pr-detail .comment-body,
+.legacy-pr-detail .timeline-comment .markdown-body {
+    display: block !important;
+    box-sizing: border-box;
+    width: 100% !important;
+    padding: 12px !important;
+    font-size: 15px;
+    line-height: 1.55;
+    overflow-wrap: break-word;
+    word-wrap: break-word;
+}
+
+.legacy-pr-detail .comment-body table,
+.legacy-pr-detail .comment-body tbody,
+.legacy-pr-detail .comment-body tr,
+.legacy-pr-detail .comment-body td {
+    display: block !important;
+    width: auto !important;
+}
+
+.legacy-pr-detail .comment-body pre,
+.legacy-pr-detail .comment-body code {
+    white-space: pre-wrap;
+    word-break: break-word;
+    word-wrap: break-word;
+}
+
+.legacy-pr-detail .js-timeline-item > .TimelineItem:not(.js-comment-container),
+.legacy-pr-detail .js-timeline-item > div > .TimelineItem {
+    display: block !important;
+    position: relative !important;
+    box-sizing: border-box;
+    margin: 0 0 12px !important;
+    padding: 8px 10px 8px 34px !important;
+    border-left: 3px solid #d0d7de;
+    color: #57606a;
+    font-size: 13px;
+    line-height: 1.45;
+}
+
+.legacy-pr-detail .js-timeline-item > .TimelineItem:not(.js-comment-container) > .TimelineItem-badge,
+.legacy-pr-detail .js-timeline-item > div > .TimelineItem > .TimelineItem-badge {
+    display: block;
+    position: absolute;
+    top: 9px;
+    left: 8px;
+}
+
+.legacy-pr-detail .js-timeline-item > .TimelineItem:not(.js-comment-container) > .TimelineItem-body,
+.legacy-pr-detail .js-timeline-item > div > .TimelineItem > .TimelineItem-body {
+    display: block !important;
+    margin: 0 !important;
+}
+
+.legacy-pr-detail [id^="commits-pushed-"] + div {
+    margin: -5px 0 14px 24px;
+    overflow: hidden;
+    border: 1px solid #d0d7de;
+    border-radius: 5px;
+}
+
+.legacy-pr-detail [id^="commits-pushed-"] + div .TimelineItem {
+    display: block !important;
+    position: relative !important;
+    margin: 0 !important;
+    padding: 8px 70px 8px 10px !important;
+    border-top: 1px solid #d0d7de;
+    font-size: 13px;
+}
+
+.legacy-pr-detail [id^="commits-pushed-"] + div .TimelineItem:first-child {
+    border-top: 0;
+}
+
+.legacy-pr-detail [id^="commits-pushed-"] + div .TimelineItem-badge,
+.legacy-pr-detail [id^="commits-pushed-"] + div .AvatarStack,
+.legacy-pr-detail [id^="commits-pushed-"] + div batch-deferred-content,
+.legacy-pr-detail [id^="commits-pushed-"] + div .commit-build-statuses {
+    display: none !important;
+}
+
+.legacy-pr-detail [id^="commits-pushed-"] + div .d-flex,
+.legacy-pr-detail [id^="commits-pushed-"] + div .TimelineItem-body {
+    display: block !important;
+}
+
+.legacy-pr-detail [id^="commits-pushed-"] + div .pr-1.flex-auto {
+    display: block;
+    padding: 0 !important;
+}
+
+.legacy-pr-detail [id^="commits-pushed-"] + div .text-right {
+    position: absolute;
+    top: 8px;
+    right: 10px;
+}
+
+.legacy-pr-detail .js-timeline-item > .TimelineItem:not(.js-comment-container) .mt-2 {
+    display: block !important;
+    margin-top: 6px;
+}
+
 .footer {
     margin-top: 24px;
     padding: 16px 10px !important;
@@ -1186,6 +1604,16 @@ section[aria-label="All issues"] [class*="MetadataContainer-module"] {
 
 .footer cookie-consent-link {
     display: none !important;
+}
+
+.blankslate {
+    padding: 15px;
+}
+
+.paginate-container {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    text-align: center;
 }
 
 @media only screen and (max-width: 600px) {

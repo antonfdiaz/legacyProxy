@@ -8,6 +8,8 @@
     )
     var issueSearch = document.getElementById("repository-input")
     var issueViewer = document.querySelector('[data-testid="issue-viewer-container"]')
+    var pullSearch = document.getElementById("js-issues-search")
+    var pullTimeline = document.querySelector(".pull-discussion-timeline")
     var sibling
     var i
 
@@ -105,5 +107,14 @@
 
     if (issueViewer) {
         document.body.className += " legacy-issue-detail"
+    }
+
+    if (pullSearch && pullSearch.form &&
+        /\/pulls(?:\?|$)/.test(pullSearch.form.action)) {
+        document.body.className += " legacy-pulls-page"
+    }
+
+    if (pullTimeline) {
+        document.body.className += " legacy-pr-detail"
     }
 }())
