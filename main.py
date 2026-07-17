@@ -179,6 +179,9 @@ if __name__ == "__main__":
             import pystray._darwin as _pystray_darwin
             import AppKit,Foundation
 
+            #hide dock icon, menu bar only
+            AppKit.NSApplication.sharedApplication().setActivationPolicy_(AppKit.NSApplicationActivationPolicyAccessory)
+
             def _retina_assert_image(self):
                 #we need to resize the icon for retina displays, otherwise it will look pixelated
                 thickness = self._status_bar.thickness()
