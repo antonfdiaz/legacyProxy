@@ -32,7 +32,7 @@ class GoogleScraper:
         self.playwright = await async_playwright().start()
         launch_options = {
             "user_data_dir": str(PROFILE_PATH),
-            "headless": False,
+            "headless": True,
             "no_viewport": True,
             "chromium_sandbox": True,
         }
