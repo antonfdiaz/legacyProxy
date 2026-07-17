@@ -127,6 +127,62 @@ button,.Button,[data-component="Button"] {
     display: none !important;
 }
 
+.HeaderMenu-link {
+    color: #1f2328;
+    white-space: nowrap;
+    border-radius: 6px;
+    background: 0 0;
+}
+
+.HeaderMenu-link:hover {
+    color: #1f2328;
+}
+
+.HeaderMenu-button {
+    height: 32px;
+    font-size: .875rem;
+    justify-content: center;
+    align-items: center;
+    line-height: 1;
+    padding-right: .75rem !important;
+    padding-left: .75rem !important;
+    font-weight: 500;
+}
+
+.rounded-2 {
+    border-radius: 6px !important;
+}
+
+.border {
+    border: 1px solid #d1d9e0 !important;
+}
+
+.color-fg-inherit,.fgColor-inherit {
+    color: inherit !important;
+}
+
+.f5 {
+    font-size: 14px !important;
+}
+
+.px-2 {
+    padding-right: 8px !important;
+    padding-left: 8px !important;
+}
+
+.py-1 {
+    padding-top: 4px !important;
+    padding-bottom: 4px !important;
+}
+
+.no-underline {
+    text-decoration: none !important;
+}
+
+.d-inline-flex {
+    display: inline-flex !important;
+}
+
 .HeaderMktg a[aria-label="Homepage"] {
     display: inline-block;
 }
