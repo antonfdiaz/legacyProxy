@@ -17,7 +17,7 @@ Rewrites Wikimedia image URLs through the proxy and removes the unsupported `src
 Wikipedia works correctly on every version I've tested.
 
 ### GitHub
-Injects a compatible stylesheet into GitHub pages. Repo headers, navigation, file listings, README files and sidebars use a simple single-column layout that doesn't depend on modern CSS grid or flexbox support.  
+Injects custom CSS and JS into GitHub pages. Repo headers, navigation, file listings, README files and sidebars use a simple single-column layout that doesn't depend on modern CSS grid or flexbox support.  
 GitHub works better on iOS 6+.
 
 ## Usage
