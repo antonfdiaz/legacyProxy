@@ -8,8 +8,15 @@ from src.config import Config
 import asyncio
 from pathlib import Path
 from urllib.parse import parse_qs,urlparse
+from PIL import Image
+import PIL
+import pystray
+from threading import Thread
+from src.utils import set_config_value
+import os
+import sys
 
-VERSION = "0.6.0"
+VERSION = "0.7.0"
 
 GOOGLE_HOSTS = {"www.google.com","www.google.es","www.google.fr","www.google.de","www.google.co.uk","www.google.ca","www.google.com.au"}
 
@@ -164,6 +171,62 @@ async def start_proxy(host,port):
         
 if __name__ == "__main__":
     try:
-        asyncio.run(start_proxy(config.general.host,config.general.port))
+        image_path = Path(__file__).parent/"images"/"tray-icon.png"
+        image = Image.open(image_path).convert("RGBA")
+        
+        if sys.platform == "darwin":
+            import io
+            import pystray._darwin as _pystray_darwin
+            import AppKit,Foundation
+
+            def _retina_assert_image(self):
+                #we need to resize the icon for retina displays, otherwise it will look pixelated
+                thickness = self._status_bar.thickness()
+                
+                scale = AppKit.NSScreen.mainScreen().backingScaleFactor()
+                px = int(thickness*scale)
+                size = (px,px)
+
+                if self._icon_image and self._icon_image.size() == (int(thickness),int(thickness)):
+                    return
+
+                source = PIL.Image.new("RGBA",size)
+                source.paste(self._icon.resize(size,Image.LANCZOS))
+
+                b = io.BytesIO()
+                source.save(b,"png")
+                data = Foundation.NSData(b.getvalue())
+
+                ns_image = AppKit.NSImage.alloc().initWithData_(data)
+                
+                ns_image.setSize_(AppKit.NSSize(thickness,thickness))
+                self._icon_image = ns_image
+                self._status_item.button().setImage_(self._icon_image)
+
+            _pystray_darwin.Icon._assert_image = _retina_assert_image #hook for retina support
+            image = Image.open(image_path).convert("RGBA")
+        else:
+            image = image.resize((64,64),getattr(Image,"Resampling",Image).LANCZOS)
+
+        thread = Thread(target=lambda: asyncio.run(start_proxy(config.general.host,config.general.port)))
+        thread.start()
+        
+        general_menu = pystray.Menu(
+            pystray.MenuItem("Host...",lambda: set_config_value("general","host",config)),
+            pystray.MenuItem("Port...",lambda: set_config_value("general","port",config)),
+            pystray.MenuItem("Chrome Headless",lambda: set_config_value("general","chrome_headless",config),checked=lambda item: config.general.chrome_headless),
+            pystray.MenuItem("Chrome Path...",lambda: set_config_value("general","chrome_path",config)),
+        )
+        
+        def on_exit(icon,item):
+            icon.stop()
+            os._exit(0)
+
+        icon = pystray.Icon("legacyProxy",image,"legacyProxy",menu=pystray.Menu(
+            pystray.MenuItem(f"legacyProxy {VERSION}",lambda: None,enabled=False),
+            pystray.MenuItem("General",general_menu),
+            pystray.MenuItem("Exit",on_exit)
+        ))
+        icon.run()
     except KeyboardInterrupt:
         pass
