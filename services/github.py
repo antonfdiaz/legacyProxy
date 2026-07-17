@@ -32,7 +32,7 @@ def issue_timeline(html):
         return html
 
     items = (
-        issue.get("frontTimelineItems",{}).get("edges",[]) +
+        issue.get("frontTimelineItems",{}).get("edges",[])+
         issue.get("backTimelineItems",{}).get("edges",[])
     )
     timeline = []
@@ -75,7 +75,6 @@ def issue_timeline(html):
         flags=re.DOTALL,
     )
 
-
 class GitHubProxy:
     def response(self,flow):
         content_type = flow.response.headers.get("Content-Type","")
@@ -85,7 +84,8 @@ class GitHubProxy:
         html = flow.response.text
         if 'id="legacy-proxy-github"' in html:
             return True
-        if 'id="js-repo-pjax-container"' not in html:
+        if ('id="js-repo-pjax-container"' not in html and
+                'js-profile-editable-area' not in html):
             return False
 
         html = re.sub(
