@@ -15,7 +15,13 @@ def set_config_value(section,key,config):
     if isinstance(current_value, bool):
         new_value = not current_value
     else:
-        title = f"Set {section}.{key}".replace('"','\\"')
+        LABELS = {
+            "general.host": "Host",
+            "general.port": "Port",
+            "general.chrome_path": "Chrome Path",
+        }
+        
+        title = f"Set {LABELS.get(f'{section}.{key}',f'{section}.{key}')}".replace('"','\\"')
         prompt = f"Current value: {current_value}\nEnter new value:".replace('"','\\"')
         default = str(current_value).replace('"','\\"')
         
