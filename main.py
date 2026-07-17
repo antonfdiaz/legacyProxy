@@ -220,6 +220,13 @@ if __name__ == "__main__":
             pystray.MenuItem("Chrome Headless",lambda: set_config_value("general","chrome_headless",config),checked=lambda item: config.general.chrome_headless),
             pystray.MenuItem("Chrome Path...",lambda: set_config_value("general","chrome_path",config)),
         )
+
+        services_menu = pystray.Menu(
+            pystray.MenuItem("Google",lambda: set_config_value("services","google",config),checked=lambda item: config.services.google),
+            pystray.MenuItem("Reddit",lambda: set_config_value("services","reddit",config),checked=lambda item: config.services.reddit),
+            pystray.MenuItem("Wikipedia",lambda: set_config_value("services","wikipedia",config),checked=lambda item: config.services.wikipedia),
+            pystray.MenuItem("GitHub",lambda: set_config_value("services","github",config),checked=lambda item: config.services.github),
+        )
         
         def on_exit(icon,item):
             icon.stop()
@@ -228,6 +235,7 @@ if __name__ == "__main__":
         icon = pystray.Icon("legacyProxy",image,"legacyProxy",menu=pystray.Menu(
             pystray.MenuItem(f"legacyProxy {VERSION}",lambda: None,enabled=False),
             pystray.MenuItem("General",general_menu),
+            pystray.MenuItem("Services",services_menu),
             pystray.MenuItem("Exit",on_exit)
         ))
         icon.run()
