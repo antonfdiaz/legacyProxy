@@ -106,6 +106,134 @@ button,.Button,[data-component="Button"] {
     text-align: center;
 }
 
+.btn {
+    display: inline-block;
+    position: relative;
+    padding: 5px 16px !important;
+    border: 1px solid #d0d7de !important;
+    border-radius: 6px !important;
+    background: #f6f8fa !important;
+    color: #24292f !important;
+    font-size: 14px;
+    font-weight: 500;
+    line-height: 20px;
+    text-align: center;
+    vertical-align: middle;
+    white-space: nowrap;
+    cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+    -webkit-user-select: none;
+    user-select: none;
+}
+
+.btn-primary {
+    border-color: #1a7f37 !important;
+    background: #1f883d !important;
+    color: #fff !important;
+}
+
+.btn-primary:active,
+.btn-primary:hover {
+    border-color: #187733 !important;
+    background: #1a7f37 !important;
+    text-decoration: none;
+}
+
+.btn-block {
+    display: block;
+    width: 100%;
+}
+
+.js-sign-in-button {
+    height: 40px;
+    margin-top: 16px;
+}
+
+.form-control, .form-select {
+    color: #1f2328;
+    vertical-align: middle;
+    background-color: #fff;
+    border: 1px solid #d1d9e0;
+    border-radius: 6px;
+    padding: 5px 12px;
+    font-size: 14px;
+    line-height: 20px;
+}
+
+.authentication {
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizelegibility;
+    -moz-text-size-adjust: 100%;
+    text-size-adjust: 100%;
+    padding: 1rem;
+    gap: 1rem;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    display: flex;
+}
+
+.authentication-header {
+    text-align: center;
+}
+
+.footer-session-authentication {
+    background-color: #f6f8fa;
+    width: 100%;
+    margin-top: auto;
+}
+
+.footer-session-authentication-links {
+    padding: 1rem 0;
+    text-align: center;
+    font-size: .75rem;
+    justify-content: center;
+    list-style: none;
+    display: flex;
+}
+
+.footer-session-authentication-links li {
+  text-decoration: none;
+}
+
+.flash {
+    padding: 1rem;
+    margin: 0 auto;
+    margin-block: .25rem;
+    font-size: .875rem;
+    border-style: solid;
+    border-width: .0625rem;
+    border-radius: 6px;
+}
+
+.session-authentication .flash {
+    text-align: center;
+}
+
+.flash-error:not(.Banner) {
+    color: #1f2328;
+    background-color: #ffebe9;
+    border: 1px solid #ff818266;
+}
+
+.flash-close:not(.Banner-close) {
+    float: right;
+    margin-top: calc(.25rem*-1);
+    text-align: center;
+    cursor: pointer;
+    border: none;
+    background: none;
+}
+
+.html-auth .flash .flash-close {
+    height: 30px;
+}
+
+.flash-error:not(.Banner) .octicon {
+    color: #d1242f;
+}
+
 /*github's logged-out navigation is too complex for old ios webkit. */
 .HeaderMktg {
     position: static !important;

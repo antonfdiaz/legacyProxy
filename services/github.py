@@ -4,6 +4,14 @@ from html import escape
 from pathlib import Path
 
 GITHUB_HOSTS = {"github.com","www.github.com"}
+GITHUB_AUTH_PATHS = (
+    "/login",
+    "/session",
+    "/sessions",
+    "/signup",
+    "/password_reset",
+    "/two-factor-authentication",
+)
 GITHUB_VIEWPORT = '<meta name="viewport" content="width=device-width,initial-scale=1.0">'
 GITHUB_CSS = f"""
 <style id="legacy-proxy-github">
@@ -84,8 +92,13 @@ class GitHubProxy:
         html = flow.response.text
         if 'id="legacy-proxy-github"' in html:
             return True
+        path = flow.request.path.split("?",1)[0]
+        auth_page = any(
+            path == auth_path or path.startswith(auth_path+"/")
+            for auth_path in GITHUB_AUTH_PATHS
+        )
         if ('id="js-repo-pjax-container"' not in html and
-                'js-profile-editable-area' not in html):
+                'js-profile-editable-area' not in html and not auth_page):
             return False
 
         html = re.sub(
