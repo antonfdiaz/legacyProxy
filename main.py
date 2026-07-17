@@ -4,6 +4,7 @@ from services.github import GitHubProxy
 from services.google import GoogleCaptchaError,GoogleScraper
 from services.reddit import RedditProxy
 from services.wikipedia import WikipediaProxy
+from services.config import Config
 import asyncio
 from pathlib import Path
 from urllib.parse import parse_qs,urlparse
@@ -12,6 +13,8 @@ VERSION = "0.5.9"
 
 GOOGLE_HOSTS = {"www.google.com","www.google.es","www.google.fr","www.google.de","www.google.co.uk","www.google.ca","www.google.com.au"}
 
+config = Config()
+
 class InterceptAddon:
     def __init__(self):
         #initialize proxy services
@@ -19,6 +22,8 @@ class InterceptAddon:
         self.google = GoogleScraper()
         self.reddit = RedditProxy()
         self.wikipedia = WikipediaProxy()
+
+        self.config = config or Config()
 
     async def request(self,flow):
         host = flow.request.pretty_host
@@ -157,6 +162,6 @@ async def start_proxy(host,port):
         
 if __name__ == "__main__":
     try:
-        asyncio.run(start_proxy("0.0.0.0",8080))
+        asyncio.run(start_proxy(config.general.host,config.general.port))
     except KeyboardInterrupt:
         pass
