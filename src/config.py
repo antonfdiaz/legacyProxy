@@ -7,6 +7,7 @@ class GeneralConfig:
     host: str
     port: int
     chrome_headless: bool
+    chrome_path: str
     
 @dataclass
 class ServicesConfig:
@@ -24,7 +25,8 @@ class Config:
         self.general = GeneralConfig(
             host=general_config.get("host","0.0.0.0"),
             port=general_config.get("port",8080),
-            chrome_headless=general_config.get("chrome_headless",True)
+            chrome_headless=general_config.get("chrome_headless",True),
+            chrome_path=general_config.get("chrome_path","/Applications/Google Chrome.app")
         )
 
         self.services = ServicesConfig(
@@ -50,6 +52,7 @@ class Config:
                 "host": "0.0.0.0",
                 "port": 8080,
                 "chrome_headless": True,
+                "chrome_path": "/Applications/Google Chrome.app"
             },
             "services": {
                 "google": True,

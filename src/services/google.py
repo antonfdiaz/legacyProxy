@@ -15,7 +15,7 @@ class GoogleCaptchaError(RuntimeError):
     pass
 
 class GoogleScraper:
-    def __init__(self):
+    def __init__(self,chrome_headless):
         self.playwright = None
         self.context = None
         self.page = None
@@ -24,6 +24,7 @@ class GoogleScraper:
         self.image_cache = {}
         self.html_template = TEMPLATE_PATH.read_text(encoding="utf-8")
         self.image_home = IMAGE_TEMPLATE_PATH.read_text(encoding="utf-8")
+        self.chrome_headless = chrome_headless
 
     async def start(self):
         if self.context:
@@ -32,7 +33,7 @@ class GoogleScraper:
         self.playwright = await async_playwright().start()
         launch_options = {
             "user_data_dir": str(PROFILE_PATH),
-            "headless": True,
+            "headless": self.chrome_headless,
             "no_viewport": True,
             "chromium_sandbox": True,
         }
