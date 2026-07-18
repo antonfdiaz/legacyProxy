@@ -22,11 +22,10 @@ GitHub works better on iOS 6+.
 
 ## Usage
 ### How to run
-- Make a venv inside the proxy folder: `python3 -m venv .venv`
+- Make a venv inside the proxy folder: `python -m venv .venv`
 - Activate it: `source .venv/bin/activate` (`.venv/Scripts/activate` on Windows)
 - Install libraries: `pip install -r requirements.txt`
-- Start the proxy: `nohup python main.py > /dev/null 2>&1 &`
-- You can close the terminal now.
+- Start the proxy: `python main.py`
 
 ### Configure Device
 Go to Settings -> Wi-Fi -> The button next to the selected network -> Go to the bottom -> HTTP Proxy:
