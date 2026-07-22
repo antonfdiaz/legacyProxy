@@ -39,6 +39,7 @@ That's it! You can now use Google, Reddit, GitHub and more on your old iPhone!
 ## TODO
 To-do for website fixing. I will NOT be fixing websites that already work with an app, such as eBay, YouTube, Instagram, etc.
 - [x] Google Search
+  - [x] Modern homepage
   - [x] Web search
   - [x] Image search
   - [ ] Video search
@@ -54,4 +55,5 @@ To-do for website fixing. I will NOT be fixing websites that already work with a
   - [x] Issue pages
   - [x] PRs page
   - [x] User page
+  - [ ] Home page
   - [ ] Login
