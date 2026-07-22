@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Google</title>
+    <link rel="stylesheet" href="/css/google_index.css">
+</head>
+<body>
+    <div id="options-menu">
+        <div class="menu-heading">
+            <h3>GoogleProxy</h3>
+            <button id="close-menu" type="button" aria-label="Cerrar menú">&#215;</button>
+        </div>
+        <a href="https://www.google.com/">Home</a>
+        <a href="https://www.google.com/imghp">Images</a>
+        <a href="https://www.google.com/shopping">Shopping</a>
+        <a href="https://www.google.com/videohp">Videos</a>
+    </div>
+
+    <div class="page">
+        <header class="top-bar">
+            <nav class="mobile-nav" aria-label="Navegación principal">
+                <button class="menu-icon" type="button" aria-label="Abrir menú" aria-controls="options-menu" aria-expanded="false">
+                    <span class="hamburger-lines" aria-hidden="true"><i></i><i></i><i></i></span>
+                </button>
+                <a class="mobile-tab active" href="/">All</a>
+                <a class="mobile-tab" href="/imghp">Images</a>
+            </nav>
+            <span class="top-actions">
+                <a class="desktop-link" href="https://mail.google.com/">Gmail</a>
+                <a class="desktop-link" href="/imghp">Images</a>
+                <a class="sign-in" href="https://accounts.google.com/">Sign in</a>
+            </span>
+        </header>
+
+        <main class="main">
+            <img class="google-logo" src="/images/google.png" alt="Google">
+            <form class="search-form" action="/search" method="get">
+                <div class="search-box">
+                    <span class="search-icon" aria-hidden="true"></span>
+                    <input class="search-input" type="text" name="q" aria-label="Buscar" autocomplete="off">
+                </div>
+            </form>
+            <p class="language">GoogleProxy - Made by t0nchi7</p>
+        </main>
+
+        <footer class="footer">
+            <div class="top-text">legacyProxy 0.7.2</div>
+            <div class="footer-links">
+                <a href="https://about.google/">About Google</a>
+                <a href="https://policies.google.com/privacy">Privacy</a>
+                <a href="https://policies.google.com/terms">Terms</a>
+            </div>
+        </footer>
+    </div>
+    <script src="/js/google.js"></script>
+</body>
+</html>

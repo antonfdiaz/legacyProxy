@@ -1,0 +1,380 @@
+* {
+    -webkit-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+html,body {
+    height: 100%;
+    margin: 0;
+}
+
+body {
+    color: #202124;
+    background: #fff;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+}
+
+header,main,nav,footer {
+    display: block;
+}
+
+a {
+    color: #202124;
+    text-decoration: none;
+}
+
+.page {
+    min-height: 100%;
+    position: relative;
+    padding-bottom: 156px;
+}
+
+.top-bar {
+    height: 80px;
+    padding: 0 8px;
+    border-top: 1px solid #dadce0;
+    white-space: nowrap;
+}
+
+.mobile-nav,.menu-icon,.mobile-tab,.sign-in {
+    display: inline-block;
+    vertical-align: top;
+}
+
+.mobile-nav,.menu-icon,.mobile-tab {
+    height: 79px;
+}
+
+.menu-icon,.mobile-tab {
+    line-height: 60px;
+}
+
+.menu-icon {
+    margin-top: 0px;
+    width: 34px;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: #5f6368;
+    cursor: pointer;
+    text-align: left;
+    -webkit-appearance: none;
+}
+
+.hamburger-lines {
+    margin-bottom: 15px;
+    display: block;
+    width: 20px;
+    height: 16px;
+}
+
+.hamburger-lines i {
+    display: block;
+    width: 20px;
+    height: 3px;
+    margin-bottom: 3px;
+    border-radius: 1px;
+    background: #5f6368;
+}
+
+.mobile-tab {
+    position: relative;
+    padding: 0 6px;
+    height: 45px;
+    color: #5f6368;
+    font-size: 12px;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+.mobile-tab.active {
+    color: #000;
+}
+
+.mobile-tab.active:after {
+    content: "";
+    height: 3px;
+    position: absolute;
+    right: 5px;
+    bottom: 0;
+    left: 5px;
+    background: #000;
+}
+
+.top-actions {
+    float: right;
+    padding-top: 14px;
+}
+
+.desktop-link {
+    display: none;
+}
+
+.sign-in {
+    padding: 10px 11px;
+    border-radius: 21px;
+    color: #fff;
+    background: #0b57d0;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+#options-menu {
+    width: 200px;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    left: -200px;
+    z-index: 1000;
+    border-right: 1px solid #dfe1e5;
+    background: #fff;
+    -webkit-box-shadow: 1px 0 2px rgba(60, 64, 67, .15);
+    box-shadow: 1px 0 2px rgba(60, 64, 67, .15);
+    -webkit-transition: left .3s ease-in-out;
+    transition: left .3s ease-in-out;
+}
+
+#options-menu a {
+    display: block;
+    padding: 12px 16px;
+    color: #202124;
+    font-size: 14px;
+}
+
+.menu-heading {
+    height: 48px;
+    position: relative;
+    border-bottom: 1px solid #f1f3f4;
+}
+
+#options-menu h3 {
+    margin: 0;
+    padding: 14px 44px 12px 16px;
+    font-size: 16px;
+    font-weight: normal;
+}
+
+#close-menu {
+    width: 40px;
+    height: 47px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: #5f6368;
+    cursor: pointer;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 24px;
+    line-height: 47px;
+    -webkit-appearance: none;
+}
+
+.main {
+    width: 100%;
+    padding: 120px 15px 30px;
+    text-align: center;
+}
+
+.google-logo {
+    display: block;
+    width: 184px;
+    height: auto;
+    margin: 0 auto 40px;
+}
+
+.search-form {
+    width: 100%;
+    max-width: 584px;
+    margin: 0 auto;
+}
+
+.search-box {
+    height: 48px;
+    position: relative;
+    border: 1px solid #dfe1e5;
+    border-radius: 25px;
+    background: #fff;
+}
+
+.search-icon {
+    width: 15px;
+    height: 15px;
+    position: absolute;
+    top: 14px;
+    left: 17px;
+    border: 2px solid #9aa0a6;
+    border-radius: 50%;
+}
+
+.search-icon:after {
+    content: "";
+    width: 7px;
+    height: 2px;
+    position: absolute;
+    right: -6px;
+    bottom: -3px;
+    background: #9aa0a6;
+    -webkit-transform: rotate(45deg);
+    transform: rotate(45deg);
+}
+
+.search-input {
+    width: 100%;
+    height: 46px;
+    margin: 0;
+    padding: 0 18px 0 50px;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: #202124;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 16px;
+    line-height: 46px;
+    -webkit-appearance: none;
+}
+
+.language {
+    margin: 34px 0 0;
+    color: #4d5156;
+    font-size: 13px;
+    line-height: 24px;
+}
+
+.language a {
+    margin-left: 4px;
+    color: #1a0dab;
+}
+
+.footer {
+    width: 100%;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    color: #3c4043;
+    background: #f2f2f2;
+}
+
+.top-text {
+    text-align: center;
+    height: 48px;
+    padding: 15px 20px;
+    border-bottom: 1px solid #dadce0;
+    font-size: 15px;
+}
+
+.footer-links {
+    height: 55px;
+    padding: 14px 8px;
+    text-align: center;
+}
+
+.footer-links a {
+    display: inline-block;
+    margin: 8px 11px;
+    color: #3c4043;
+}
+
+@media screen and (max-height: 568px) {
+    .main {
+        padding-top: 38px;
+    }
+
+    .google-logo {
+        margin-bottom: 26px;
+    }
+
+    .language {
+        margin-top: 24px;
+    }
+}
+
+@media screen and (min-width: 681px) {
+    .page {
+        padding-bottom: 96px;
+    }
+
+    .top-bar {
+        height: 76px;
+        padding: 14px 18px;
+        border-top: 0;
+        text-align: right;
+    }
+
+    .mobile-nav {
+        display: none;
+    }
+
+    .top-actions {
+        float: none;
+        padding: 0;
+    }
+
+    .desktop-link {
+        display: inline-block;
+        margin-left: 20px;
+        font-size: 13px;
+        line-height: 40px;
+        vertical-align: top;
+    }
+
+    .sign-in {
+        margin-left: 24px;
+        padding: 11px 23px;
+        font-size: 15px;
+    }
+
+    .main {
+        padding: 62px 20px 40px;
+    }
+
+    .google-logo {
+        width: 272px;
+        margin-bottom: 34px;
+    }
+
+    .search-box {
+        height: 46px;
+        border-radius: 24px;
+    }
+
+    .search-box:hover {
+        border-color: transparent;
+        -webkit-box-shadow: 0 1px 6px rgba(32, 33, 36, .28);
+        box-shadow: 0 1px 6px rgba(32, 33, 36, .28);
+    }
+
+    .search-input {
+        height: 44px;
+        line-height: 44px;
+    }
+
+    .language {
+        margin-top: 29px;
+        font-size: 14px;
+    }
+
+    .country {
+        padding-right: 30px;
+        padding-left: 30px;
+    }
+
+    .footer-links {
+        height: 48px;
+        padding: 15px 30px;
+        text-align: left;
+    }
+
+    .footer-links a {
+        margin: 0 28px 0 0;
+    }
+
+    .desktop-footer {
+        display: inline-block !important;
+    }
+}

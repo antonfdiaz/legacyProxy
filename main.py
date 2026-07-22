@@ -16,9 +16,10 @@ from src.utils import set_config_value
 import os
 import sys
 
-VERSION = "0.7.0"
+VERSION = "0.7.2"
 
-GOOGLE_HOSTS = {"www.google.com","www.google.es","www.google.fr","www.google.de","www.google.co.uk","www.google.ca","www.google.com.au"}
+GOOGLE_HOSTS = {"google.com","www.google.com","www.google.es","www.google.fr","www.google.de","www.google.co.uk","www.google.ca","www.google.com.au"}
+BING_HOSTS = {"www.bing.com","bing.com"}
 
 config = Config()
 
@@ -38,6 +39,15 @@ class InterceptAddon:
         url = flow.request.url
         
         if self.google:
+            if host in GOOGLE_HOSTS and urlparse(url).path == "/":
+                #redirect to google_index.html
+                flow.response = http.Response.make(
+                    200,
+                    (Path(__file__).parent/"html"/"google_index.html").read_bytes(),
+                    {"Content-Type": "text/html; charset=utf-8"},
+                )
+                return
+            
             if host in GOOGLE_HOSTS and urlparse(url).path == "/legacy-proxy-google-image":
                 image_url = parse_qs(urlparse(url).query).get("url",[""])[0]
                 if urlparse(image_url).scheme in {"http","https"}:
@@ -68,6 +78,14 @@ class InterceptAddon:
                 flow.response = http.Response.make(
                     200,
                     (Path(__file__).parent/"css"/"google.css").read_bytes(),
+                    {"Content-Type": "text/css","Cache-Control": "public,max-age=86400"},
+                )
+                return
+
+            if host in GOOGLE_HOSTS and flow.request.path == "/css/google_index.css":
+                flow.response = http.Response.make(
+                    200,
+                    (Path(__file__).parent/"css"/"google_index.css").read_bytes(),
                     {"Content-Type": "text/css","Cache-Control": "public,max-age=86400"},
                 )
                 return
