@@ -1816,6 +1816,531 @@ section[aria-label="All issues"] [class*="MetadataContainer-module"] {
     margin-top: 6px;
 }
 
+/*user profile overview*/
+.legacy-user-profile main > .container-xl {
+    padding: 0 10px !important;
+}
+
+.legacy-user-profile main > .container-xl > .Layout,
+.legacy-user-profile main > .container-xl > .Layout > .Layout-sidebar,
+.legacy-user-profile main > .container-xl > .Layout > .Layout-main,
+.legacy-user-profile #user-profile-frame {
+    display: block !important;
+    position: static !important;
+    width: auto !important;
+    min-width: 0 !important;
+    max-width: none !important;
+    margin: 0 !important;
+}
+
+.legacy-user-profile .js-user-profile-sticky-bar,
+.legacy-user-profile .js-responsive-underlinenav-overflow,
+.legacy-user-profile .js-pinned-items-spinner,
+.legacy-user-profile .contribution-activity-spinner {
+    display: none !important;
+}
+
+.legacy-user-profile .legacy-profile-contributions > [data-hide-on-error] svg {
+    display: none !important;
+}
+
+.legacy-user-profile .legacy-profile-contributions > [data-hide-on-error]:after {
+    color: #57606a;
+    content: "Loading contributions...";
+}
+
+.legacy-user-profile .legacy-profile-contributions.legacy-fragment-error > [data-hide-on-error] {
+    display: none !important;
+}
+
+.legacy-user-profile .legacy-profile-contributions.legacy-fragment-error > [data-show-on-error] {
+    display: block !important;
+    padding: 16px 10px;
+    border: 1px solid #d0d7de;
+    border-radius: 6px;
+}
+
+.legacy-user-profile .h-card {
+    padding: 14px 0 12px;
+}
+
+.legacy-user-profile .js-profile-editable-replace > .clearfix:first-child {
+    min-height: 104px;
+}
+
+.legacy-user-profile .js-profile-editable-replace > .clearfix:first-child:after {
+    display: table;
+    clear: both;
+    content: "";
+}
+
+.legacy-user-profile a[itemprop="image"] {
+    display: block;
+    float: left;
+    width: 54px;
+    height: 54px;
+    margin-right: 14px;
+}
+
+.legacy-user-profile a[itemprop="image"] .avatar-user {
+    display: block;
+    width: 54px !important;
+    height: 54px !important;
+    border-radius: 50%;
+}
+
+.legacy-user-profile .vcard-names-container {
+    display: block;
+    min-width: 0;
+}
+
+.legacy-user-profile .vcard-names {
+    margin: 0;
+    line-height: 1.25;
+}
+
+.legacy-user-profile .vcard-fullname,
+.legacy-user-profile .vcard-username {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.legacy-user-profile .vcard-fullname {
+    font-size: 24px;
+}
+
+.legacy-user-profile .vcard-username {
+    color: #57606a;
+    font-size: 20px;
+    font-weight: normal;
+}
+
+.legacy-user-profile .user-following-container .btn-block {
+    margin: 10px 0 12px;
+}
+
+.legacy-user-profile .user-profile-bio {
+    margin: 0 0 10px;
+    font-size: 16px;
+}
+
+.legacy-user-profile .vcard-details {
+    margin: 8px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.legacy-user-profile .vcard-detail {
+    display: block !important;
+    margin: 5px 0;
+}
+
+.legacy-user-profile .vcard-detail svg {
+    width: 16px;
+    margin-right: 6px;
+    color: #57606a;
+}
+
+.legacy-user-profile .achievement-badge-sidebar {
+    width: 56px;
+    height: 56px;
+}
+
+.legacy-user-profile .h-card > .border-top {
+    margin-top: 13px;
+    padding-top: 13px;
+    border-top: 1px solid #d0d7de;
+}
+
+.legacy-user-profile .h-card > .border-top h2 {
+    margin: 0 0 8px;
+    font-size: 14px;
+}
+
+.legacy-user-profile .user-profile-nav {
+    margin: 0 -10px 14px !important;
+}
+
+.legacy-user-profile #user-profile-frame h2 {
+    margin: 0 0 8px;
+    font-size: 16px;
+    font-weight: normal;
+}
+
+.legacy-user-profile .js-pinned-items-reorder-list {
+    display: block !important;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.legacy-user-profile .pinned-item-list-item {
+    display: block !important;
+    width: auto !important;
+    margin: 0 0 10px !important;
+}
+
+.legacy-user-profile .pinned-item-list-item > .Box {
+    display: block !important;
+    width: auto !important;
+    min-height: 0 !important;
+    padding: 12px !important;
+}
+
+.legacy-user-profile .pinned-item-list-item-content,
+.legacy-user-profile .pinned-item-list-item-content > div {
+    display: block !important;
+    width: auto !important;
+}
+
+.legacy-user-profile .pinned-item-list-item-content p {
+    margin: 8px 0 0;
+    color: #57606a;
+    font-size: 12px;
+}
+
+.legacy-user-profile .pinned-item-list-item-content .text-bold {
+    font-weight: bold;
+}
+
+.legacy-user-profile .repo-language-color {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    margin-right: 4px;
+    border-radius: 50%;
+    vertical-align: -1px;
+}
+
+.legacy-user-profile .pinned-item-meta {
+    margin-left: 12px;
+    color: #57606a;
+}
+
+.legacy-user-profile .js-yearly-contributions {
+    margin-top: 18px;
+}
+
+.legacy-user-profile .graph-before-activity-overview {
+    margin-bottom: 20px;
+    padding: 10px 0;
+    border: 1px solid #d0d7de;
+    border-radius: 6px;
+}
+
+.legacy-user-profile .ContributionCalendar {
+    display: block !important;
+    width: 100% !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch;
+}
+
+.legacy-user-profile .ContributionCalendar > div {
+    min-width: 735px;
+    padding: 0 10px;
+}
+
+.legacy-user-profile .ContributionCalendar-grid {
+    border-collapse: separate;
+    color: #57606a;
+    font-size: 10px;
+}
+
+.legacy-user-profile .ContributionCalendar-day {
+    width: 10px !important;
+    min-width: 10px;
+    height: 10px;
+    padding: 0;
+    border-radius: 2px;
+    background: #ebedf0;
+}
+
+.legacy-user-profile .ContributionCalendar-day[data-level="1"] { background: #9be9a8; }
+.legacy-user-profile .ContributionCalendar-day[data-level="2"] { background: #40c463; }
+.legacy-user-profile .ContributionCalendar-day[data-level="3"] { background: #30a14e; }
+.legacy-user-profile .ContributionCalendar-day[data-level="4"] { background: #216e39; }
+
+.legacy-user-profile .ContributionCalendar-label {
+    padding-right: 4px;
+    color: #57606a;
+    font-size: 9px;
+}
+
+.legacy-user-profile .ContributionCalendar > .width-full {
+    min-width: 735px;
+    padding: 5px 10px 0;
+    color: #57606a;
+    font-size: 11px;
+}
+
+.legacy-user-profile .ContributionCalendar > .width-full:after {
+    display: table;
+    clear: both;
+    content: "";
+}
+
+.legacy-user-profile .ContributionCalendar > .width-full > .float-left {
+    float: left;
+}
+
+.legacy-user-profile .ContributionCalendar > .width-full > .float-right {
+    float: right;
+    white-space: nowrap;
+}
+
+.legacy-user-profile .ContributionCalendar > .width-full > .float-right > span,
+.legacy-user-profile .ContributionCalendar > .width-full > .float-right > div {
+    display: inline-block;
+    margin-right: 3px;
+    vertical-align: middle;
+}
+
+.legacy-user-profile #js-contribution-activity {
+    display: block !important;
+    width: auto !important;
+    min-width: 0 !important;
+}
+
+.legacy-user-profile #js-contribution-activity > h2 {
+    margin: 24px 0 14px !important;
+    font-size: 18px;
+}
+
+.legacy-user-profile .js-profile-timeline-year-list {
+    display: block !important;
+    float: none !important;
+    width: auto !important;
+    margin: 0 0 12px;
+    padding: 0 !important;
+}
+
+.legacy-user-profile .js-profile-timeline-year-list:empty {
+    display: none !important;
+}
+
+.legacy-user-profile .js-profile-timeline-year-list ol {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.legacy-user-profile .js-profile-timeline-year-list li {
+    display: inline-block;
+}
+
+.legacy-user-profile .js-profile-timeline-year-list a,
+.legacy-user-profile .js-profile-timeline-year-list summary {
+    display: inline-block;
+    margin: 0 6px 5px 0;
+    padding: 5px 9px;
+    border: 1px solid #d0d7de;
+    border-radius: 6px;
+    color: #24292f;
+}
+
+.legacy-user-profile .js-profile-timeline-year-list .selected {
+    border-color: #0969da;
+    background: #0969da;
+    color: #fff;
+}
+
+.legacy-user-profile .contribution-activity-listing,
+.legacy-user-profile .js-show-more-timeline-form {
+    display: block !important;
+    float: none !important;
+    width: auto !important;
+}
+
+.legacy-user-profile .contribution-activity-listing h3 {
+    position: relative;
+    height: 24px !important;
+    margin: 20px 0 8px !important;
+    padding: 0 !important;
+    border: 0 !important;
+    font-size: 14px;
+}
+
+.legacy-user-profile .contribution-activity-listing h3:after {
+    position: absolute;
+    top: 10px;
+    right: 0;
+    left: 0;
+    z-index: 0;
+    border-top: 1px solid #d0d7de;
+    content: "";
+}
+
+.legacy-user-profile .contribution-activity-listing h3 > span {
+    position: relative;
+    z-index: 1;
+    padding-right: 10px;
+    background: #fff;
+}
+
+.legacy-user-profile .contribution-activity-listing .TimelineItem {
+    display: block !important;
+    position: relative !important;
+    width: auto !important;
+    min-width: 0 !important;
+    margin: 0 0 0 18px !important;
+    padding: 10px 0 18px 38px !important;
+    border-left: 2px solid #d8dee4;
+}
+
+.legacy-user-profile .contribution-activity-listing .TimelineItem-badge {
+    display: block !important;
+    position: absolute;
+    top: 7px;
+    left: -18px;
+    width: 36px;
+    height: 36px;
+    padding: 9px;
+    border-radius: 50%;
+    background: #f6f8fa;
+    color: #57606a;
+    text-align: center;
+}
+
+.legacy-user-profile .contribution-activity-listing .TimelineItem-badge svg {
+    display: block;
+    width: 18px;
+    height: 18px;
+}
+
+.legacy-user-profile .contribution-activity-listing .TimelineItem-body,
+.legacy-user-profile .contribution-activity-listing details,
+.legacy-user-profile .contribution-activity-listing summary {
+    display: block !important;
+    width: auto !important;
+    margin: 0 !important;
+}
+
+.legacy-user-profile .contribution-activity-listing .TimelineItem-body {
+    position: relative;
+}
+
+.legacy-user-profile .contribution-activity-listing summary {
+    position: relative;
+    min-height: 30px;
+    padding: 0 !important;
+    padding-right: 34px !important;
+    border: 0 !important;
+    background: transparent !important;
+    color: #24292f !important;
+    font-size: 15px;
+    line-height: 1.4;
+    text-align: left;
+    cursor: pointer;
+    list-style: none;
+}
+
+.legacy-user-profile .contribution-activity-listing summary::-webkit-details-marker {
+    display: none;
+}
+
+.legacy-user-profile .contribution-activity-listing summary > span:first-child {
+    display: block !important;
+    float: none !important;
+}
+
+.legacy-user-profile .contribution-activity-listing .legacy-details-toggle {
+    display: block !important;
+    position: absolute;
+    top: 0;
+    right: 0;
+    z-index: 2;
+    width: 28px;
+    height: 28px;
+    min-height: 0 !important;
+    padding: 0 !important;
+    border: 0 !important;
+    border-radius: 4px !important;
+    background: transparent !important;
+    box-shadow: none !important;
+    color: #57606a;
+    cursor: pointer;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+.legacy-user-profile .contribution-activity-listing .legacy-details-toggle .Details-content--open,
+.legacy-user-profile .contribution-activity-listing .legacy-details-toggle .Details-content--closed {
+    display: block !important;
+    float: none !important;
+    width: 28px;
+    height: 28px;
+    padding: 6px;
+    box-sizing: border-box;
+    border-radius: 5px;
+    color: #57606a;
+}
+
+.legacy-user-profile .contribution-activity-listing .legacy-details-toggle:hover {
+    background: #eaeef2;
+}
+
+.legacy-user-profile .contribution-activity-listing .legacy-details-toggle svg {
+    display: block;
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+}
+
+.legacy-user-profile .contribution-activity-listing details[open] + .legacy-details-toggle .Details-content--closed,
+.legacy-user-profile .contribution-activity-listing details:not([open]) + .legacy-details-toggle .Details-content--open {
+    display: none !important;
+}
+
+.legacy-user-profile .contribution-activity-listing ul {
+    margin: 10px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.legacy-user-profile .contribution-activity-listing li {
+    display: block !important;
+    min-width: 0;
+    margin: 0;
+    padding: 6px 0;
+    line-height: 1.45;
+}
+
+.legacy-user-profile .contribution-activity-listing li > .col-8 {
+    display: block !important;
+    width: auto !important;
+    min-width: 0 !important;
+}
+
+.legacy-user-profile .contribution-activity-listing li > span.col-2 {
+    display: inline-block !important;
+    width: auto !important;
+    margin: 4px 12px 0 22px;
+    color: #57606a;
+}
+
+.legacy-user-profile .contribution-activity-listing li > span.col-2 + div {
+    display: inline-block !important;
+    margin-top: 4px;
+    color: #57606a;
+}
+
+.legacy-user-profile .contribution-activity-listing li time {
+    float: none !important;
+}
+
+.legacy-user-profile .contribution-activity-listing .Progress {
+    display: none !important;
+}
+
+.legacy-user-profile .contribution-activity-show-more {
+    display: block !important;
+    width: 100% !important;
+    min-height: 40px;
+    margin-top: 16px;
+    font-weight: bold;
+}
+
 .footer {
     margin-top: 24px;
     padding: 16px 10px !important;
@@ -1851,6 +2376,33 @@ section[aria-label="All issues"] [class*="MetadataContainer-module"] {
 #repository-container-header .author > a,
 #repository-container-header strong[itemprop="name"] > a {
     font-size: 18px;
+}
+
+.octicon.octicon-fold {
+    color: rgb(89,99,110);
+    fill: rgb(89,99,110);
+}
+
+.Details-content--closed {
+    color: rgb(89,99,110);
+    fill: rgb(89,99,110);
+}
+
+.Link--primary { color: #1f2328; }
+
+.Link--secondary,
+.Link--muted { color: #59636e !important; }
+
+.Link--secondary:hover,
+.Link--muted:hover { color: #0969da !important; }
+
+.vcard-detail .octicon,.octicon-people {
+    color: #59636e;
+    fill: #59636e;
+}
+
+.tmp-mt-5 {
+    margin-top: 32px !important;
 }
 
 @media only screen and (max-width: 600px) {

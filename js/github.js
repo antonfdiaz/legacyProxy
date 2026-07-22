@@ -10,10 +10,14 @@
     var issueViewer = document.querySelector('[data-testid="issue-viewer-container"]')
     var pullSearch = document.getElementById("js-issues-search")
     var pullTimeline = document.querySelector(".pull-discussion-timeline")
+    var userProfile = document.querySelector(".js-profile-editable-area")
+    var profileContributions = document.querySelector(
+        'include-fragment[src*="tab=contributions"]'
+    )
     var sibling
     var i
 
-    function loadFragment(container,className) {
+    function loadFragment(container,className,accept,requestedWith,onload) {
         var request
         var source = container.getAttribute("src")
 
@@ -23,18 +27,27 @@
 
         request = new XMLHttpRequest()
         request.open("GET",source,true)
-        request.setRequestHeader("Accept","text/fragment+html")
+        request.setRequestHeader("Accept",accept || "text/fragment+html")
+        if (requestedWith) {
+            request.setRequestHeader("X-Requested-With","XMLHttpRequest")
+        }
         request.onreadystatechange = function () {
             if (request.readyState !== 4) {
                 return
             }
 
             if (request.status < 200 || request.status >= 300) {
+                if (requestedWith) {
+                    container.className += " legacy-fragment-error"
+                }
                 return
             }
 
             container.innerHTML = request.responseText
             container.className += " " + className
+            if (onload) {
+                onload(container)
+            }
         }
         request.send(null)
     }
@@ -52,6 +65,60 @@
     function submitIssueSearch() {
         window.location.href = window.location.pathname + "?q=" +
             encodeURIComponent(issueSearch.value)
+    }
+
+    function bindProfileActivity(container) {
+        var summaries = container.querySelectorAll(
+            ".contribution-activity-listing summary"
+        )
+        var j
+
+        for (j = 0; j < summaries.length; j += 1) {
+            var control = summaries[j].querySelector(".Details-content--open")
+            var details = summaries[j].parentNode
+            var toggle
+
+            if (!control) {
+                continue
+            }
+
+            control = control.parentNode
+            toggle = document.createElement("button")
+            toggle.type = "button"
+            toggle.className = "legacy-details-toggle"
+            toggle.setAttribute("aria-label","Collapse contribution details")
+            while (control.firstChild) {
+                toggle.appendChild(control.firstChild)
+            }
+            summaries[j].removeChild(control)
+            details.parentNode.insertBefore(toggle,details.nextSibling)
+
+            toggle.onclick = function (clickEvent) {
+                var event = clickEvent || window.event
+                var currentDetails = this.previousSibling
+                var summary = currentDetails.getElementsByTagName("summary")[0]
+
+                if (event.preventDefault) {
+                    event.preventDefault()
+                }
+                if (event.stopPropagation) {
+                    event.stopPropagation()
+                }
+                event.returnValue = false
+                event.cancelBubble = true
+
+                if (currentDetails.hasAttribute("open")) {
+                    currentDetails.removeAttribute("open")
+                    summary.setAttribute("aria-expanded","false")
+                    this.setAttribute("aria-label","Expand contribution details")
+                } else {
+                    currentDetails.setAttribute("open","")
+                    summary.setAttribute("aria-expanded","true")
+                    this.setAttribute("aria-label","Collapse contribution details")
+                }
+                return false
+            }
+        }
     }
 
     for (i = 0; i < progressBars.length; i += 1) {
@@ -116,5 +183,21 @@
 
     if (pullTimeline) {
         document.body.className += " legacy-pr-detail"
+    }
+
+    if (userProfile) {
+        document.body.className += " legacy-user-profile"
+        bindProfileActivity(document)
+    }
+
+    if (profileContributions) {
+        profileContributions.className += " legacy-profile-contributions"
+        loadFragment(
+            profileContributions,
+            "legacy-profile-contributions-loaded",
+            "text/html",
+            true,
+            bindProfileActivity
+        )
     }
 }())

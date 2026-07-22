@@ -53,5 +53,5 @@ To-do for website fixing. I will NOT be fixing websites that already work with a
   - [x] Releases/Tags
   - [x] Issue pages
   - [x] PRs page
-  - [ ] User page
+  - [x] User page
   - [ ] Login
