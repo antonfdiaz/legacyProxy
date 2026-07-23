@@ -48,7 +48,8 @@ To-do for website fixing. I will NOT be fixing websites that already work with a
   - [ ] Login
 - [x] Wikipedia
   - [x] Image loading
-  - [ ] Fix CSS
+  - [x] Fix CSS
+  - [x] FIX JavaScript
 - [x] GitHub
   - [x] Repo page
   - [x] Releases/Tags

@@ -1,20 +1,20 @@
 (function () {
-    var menu = document.getElementById("main-menu-input");
-    var mask = document.querySelector(".main-menu-mask");
+    var menu = document.getElementById("main-menu-input")
+    var mask = document.querySelector(".main-menu-mask")
 
     if (!menu || !mask) {
-        return;
+        return
     }
 
     function closeMenu(event) {
-        menu.checked = false;
-        menu.setAttribute("aria-expanded","false");
+        menu.checked = false
+        menu.setAttribute("aria-expanded","false")
         if (event && event.preventDefault) {
-            event.preventDefault();
+            event.preventDefault()
         }
-        return false;
+        return false
     }
 
-    mask.onclick = closeMenu;
-    mask.ontouchend = closeMenu;
-}());
+    mask.onclick = closeMenu
+    mask.ontouchend = closeMenu
+}())
