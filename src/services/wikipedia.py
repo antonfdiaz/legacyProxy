@@ -48,13 +48,6 @@ class WikipediaProxy:
         html = html.replace("https://upload.wikimedia.org/",image_prefix)
         html = html.replace("//upload.wikimedia.org/",image_prefix)
         html = re.sub(
-            r'<img\b(?=[^>]*\bdonate-banner__gif\b)[^>]*>',
-            "",
-            html,
-            count=1,
-            flags=re.IGNORECASE,
-        )
-        html = re.sub(
             r'\s+(?:srcset|loading|decoding)=(?:"[^"]*"|\'[^\']*\')',
             "",
             html,

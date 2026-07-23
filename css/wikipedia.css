@@ -179,24 +179,26 @@
 }
 
 #mw-mf-page-left {
-    display: none;
     background: #eaecf0 !important;
     -webkit-transform: translate(-100%, 0);
 }
 
 #main-menu-input:checked ~ #mw-mf-page-left {
-    display: block;
     visibility: visible;
     box-shadow: 0 1px 8px #72777d;
     -webkit-transform: translate(0, 0);
 }
 
 .main-menu-mask {
-    display: none;
+    display: block !important;
+    visibility: hidden;
+    pointer-events: none;
 }
 
 #main-menu-input:checked ~ .main-menu-mask {
-    display: block;
+    visibility: visible;
+    opacity: 0.5;
+    pointer-events: auto;
 }
 
 #mw-mf-page-left ul {
@@ -256,34 +258,6 @@
     display: block;
     list-style: none;
     border-bottom: 1px solid #dadde3;
-}
-
-#mw-mf-page-left .donate-banner {
-    display: none;
-    position: static !important;
-    padding: 16px;
-    white-space: normal;
-    background: #fff !important;
-    border-top: 1px solid #dadde3;
-}
-
-#main-menu-input:checked ~ #mw-mf-page-left .donate-banner {
-    display: block;
-}
-
-#mw-mf-page-left .donate-banner__link,
-#mw-mf-page-left .donate-banner__text-container {
-    display: block !important;
-    max-width: none;
-}
-
-#mw-mf-page-left .donate-banner__text {
-    display: block;
-    margin-bottom: 6px;
-}
-
-#mw-mf-page-left .donate-banner__gif {
-    display: none;
 }
 
 .page-actions-menu {
