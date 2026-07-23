@@ -1,88 +1,28 @@
 import re
+from pathlib import Path
 from urllib.parse import urlsplit,urlunsplit
 
-WIKIPEDIA_HOSTS = {"en.wikipedia.org","es.wikipedia.org","fr.wikipedia.org","de.wikipedia.org"}
-WIKIPEDIA_CSS = """
+ROOT = Path(__file__).resolve().parents[2]
+WIKIPEDIA_CSS = f"""
 <style id="legacy-proxy-wikipedia">
-.header-container {
-    padding: 0 16px !important;
-    background: #eaecf0 !important;
-    border-bottom: 1px solid #c8ccd1 !important;
-    box-shadow: none !important;
-}
-.minerva-header {
-    display: block !important;
-    height: 54px !important;
-    border: 0 !important;
-}
-.minerva-header .navigation-drawer,
-.minerva-header .minerva-search-form,
-.minerva-header .minerva-user-navigation,
-.minerva-header .minerva-badge-container {
-    display: none !important;
-}
-.minerva-header .branding-box {
-    display: block !important;
-    padding-top: 18px !important;
-}
-.minerva-header .branding-box a {
-    float: left !important;
-    margin-left: 0 !important;
-}
-.page-actions-menu {
-    border-top: 1px solid #dadde3 !important;
-    border-bottom: 1px solid #c8ccd1 !important;
-}
-.page-actions-menu__list {
-    display: table !important;
-    width: 100% !important;
-    height: auto !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    table-layout: fixed !important;
-}
-.page-actions-menu__list-item {
-    display: table-cell !important;
-    list-style: none !important;
-    text-align: center !important;
-}
-.page-actions-menu .minerva-icon {
-    display: none !important;
-}
-.page-actions-menu .cdx-button {
-    display: block !important;
-    min-width: 0 !important;
-    min-height: 0 !important;
-    padding: 8px 4px !important;
-    border: 0 !important;
-    background: transparent !important;
-    color: #36c !important;
-    font: inherit !important;
-    text-decoration: none !important;
-}
-.page-actions-menu .cdx-button span + span {
-    position: static !important;
-    clip: auto !important;
-    width: auto !important;
-    height: auto !important;
-    margin: 0 !important;
-    overflow: visible !important;
-}
-.mw-parser-output img,
-.mw-parser-output .infobox {
-    max-width: 100% !important;
-}
-.mw-parser-output img {
-    height: auto !important;
-}
+{(ROOT/"css"/"wikipedia.css").read_text(encoding="utf-8")}
 </style>
 """
+WIKIPEDIA_JS = f"""
+<script id="legacy-proxy-wikipedia-script">
+{(ROOT/"js"/"wikipedia.js").read_text(encoding="utf-8")}
+</script>
+"""
+
+def is_wikipedia_host(host):
+    host = host.lower().rstrip(".")
+    return host == "wikipedia.org" or host.endswith(".wikipedia.org")
 
 class WikipediaProxy:
     def request(self,flow):
         #if the request is not for a wikipedia image, ignore it
         if (
-            flow.request.pretty_host not in WIKIPEDIA_HOSTS
+            not is_wikipedia_host(flow.request.pretty_host)
             or not flow.request.path.startswith("/legacy-proxy-wikipedia-image/")
         ):
             return False
@@ -98,7 +38,7 @@ class WikipediaProxy:
 
     def response(self,flow):
         content_type = flow.response.headers.get("Content-Type","")
-        if flow.request.pretty_host not in WIKIPEDIA_HOSTS or "text/html" not in content_type:
+        if not is_wikipedia_host(flow.request.pretty_host) or "text/html" not in content_type:
             return False
 
         html = flow.response.text
@@ -108,12 +48,33 @@ class WikipediaProxy:
         html = html.replace("https://upload.wikimedia.org/",image_prefix)
         html = html.replace("//upload.wikimedia.org/",image_prefix)
         html = re.sub(
+            r'<img\b(?=[^>]*\bdonate-banner__gif\b)[^>]*>',
+            "",
+            html,
+            count=1,
+            flags=re.IGNORECASE,
+        )
+        html = re.sub(
             r'\s+(?:srcset|loading|decoding)=(?:"[^"]*"|\'[^\']*\')',
             "",
             html,
             flags=re.IGNORECASE,
         )
+        html = re.sub(
+            r'<button\b(?=[^>]*\bid=["\']searchIcon["\'])(?P<attrs>[^>]*)>'
+            r'(?P<body>.*?)</button>',
+            lambda match: (
+                '<a'+match.group("attrs")
+                +' href="/wiki/Special:Search">'
+                +match.group("body")+"</a>"
+            ),
+            html,
+            count=1,
+            flags=re.IGNORECASE|re.DOTALL,
+        )
         if 'id="legacy-proxy-wikipedia"' not in html:
             html = html.replace("</head>",WIKIPEDIA_CSS+"</head>",1)
+        if 'id="legacy-proxy-wikipedia-script"' not in html:
+            html = html.replace("</body>",WIKIPEDIA_JS+"</body>",1)
         flow.response.text = html
         return True
