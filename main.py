@@ -35,8 +35,8 @@ class InterceptAddon:
         self.wikipedia = WikipediaProxy() if config.services.wikipedia else None
 
     async def request(self,flow):
-        host = flow.request.pretty_host
         url = flow.request.url
+        host = (urlparse(url).hostname or "").lower().rstrip(".")
         
         if self.google:
             if host in GOOGLE_HOSTS and urlparse(url).path == "/":

@@ -2,6 +2,81 @@ import re
 from urllib.parse import urlsplit,urlunsplit
 
 WIKIPEDIA_HOSTS = {"en.wikipedia.org","es.wikipedia.org","fr.wikipedia.org","de.wikipedia.org"}
+WIKIPEDIA_CSS = """
+<style id="legacy-proxy-wikipedia">
+.header-container {
+    padding: 0 16px !important;
+    background: #eaecf0 !important;
+    border-bottom: 1px solid #c8ccd1 !important;
+    box-shadow: none !important;
+}
+.minerva-header {
+    display: block !important;
+    height: 54px !important;
+    border: 0 !important;
+}
+.minerva-header .navigation-drawer,
+.minerva-header .minerva-search-form,
+.minerva-header .minerva-user-navigation,
+.minerva-header .minerva-badge-container {
+    display: none !important;
+}
+.minerva-header .branding-box {
+    display: block !important;
+    padding-top: 18px !important;
+}
+.minerva-header .branding-box a {
+    float: left !important;
+    margin-left: 0 !important;
+}
+.page-actions-menu {
+    border-top: 1px solid #dadde3 !important;
+    border-bottom: 1px solid #c8ccd1 !important;
+}
+.page-actions-menu__list {
+    display: table !important;
+    width: 100% !important;
+    height: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    table-layout: fixed !important;
+}
+.page-actions-menu__list-item {
+    display: table-cell !important;
+    list-style: none !important;
+    text-align: center !important;
+}
+.page-actions-menu .minerva-icon {
+    display: none !important;
+}
+.page-actions-menu .cdx-button {
+    display: block !important;
+    min-width: 0 !important;
+    min-height: 0 !important;
+    padding: 8px 4px !important;
+    border: 0 !important;
+    background: transparent !important;
+    color: #36c !important;
+    font: inherit !important;
+    text-decoration: none !important;
+}
+.page-actions-menu .cdx-button span + span {
+    position: static !important;
+    clip: auto !important;
+    width: auto !important;
+    height: auto !important;
+    margin: 0 !important;
+    overflow: visible !important;
+}
+.mw-parser-output img,
+.mw-parser-output .infobox {
+    max-width: 100% !important;
+}
+.mw-parser-output img {
+    height: auto !important;
+}
+</style>
+"""
 
 class WikipediaProxy:
     def request(self,flow):
@@ -38,5 +113,7 @@ class WikipediaProxy:
             html,
             flags=re.IGNORECASE,
         )
+        if 'id="legacy-proxy-wikipedia"' not in html:
+            html = html.replace("</head>",WIKIPEDIA_CSS+"</head>",1)
         flow.response.text = html
         return True
