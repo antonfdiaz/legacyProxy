@@ -49,7 +49,7 @@ To-do for website fixing. I will NOT be fixing websites that already work with a
 - [x] Wikipedia
   - [x] Image loading
   - [x] Fix CSS
-  - [x] FIX JavaScript
+  - [x] Fix JavaScript
 - [x] GitHub
   - [x] Repo page
   - [x] Releases/Tags
