@@ -37,7 +37,7 @@ Go to Settings -> Wi-Fi -> The button next to the selected network -> Go to the 
 That's it! You can now use Google, Reddit, GitHub and more on your old iPhone!
 
 ## TODO
-To-do for website fixing. I will NOT be fixing websites that already work with an app, such as eBay, YouTube, Instagram, etc.
+To-do for website fixing. I will not be fixing websites that already work well with an app, such as YouTube, Instagram, etc.
 - [x] Google Search
   - [x] Modern homepage
   - [x] Web search
