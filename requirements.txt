@@ -1,3 +1,5 @@
 mitmproxy
 patchright
 beautifulsoup4
+pillow
+pystray
