@@ -27,6 +27,7 @@ GitHub works better on iOS 6+.
 - Make a venv inside the proxy folder: `python -m venv .venv`
 - Activate it: `source .venv/bin/activate` (`.venv/Scripts/activate` on Windows)
 - Install libraries: `pip install -r requirements.txt`
+- Install Chrome: `patchright install chrome`
 - Start the proxy: `python main.py`
 
 ### Configure Device
