@@ -19,7 +19,6 @@ import sys
 VERSION = "0.7.3"
 
 GOOGLE_HOSTS = {"google.com","www.google.com","www.google.es","www.google.fr","www.google.de","www.google.co.uk","www.google.ca","www.google.com.au"}
-BING_HOSTS = {"www.bing.com","bing.com"}
 
 config = Config()
 
