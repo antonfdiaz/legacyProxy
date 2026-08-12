@@ -48,7 +48,6 @@ To-do for website fixing. I will not be fixing websites that already work well w
   - [ ] Video search
 - [x] Reddit
   - [x] Browse Reddit
-  - [ ] Login
 - [x] Wikipedia
   - [x] Image loading
   - [x] Fix CSS
@@ -60,4 +59,3 @@ To-do for website fixing. I will not be fixing websites that already work well w
   - [x] PRs page
   - [x] User page
   - [ ] Home page
-  - [ ] Login
