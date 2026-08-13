@@ -17,7 +17,8 @@ Reddit looks a bit better on iOS 8+ than on iOS 3 and 6.
 ### Google Search
 Scrapes Google Search results and builds the results page from a local *HTML template*.
 The CSS applied is like the modern Google search.
-Google looks better on iOS 6+.
+Google looks better on iOS 6+.  
+**Note**: if Google Search doesn't work, **uncheck** "Chrome Headless" in the proxy settings.
 
 ### Wikipedia
 Rewrites Wikimedia image URLs through the proxy and removes the unsupported `srcset`, `loading`, and `decoding` attributes from Wikipedia pages so images load correctly on legacy iOS Safari.
