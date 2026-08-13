@@ -1,6 +1,7 @@
 import re
 from pathlib import Path
 from urllib.parse import urlsplit,urlunsplit
+import src.compat as compat
 
 ROOT = Path(__file__).resolve().parents[2]
 WIKIPEDIA_CSS = f"""
@@ -47,12 +48,6 @@ class WikipediaProxy:
         )
         html = html.replace("https://upload.wikimedia.org/",image_prefix)
         html = html.replace("//upload.wikimedia.org/",image_prefix)
-        html = re.sub(
-            r'\s+(?:srcset|loading|decoding)=(?:"[^"]*"|\'[^\']*\')',
-            "",
-            html,
-            flags=re.IGNORECASE,
-        )
         html = re.sub(
             r'<button\b(?=[^>]*\bid=["\']searchIcon["\'])(?P<attrs>[^>]*)>'
             r'(?P<body>.*?)</button>',

@@ -5,6 +5,7 @@ from src.services.google import GoogleCaptchaError,GoogleScraper
 from src.services.reddit import RedditProxy
 from src.services.wikipedia import WikipediaProxy
 from src.config import Config
+import src.compat as compat
 import asyncio
 from pathlib import Path
 from urllib.parse import parse_qs,urlparse
@@ -16,7 +17,7 @@ from src.utils import set_config_value
 import os
 import sys
 
-VERSION = "0.7.3"
+VERSION = "0.8.0"
 
 GOOGLE_HOSTS = {"google.com","www.google.com","www.google.es","www.google.fr","www.google.de","www.google.co.uk","www.google.ca","www.google.com.au"}
 
@@ -34,6 +35,12 @@ class InterceptAddon:
         self.wikipedia = WikipediaProxy() if config.services.wikipedia else None
 
     async def request(self,flow):
+        path = urlparse(flow.request.url).path.lower()
+
+        if path.endswith((".css",".html",".htm")):
+            flow.request.headers.pop("If-None-Match",None)
+            flow.request.headers.pop("If-Modified-Since",None)
+    
         url = flow.request.url
         host = (urlparse(url).hostname or "").lower().rstrip(".")
         
@@ -152,8 +159,16 @@ class InterceptAddon:
         if self.wikipedia and self.wikipedia.request(flow):
             return
         
-    def response(self,flow):
-        #handle responses for proxy services
+    def response(self, flow):
+        content_type = flow.response.headers.get("Content-Type","").lower()
+
+        if "text/html" in content_type:
+            print("[INFO] adapting HTML for legacy WebKit...")
+            flow.response.text = compat.adapt_html(flow.response.text)
+        elif "text/css" in content_type:
+            print("[INFO] adapting CSS for legacy WebKit...")
+            flow.response.text = compat.adapt_css(flow.response.text)
+
         self.github.response(flow) if self.github else None
         self.wikipedia.response(flow) if self.wikipedia else None
         self.reddit.response(flow) if self.reddit else None
@@ -161,7 +176,8 @@ class InterceptAddon:
         print(f"[INFO] intercepted response from: {flow.request.url}")
 
     async def close(self):
-        await self.google.close()
+        if self.google:
+            await self.google.close()
 
 async def start_proxy(host,port):
     opts = options.Options(listen_host=host,listen_port=port)
