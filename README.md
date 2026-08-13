@@ -5,6 +5,11 @@ Tested on iOS 3 (iPhone 3G), iOS 6 (iPhone 4S) and iOS 8 (iPod touch 5). It fixe
 
 <img height="200" alt="iPhones" src="https://github.com/user-attachments/assets/b3a6d616-9ea6-4073-afdb-962b30dc3ccd" />
 
+## Layout Patches
+legacyProxy adapts the CSS and HTML of the websites you visit in real time, so it fixes the layout a bit on old Safari/WebKit. It isn't perfect, but most sites look better thanks to this.
+
+## Website Fixes
+
 ### Reddit
 Redirects `reddit.com` URLs to `old.reddit.com` and modifies its CSS to work better on old Safari/WebKit.  
 Reddit looks a bit better on iOS 8+ than on iOS 3 and 6.
