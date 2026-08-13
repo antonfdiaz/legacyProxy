@@ -31,6 +31,7 @@ GitHub works better on iOS 6+.
 - Start the proxy: `python main.py`
 
 ### Configure Device
+There is no jailbreak needed (but it's recommended). You just need to do it like this:  
 Go to Settings -> Wi-Fi -> The button next to the selected network -> Go to the bottom -> HTTP Proxy:
 - Set it to `Manual`
 - Server: Your PC's IP address
