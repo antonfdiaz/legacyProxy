@@ -78,7 +78,7 @@ def _add_webkit_prefixes(css):
         css,
     )
 
-    # Modern alignment keywords -> older flexbox equivalents
+    #modern alignment keywords -> older flexbox equivalents
     css = re.sub(
         r'(?i)(justify-content|align-items|align-self)\s*:\s*end\b',
         lambda m: f'{m.group(1)}: flex-end',
@@ -101,7 +101,7 @@ def _resolve_root_variables(css):
         css,
         flags=re.I | re.S
     ):
-        for name, value in re.findall(
+        for name,value in re.findall(
             r'(--[\w-]+)\s*:\s*([^;]+);',
             block
         ):
