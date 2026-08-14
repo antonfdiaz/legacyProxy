@@ -17,7 +17,7 @@ from src.utils import set_config_value
 import os
 import sys
 
-VERSION = "0.8.0"
+VERSION = "0.8.1"
 
 GOOGLE_HOSTS = {"google.com","www.google.com","www.google.es","www.google.fr","www.google.de","www.google.co.uk","www.google.ca","www.google.com.au"}
 
