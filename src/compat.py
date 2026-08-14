@@ -1,4 +1,24 @@
+import copy
 import re
+import tinycss2
+from tinycss2.ast import Declaration, WhitespaceToken
+
+_PREFIXED_PROPERTIES = {
+    "transform", "transition", "animation", "appearance", "user-select",
+    "flex", "flex-grow", "flex-shrink", "flex-basis", "flex-direction",
+    "flex-wrap", "align-items", "align-self", "align-content",
+    "justify-content", "order",
+}
+_UNSET_FALLBACKS = {
+    "box-shadow": "none", "background": "none", "height": "auto",
+    "width": "auto", "overflow": "visible", "overflow-x": "visible",
+    "overflow-y": "visible",
+}
+_DECLARATION_AT_RULES = {"font-face", "page"}
+_RULE_AT_RULES = {
+    "media", "supports", "container", "document", "keyframes", "layer",
+    "scope", "starting-style",
+}
 
 def adapt_html(html):
     #modern attributes that old webkit doesn't need
@@ -53,135 +73,187 @@ def _adapt_lazy_img(match):
 
     return f'<img{attrs} src="{url}">'
 
-def _add_webkit_prefixes(css):
-    props = (
-        "transform|transition|animation|appearance|user-select|"
-        "flex|flex-grow|flex-shrink|flex-basis|flex-direction|flex-wrap|"
-        "align-items|align-self|align-content|justify-content|order"
+def _value(css):
+    return tinycss2.parse_component_value_list(css)
+
+def _text(tokens):
+    return tinycss2.serialize(tokens).strip()
+
+def _is_ident_value(tokens,value):
+    meaningful = [token for token in tokens if token.type != "whitespace"]
+    return (len(meaningful) == 1 and meaningful[0].type == "ident"
+            and meaningful[0].value.lower() == value)
+
+def _new_declaration(name,value,original):
+    return Declaration(
+        original.source_line,
+        original.source_column,
+        name,
+        name.lower(),
+        value,
+        original.important,
     )
 
-    css = re.sub(
-        rf'(?i)(?<!-webkit-)\b({props})\s*:\s*([^;}}]+)',
-        r'-webkit-\1: \2; \1: \2',
-        css,
-    )
+def _replacement_value(css,original):
+    prefix = " " if original.value and original.value[0].type == "whitespace" else ""
+    suffix = " " if original.important else ""
+    return _value(prefix+css+suffix)
 
-    css = re.sub(
-        r'(?i)\bdisplay\s*:\s*flex\s*;',
-        'display: -webkit-flex; display: flex;',
-        css,
-    )
+def _separator(node):
+    return WhitespaceToken(node.source_line,node.source_column," ")
 
-    css = re.sub(
-        r'(?i)\bdisplay\s*:\s*inline-flex\s*;',
-        'display: -webkit-inline-flex; display: inline-flex;',
-        css,
-    )
+def _prepare_rules(nodes):
+    for node in nodes:
+        if node.type == "qualified-rule":
+            node.content = tinycss2.parse_blocks_contents(
+                node.content,skip_comments=False,skip_whitespace=False)
+        elif node.type == "at-rule" and node.content is not None:
+            if node.lower_at_keyword in _DECLARATION_AT_RULES:
+                node.content = tinycss2.parse_blocks_contents(
+                    node.content,skip_comments=False,skip_whitespace=False)
+            elif node.lower_at_keyword in _RULE_AT_RULES:
+                node.content = tinycss2.parse_blocks_contents(
+                    node.content,skip_comments=False,skip_whitespace=False)
+                _prepare_rules(node.content)
 
-    #modern alignment keywords -> older flexbox equivalents
-    css = re.sub(
-        r'(?i)(justify-content|align-items|align-self)\s*:\s*end\b',
-        lambda m: f'{m.group(1)}: flex-end',
-        css,
-    )
-
-    css = re.sub(
-        r'(?i)(justify-content|align-items|align-self)\s*:\s*start\b',
-        lambda m: f'{m.group(1)}: flex-start',
-        css,
-    )
-
-    return css
-
-def _resolve_root_variables(css):
+def _root_variables(nodes):
     variables = {}
+    for node in nodes:
+        if node.type == "qualified-rule" and _text(node.prelude) == ":root":
+            for declaration in node.content:
+                if declaration.type == "declaration" and declaration.name.startswith("--"):
+                    variables[declaration.name] = declaration.value
+        elif (node.type == "at-rule" and node.content is not None
+              and node.lower_at_keyword in _RULE_AT_RULES):
+            variables.update(_root_variables(node.content))
+    return variables
 
-    for block in re.findall(
-        r':root\s*\{(.*?)\}',
-        css,
-        flags=re.I | re.S
-    ):
-        for name,value in re.findall(
-            r'(--[\w-]+)\s*:\s*([^;]+);',
-            block
-        ):
-            variables[name] = value.strip()
+def _replace_variables(tokens,variables):
+    result = []
+    for token in tokens:
+        if token.type == "function" and token.lower_name == "var":
+            arguments = token.arguments
+            comma = next((i for i, item in enumerate(arguments)
+                          if item.type == "literal" and item.value == ","), None)
+            name = _text(arguments[:comma] if comma is not None else arguments)
+            replacement = variables.get(name)
+            if replacement is None and comma is not None:
+                replacement = arguments[comma+1:]
+            result.extend(copy.deepcopy(replacement) if replacement is not None else [token])
+        elif hasattr(token,"content") and token.content is not None:
+            token.content = _replace_variables(token.content, variables)
+            result.append(token)
+        elif hasattr(token,"arguments"):
+            token.arguments = _replace_variables(token.arguments,variables)
+            result.append(token)
+        else:
+            result.append(token)
+    return result
 
-    def replace_var(match):
-        name = match.group(1)
-        fallback = match.group(2)
+def _convert_rgb(tokens):
+    converted = []
+    for token in tokens:
+        if token.type == "function" and token.lower_name == "rgb":
+            parts = [item for item in token.arguments if item.type != "whitespace"]
+            if (len(parts) == 5 and parts[3].type == "literal" and parts[3].value == "/"
+                    and all(item.type == "number" for item in parts[:3])
+                    and parts[4].type == "percentage"):
+                red, green, blue = (item.representation for item in parts[:3])
+                alpha = parts[4].value / 100
+                converted.extend(_value(f"rgba({red}, {green}, {blue}, {alpha:g})"))
+                continue
+        if hasattr(token, "content") and token.content is not None:
+            token.content = _convert_rgb(token.content)
+        elif hasattr(token, "arguments"):
+            token.arguments = _convert_rgb(token.arguments)
+        converted.append(token)
+    return converted
 
-        if name in variables:
-            return variables[name]
+def _inset_values(tokens):
+    values, current = [], []
+    for token in tokens:
+        if token.type == "whitespace":
+            if current:
+                values.append(_text(current))
+                current = []
+        else:
+            current.append(token)
+    if current:
+        values.append(_text(current))
+    if not 1 <= len(values) <= 4:
+        return None
+    top = values[0]
+    right = values[1] if len(values) > 1 else top
+    bottom = values[2] if len(values) > 2 else top
+    left = values[3] if len(values) > 3 else right
+    return top, right, bottom, left
 
-        if fallback:
-            return fallback.strip()
+def _transform_declarations(nodes, variables):
+    transformed = []
+    for declaration in nodes:
+        if declaration.type != "declaration":
+            transformed.append(declaration)
+            continue
 
-        return match.group(0)
+        try:
+            name = declaration.lower_name
+            value = _convert_rgb(_replace_variables(
+                copy.deepcopy(declaration.value),variables))
 
-    return re.sub(
-        r'var\(\s*(--[\w-]+)\s*(?:,\s*([^)]+))?\)',
-        replace_var,
-        css
-    )
-    
-def _expand_inset(css):
-    def repl(match):
-        value = match.group(1).strip()
+            if name in {"justify-content", "align-items", "align-self"}:
+                if _is_ident_value(value, "start"):
+                    value = _replacement_value("flex-start",declaration)
+                elif _is_ident_value(value, "end"):
+                    value = _replacement_value("flex-end",declaration)
+            elif name in _UNSET_FALLBACKS and _is_ident_value(value, "unset"):
+                value = _replacement_value(_UNSET_FALLBACKS[name],declaration)
 
-        return (
-            f"top: {value}; "
-            f"right: {value}; "
-            f"bottom: {value}; "
-            f"left: {value};"
-        )
+            if name == "inset":
+                values = _inset_values(value)
+                if values:
+                    for index,(side,side_value) in enumerate(zip(
+                            ("top", "right", "bottom", "left"),values)):
+                        transformed.append(_new_declaration(
+                            side,_replacement_value(side_value,declaration),declaration))
+                        if index < 3:
+                            transformed.append(_separator(declaration))
+                    continue
 
-    return re.sub(
-        r'(?i)\binset\s*:\s*([^;}]+)\s*;?',
-        repl,
-        css,
-    )
-    
-def _convert_modern_rgb(css):
-    def repl(match):
-        r = match.group(1)
-        g = match.group(2)
-        b = match.group(3)
-        alpha = float(match.group(4)) / 100.0
+            if name == "display" and _is_ident_value(value, "flex"):
+                transformed.append(_new_declaration(
+                    "display",_replacement_value("-webkit-flex",declaration),declaration))
+                transformed.append(_separator(declaration))
+            elif name == "display" and _is_ident_value(value, "inline-flex"):
+                transformed.append(_new_declaration(
+                    "display",_replacement_value("-webkit-inline-flex",declaration),declaration))
+                transformed.append(_separator(declaration))
+            elif name in _PREFIXED_PROPERTIES:
+                transformed.append(_new_declaration(
+                    f"-webkit-{declaration.name}",copy.deepcopy(value),declaration))
+                transformed.append(_separator(declaration))
 
-        return f"rgba({r}, {g}, {b}, {alpha:g})"
+            declaration.value = value
+        except Exception:
+            pass
+        transformed.append(declaration)
+    return transformed
 
-    return re.sub(
-        r'rgb\(\s*(\d+)\s+(\d+)\s+(\d+)\s*/\s*(\d+(?:\.\d+)?)%\s*\)',
-        repl,
-        css,
-        flags=re.I,
-    )
-    
-def _replace_safe_unset(css):
-    replacements = {
-        "box-shadow": "none",
-        "background": "none",
-        "height": "auto",
-        "width": "auto",
-        "overflow": "visible",
-        "overflow-x": "visible",
-        "overflow-y": "visible",
-    }
-
-    for prop, fallback in replacements.items():
-        css = re.sub(
-            rf'(?i)\b{re.escape(prop)}\s*:\s*unset\s*;',
-            f'{prop}: {fallback};',
-            css,
-        )
-
-    return css
+def _transform_rules(rules, variables):
+    for rule in rules:
+        if rule.type == "qualified-rule":
+            rule.content = _transform_declarations(rule.content, variables)
+        elif rule.type == "at-rule" and rule.content is not None:
+            if rule.lower_at_keyword in _DECLARATION_AT_RULES:
+                rule.content = _transform_declarations(rule.content, variables)
+            elif rule.lower_at_keyword in _RULE_AT_RULES:
+                _transform_rules(rule.content, variables)
 
 def adapt_css(css):
-    css = _add_webkit_prefixes(css)
-    css = _resolve_root_variables(css)
-    css = _expand_inset(css)
-    css = _convert_modern_rgb(css)
-    css = _replace_safe_unset(css)
-    return css
+    try:
+        rules = tinycss2.parse_stylesheet(
+            css,skip_comments=False,skip_whitespace=False)
+        _prepare_rules(rules)
+        _transform_rules(rules,_root_variables(rules))
+        return tinycss2.serialize(rules)
+    except Exception:
+        return css
