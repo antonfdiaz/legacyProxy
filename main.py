@@ -20,7 +20,28 @@ import sys
 VERSION = "0.8.2"
 
 GOOGLE_HOSTS = {"google.com","www.google.com"}
-COMPAT_EXCEPTIONS = {"google.com","www.google.com","github.com","www.github.com","wikipedia.org"}
+COMPAT_EXCEPTIONS = {
+    "google.com",
+    "www.google.com",
+    "github.com",
+    "www.github.com",
+    "wikipedia.org"
+}
+IGNORE_HOSTS = [
+    r"(^|\.)apple\.com:443$",
+    r"(^|\.)icloud\.com:443$",
+    r"(^|\.)itunes\.apple\.com:443$",
+    r"(^|\.)apps\.apple\.com:443$",
+    r"(^|\.)mzstatic\.com:443$",
+]
+IGNORE_CONTENT_TYPES = (
+    "application/json",
+    "application/ld+json",
+    "application/xml",
+    "text/xml",
+    "audio/",
+    "video/"
+)
 
 config = Config()
 
@@ -160,13 +181,35 @@ class InterceptAddon:
         if self.wikipedia and self.wikipedia.request(flow):
             return
         
+    def should_ignore_response(self,content_type):
+        return any(
+            content_type.startswith(prefix)
+            for prefix in IGNORE_CONTENT_TYPES
+        )
+        
+    def matches_domain(self,host,domain):
+        return host == domain or host.endswith("."+domain)
+    
+    def is_compat_exception(self,host):
+        return any(
+            self.matches_domain(host,domain)
+            for domain in COMPAT_EXCEPTIONS
+        )
+        
     def response(self,flow):
         content_type = flow.response.headers.get("Content-Type","").lower()
 
         url = flow.request.url
         host = (urlparse(url).hostname or "").lower().rstrip(".")
         
-        if host not in COMPAT_EXCEPTIONS:
+        self.github.response(flow) if self.github else None
+        self.wikipedia.response(flow) if self.wikipedia else None
+        self.reddit.response(flow) if self.reddit else None
+        
+        if self.should_ignore_response(content_type):
+            return
+        
+        if not self.is_compat_exception(host):
             if "text/html" in content_type:
                 print("[INFO] adapting HTML for legacy WebKit...")
                 flow.response.text = compat.adapt_html(flow.response.text)
@@ -174,22 +217,25 @@ class InterceptAddon:
                 print("[INFO] adapting CSS for legacy WebKit...")
                 flow.response.text = compat.adapt_css(flow.response.text)
 
-        self.github.response(flow) if self.github else None
-        self.wikipedia.response(flow) if self.wikipedia else None
-        self.reddit.response(flow) if self.reddit else None
-
-        print(f"[INFO] intercepted response from: {flow.request.url}")
+        print(f"[INFO] intercepted response from: {url}")
 
     async def close(self):
         if self.google:
             await self.google.close()
 
 async def start_proxy(host,port):
-    opts = options.Options(listen_host=host,listen_port=port)
+    opts = options.Options(
+        listen_host=host,
+        listen_port=port,
+    )
+
+    opts.update(ignore_hosts=IGNORE_HOSTS)
     opts.update_defer(tls_version_client_min="TLS1")
+    
     master = DumpMaster(opts)
     addon = InterceptAddon()
     master.addons.add(addon)
+    
     try:
         print(r""" _                               ___                     
 | | ___  __ _  __ _  ___ _   _  / _ \_ __ _____  ___   _ 
