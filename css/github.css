@@ -235,106 +235,163 @@ button,.Button,[data-component="Button"] {
 }
 
 /*github's logged-out navigation is too complex for old ios webkit. */
-.HeaderMktg {
-    position: static !important;
-    min-height: 44px;
-    padding: 7px 10px !important;
-    border-bottom: 1px solid #57606a;
-    background: #24292f !important;
-    color: #fff !important;
-}
 
-.HeaderMktg a {
-    color: #fff;
-}
-
-.HeaderMktg .HeaderMenu,
-.HeaderMktg-backdrop,
-.HeaderMktg .AppHeader-appearanceSettings,
-.HeaderMktg .js-header-menu-toggle {
+/* Hide GitHub's own global header. It changes frequently and depends on
+   modern layout and JavaScript. Repository navigation is left untouched. */
+.header-wrapper,
+.js-header-wrapper,
+.HeaderMktg,
+.header-logged-out {
     display: none !important;
 }
 
-.HeaderMenu-link {
-    color: #1f2328;
-    white-space: nowrap;
-    border-radius: 6px;
-    background: 0 0;
-}
-
-.HeaderMenu-link:hover {
-    color: #1f2328;
-}
-
-.HeaderMenu-button {
-    height: 32px;
-    font-size: .875rem;
-    justify-content: center;
-    align-items: center;
-    line-height: 1;
-    padding-right: .75rem !important;
-    padding-left: .75rem !important;
-    font-weight: 500;
-}
-
-.rounded-2 {
-    border-radius: 6px !important;
-}
-
-.border {
-    border: 1px solid #d1d9e0 !important;
-}
-
-.color-fg-inherit,.fgColor-inherit {
-    color: inherit !important;
-}
-
-.f5 {
-    font-size: 14px !important;
-}
-
-.px-2 {
-    padding-right: 8px !important;
-    padding-left: 8px !important;
-}
-
-.py-1 {
-    padding-top: 4px !important;
-    padding-bottom: 4px !important;
-}
-
-.no-underline {
-    text-decoration: none !important;
-}
-
-.d-inline-flex {
-    display: inline-flex !important;
-}
-
-.HeaderMktg a[aria-label="Homepage"] {
-    display: inline-block;
-}
-
-.HeaderMktg .text-right.d-lg-none {
+#legacy-github-header {
     display: block !important;
-    float: right;
+    position: relative !important;
+    box-sizing: border-box;
+    width: 100% !important;
+    height: 48px !important;
+    min-height: 48px !important;
+    padding: 0 !important;
+    border-bottom: 1px solid #30363d;
+    background: #010409 !important;
+    color: #fff !important;
 }
 
-.HeaderMktg:after {
-    display: table;
-    clear: both;
-    content: "";
+#legacy-github-header button {
+    min-height: 0 !important;
+    border: 0 !important;
+    border-radius: 6px !important;
+    background: transparent !important;
+    color: #fff !important;
+    -webkit-appearance: none;
+    appearance: none;
 }
 
-.HeaderMktg svg.octicon-mark-github {
+#legacy-github-menu-button {
+    display: block !important;
+    position: absolute !important;
+    top: 8px;
+    left: 12px;
+    width: 32px !important;
+    height: 32px !important;
+    padding: 7px 6px !important;
+}
+
+#legacy-github-menu-button span {
+    display: block;
+    width: 20px;
+    height: 2px;
+    margin: 0 0 4px;
+    background: #fff;
+}
+
+#legacy-github-menu-button span:last-child {
+    margin-bottom: 0;
+}
+
+#legacy-github-logo {
+    display: block !important;
+    position: absolute !important;
+    top: 10px;
+    left: 50%;
+    width: 28px;
+    height: 28px;
+    margin-left: -14px;
+    color: #fff !important;
+}
+
+#legacy-github-logo svg {
+    display: block;
     width: 28px;
     height: 28px;
     fill: #fff;
 }
 
-.header-wrapper,.js-header-wrapper,
-.position-sticky,.sticky {
-    position: static !important;
+#legacy-github-signin {
+    display: block !important;
+    position: absolute !important;
+    top: 8px;
+    right: 49px;
+    height: 30px;
+    padding: 0 10px;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    color: #fff !important;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 28px;
+    text-decoration: none;
+}
+
+#legacy-github-settings {
+    display: block !important;
+    position: absolute !important;
+    top: 8px;
+    right: 10px;
+    width: 31px !important;
+    height: 31px !important;
+    min-height: 0 !important;
+    padding: 7px !important;
+    border: 1px solid #30363d !important;
+    border-radius: 6px !important;
+    background: transparent !important;
+    color: #fff !important;
+    -webkit-appearance: none;
+    appearance: none;
+}
+
+#legacy-github-settings svg {
+    display: block;
+    width: 16px;
+    height: 16px;
+    margin: 0;
+}
+
+#legacy-github-drawer {
+    display: none;
+    box-sizing: border-box;
+    width: 100%;
+    padding: 20px 26px;
+    border-bottom: 1px solid #30363d;
+    background: #010409;
+    color: #fff;
+}
+
+#legacy-github-drawer.legacy-open {
+    display: block;
+}
+
+#legacy-github-drawer > a {
+    display: block;
+    padding: 11px 0;
+    color: #fff;
+    font-size: 17px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+#legacy-github-drawer form {
+    margin: 14px 0 10px;
+}
+
+#legacy-github-drawer input {
+    box-sizing: border-box;
+    width: 100%;
+    height: 34px;
+    padding: 5px 10px;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    background: #0d1117;
+    color: #fff;
+}
+
+#legacy-github-drawer .legacy-github-signup {
+    padding: 7px 10px;
+    border: 1px solid #30363d;
+    border-radius: 6px;
+    background: #21262d;
+    text-align: center;
 }
 
 /*repository title and star/fork controls*/

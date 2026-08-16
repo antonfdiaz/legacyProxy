@@ -319,7 +319,7 @@ if __name__ == "__main__":
         thread.start()
         
         if not "--disable-menu" in sys.argv:
-            image_path = Path(__file__).parent/"images"/"tray-icon.png"
+            image_path = Path(__file__).parent/"images"/"tray-icon-alt.png"
             image = Image.open(image_path).convert("RGBA")
             
             start_menu(image)

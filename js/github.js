@@ -16,6 +16,26 @@
     )
     var sibling
     var i
+    var legacyMenuButton = document.getElementById(
+        "legacy-github-menu-button"
+    )
+    var legacyDrawer = document.getElementById(
+        "legacy-github-drawer"
+    )
+
+    if (legacyMenuButton && legacyDrawer) {
+        legacyMenuButton.onclick = function () {
+            if (
+                (" " + legacyDrawer.className + " ")
+                    .indexOf(" legacy-open ") !== -1
+            ) {
+                legacyDrawer.className = legacyDrawer.className
+                    .replace(/\blegacy-open\b/g,"")
+            } else {
+                legacyDrawer.className += " legacy-open"
+            }
+        }
+    }
 
     function loadFragment(container,className,accept,requestedWith,onload) {
         var request
