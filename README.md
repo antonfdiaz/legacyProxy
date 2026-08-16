@@ -66,3 +66,5 @@ To-do for website fixing. I will not be fixing websites that already work well w
   - [x] PRs page
   - [x] User page
   - [ ] Home page
+- [ ] Stack Overflow
+- [ ] IMDb
