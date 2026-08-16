@@ -17,7 +17,7 @@ from src.utils import set_config_value
 import os
 import sys
 
-VERSION = "0.8.3"
+VERSION = "0.8.5"
 
 GOOGLE_HOSTS = {"google.com","www.google.com"}
 COMPAT_EXCEPTIONS = {
