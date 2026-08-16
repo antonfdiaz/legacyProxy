@@ -4,3 +4,7 @@ output/
 .playwright-cli/
 .DS_Store
 config.json
+legacyProxy.app/
+main.build/
+main.dist/
+main.app/
