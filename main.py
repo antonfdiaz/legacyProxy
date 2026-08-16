@@ -17,9 +17,10 @@ from src.utils import set_config_value
 import os
 import sys
 
-VERSION = "0.8.1"
+VERSION = "0.8.2"
 
-GOOGLE_HOSTS = {"google.com","www.google.com","www.google.es","www.google.fr","www.google.de","www.google.co.uk","www.google.ca","www.google.com.au"}
+GOOGLE_HOSTS = {"google.com","www.google.com"}
+COMPAT_EXCEPTIONS = {"google.com","www.google.com","github.com","www.github.com","wikipedia.org"}
 
 config = Config()
 
@@ -159,15 +160,19 @@ class InterceptAddon:
         if self.wikipedia and self.wikipedia.request(flow):
             return
         
-    def response(self, flow):
+    def response(self,flow):
         content_type = flow.response.headers.get("Content-Type","").lower()
 
-        if "text/html" in content_type:
-            print("[INFO] adapting HTML for legacy WebKit...")
-            flow.response.text = compat.adapt_html(flow.response.text)
-        elif "text/css" in content_type:
-            print("[INFO] adapting CSS for legacy WebKit...")
-            flow.response.text = compat.adapt_css(flow.response.text)
+        url = flow.request.url
+        host = (urlparse(url).hostname or "").lower().rstrip(".")
+        
+        if host not in COMPAT_EXCEPTIONS:
+            if "text/html" in content_type:
+                print("[INFO] adapting HTML for legacy WebKit...")
+                flow.response.text = compat.adapt_html(flow.response.text)
+            elif "text/css" in content_type:
+                print("[INFO] adapting CSS for legacy WebKit...")
+                flow.response.text = compat.adapt_css(flow.response.text)
 
         self.github.response(flow) if self.github else None
         self.wikipedia.response(flow) if self.wikipedia else None

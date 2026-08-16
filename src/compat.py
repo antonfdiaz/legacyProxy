@@ -4,20 +4,20 @@ import tinycss2
 from tinycss2.ast import Declaration, WhitespaceToken
 
 _PREFIXED_PROPERTIES = {
-    "transform", "transition", "animation", "appearance", "user-select",
-    "flex", "flex-grow", "flex-shrink", "flex-basis", "flex-direction",
-    "flex-wrap", "align-items", "align-self", "align-content",
-    "justify-content", "order",
+    "transform","transition","animation","appearance","user-select",
+    "flex","flex-grow","flex-shrink","flex-basis","flex-direction",
+    "flex-wrap","align-items","align-self","align-content",
+    "justify-content","order",
 }
 _UNSET_FALLBACKS = {
-    "box-shadow": "none", "background": "none", "height": "auto",
-    "width": "auto", "overflow": "visible", "overflow-x": "visible",
+    "box-shadow": "none","background": "none","height": "auto",
+    "width": "auto","overflow": "visible","overflow-x": "visible",
     "overflow-y": "visible",
 }
-_DECLARATION_AT_RULES = {"font-face", "page"}
+_DECLARATION_AT_RULES = {"font-face","page"}
 _RULE_AT_RULES = {
-    "media", "supports", "container", "document", "keyframes", "layer",
-    "scope", "starting-style",
+    "media","supports","container","document","keyframes","layer",
+    "scope","starting-style",
 }
 
 def adapt_html(html):
