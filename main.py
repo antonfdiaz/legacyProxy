@@ -17,7 +17,7 @@ from src.utils import set_config_value
 import os
 import sys
 
-VERSION = "0.8.2"
+VERSION = "0.8.3"
 
 GOOGLE_HOSTS = {"google.com","www.google.com"}
 COMPAT_EXCEPTIONS = {
@@ -282,6 +282,7 @@ def start_menu(image):
 
             ns_image = AppKit.NSImage.alloc().initWithData_(data)
             
+            ns_image.setTemplate_(True)
             ns_image.setSize_(AppKit.NSSize(thickness,thickness))
             self._icon_image = ns_image
             self._status_item.button().setImage_(self._icon_image)
@@ -319,7 +320,7 @@ if __name__ == "__main__":
         thread.start()
         
         if not "--disable-menu" in sys.argv:
-            image_path = Path(__file__).parent/"images"/"tray-icon-alt.png"
+            image_path = Path(__file__).parent/"images"/"tray-icon.png"
             image = Image.open(image_path).convert("RGBA")
             
             start_menu(image)
