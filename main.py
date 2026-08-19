@@ -16,7 +16,6 @@ from threading import Thread
 from src.utils import set_config_value
 import os
 import sys
-import dukpy
 
 VERSION = "0.9.0"
 
@@ -204,21 +203,6 @@ class InterceptAddon:
             for domain in COMPAT_EXCEPTIONS
         )
         
-    def should_transpile(self,url):
-        host = urlparse(url).hostname or ""
-
-        return not any(
-            host == domain or host.endswith("."+domain)
-            for domain in SKIP_JS_HOSTS
-        )
-        
-    def transpile_js(js: str) -> str:
-        try:
-            return dukpy.typescript_compile(js)
-        except Exception as e:
-            print(f"[WARN] JS transpile failed: {type(e).__name__}: {e}")
-            return js
-        
     def response(self,flow):
         content_type = flow.response.headers.get("Content-Type","").lower()
 
@@ -239,18 +223,6 @@ class InterceptAddon:
             elif "text/css" in content_type:
                 print("[INFO] adapting CSS for legacy WebKit...")
                 flow.response.text = compat.adapt_css(flow.response.text)
-            elif "text/javascript" in content_type and self.should_transpile(flow.request.pretty_url):
-                print("[INFO] adapting JS for legacy WebKit...")
-
-                original = flow.response.text
-
-                try:
-                    converted = dukpy.typescript_compile(original)
-                    flow.response.text = converted
-                    print("[INFO] JS transpiled successfully")
-                except Exception as e:
-                    print(f"[WARN] transpile failed: {type(e).__name__}: {e}")
-                    flow.response.text = original
 
         print(f"[INFO] intercepted response from: {url}")
 
