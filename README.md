@@ -52,7 +52,6 @@ To-do for website fixing. I will not be fixing websites that already work well w
   - [x] Modern homepage
   - [x] Web search
   - [x] Image search
-  - [ ] Video search
 - [x] Reddit
   - [x] Browse Reddit
 - [x] Wikipedia
