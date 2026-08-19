@@ -28,6 +28,11 @@ Wikipedia works correctly on every version I've tested.
 Injects custom CSS and JS into GitHub pages. Repo headers, navigation, file listings, README files and sidebars use a simple single-column layout that doesn't depend on modern CSS grid or flexbox support.  
 GitHub works better on iOS 6+.
 
+## App Fixes
+
+### Reddit
+Fixes iReddit, Alien Blue and the modern Reddit app. Login not tested.
+
 ## Usage
 ### How to run
 - Make a venv inside the proxy folder: `python -m venv .venv`
