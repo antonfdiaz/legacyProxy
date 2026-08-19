@@ -18,7 +18,7 @@ import os
 import sys
 import dukpy
 
-VERSION = "0.8.5"
+VERSION = "0.9.0"
 
 GOOGLE_HOSTS = {"google.com","www.google.com"}
 COMPAT_EXCEPTIONS = {
