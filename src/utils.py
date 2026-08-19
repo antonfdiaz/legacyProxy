@@ -19,6 +19,8 @@ def set_config_value(section,key,config):
             "general.host": "Host",
             "general.port": "Port",
             "general.chrome_path": "Chrome Path",
+            "services.reddit_cookie": "Reddit Cookie",
+            "services.reddit_token": "Reddit Token",
         }
         
         title = f"Set {LABELS.get(f'{section}.{key}',f'{section}.{key}')}".replace('"','\\"')

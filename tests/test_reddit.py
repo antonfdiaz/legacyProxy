@@ -102,6 +102,32 @@ class TestRedditProxy(unittest.TestCase):
         self.assertFalse(result)
         self.assertIsNone(flow.response)
 
+    def test_alien_blue_json_request_rewrites_ua(self):
+        """Test Alien Blue requests to .json rewrite User-Agent to modern UA and do not redirect."""
+        flow = self._create_flow(
+            "https://www.reddit.com/.json?limit=25",
+            method="GET",
+            headers={"User-Agent": "AlienBlue/2.9.0 (iPhone; iOS 6.1.3; Scale/2.00)"}
+        )
+        result = self.proxy.request(flow)
+
+        self.assertFalse(result)
+        self.assertIsNone(flow.response)
+        self.assertIn("Mozilla/5.0", flow.request.headers["User-Agent"])
+
+    def test_api_reddit_com_host(self):
+        """Test requests to api.reddit.com rewrite UA and do not redirect."""
+        flow = self._create_flow(
+            "https://api.reddit.com/r/all.json",
+            method="GET",
+            headers={"User-Agent": "AlienBlue/2.9.0"}
+        )
+        result = self.proxy.request(flow)
+
+        self.assertFalse(result)
+        self.assertIsNone(flow.response)
+        self.assertIn("Mozilla/5.0", flow.request.headers["User-Agent"])
+
     def test_oauth_host_not_redirected(self):
         """Test requests to oauth.reddit.com are not redirected to old.reddit.com."""
         flow = self._create_flow("https://oauth.reddit.com/api/v1/me", method="GET", headers={"Authorization": "bearer token123"})
@@ -148,6 +174,48 @@ class TestRedditProxy(unittest.TestCase):
         self.assertTrue(result)
         self.assertIn('<meta name="viewport" content="width=device-width,initial-scale=1.0">', flow.response.text)
         self.assertIn('id="legacy-proxy-mobile"', flow.response.text)
+
+    def test_cookie_injection(self):
+        """Test that configured reddit_cookie is injected into requests."""
+        proxy_with_cookie = RedditProxy(cookie="reddit_session=abc123xyz")
+        flow = self._create_flow("https://www.reddit.com/.json?limit=25", method="GET")
+        proxy_with_cookie.request(flow)
+        self.assertEqual(flow.request.headers.get("Cookie"), "reddit_session=abc123xyz")
+
+    def test_token_injection(self):
+        """Test that configured reddit_token is injected as Bearer token."""
+        proxy_with_token = RedditProxy(token="my_oauth_token")
+        flow = self._create_flow("https://oauth.reddit.com/r/technology.json", method="GET")
+        proxy_with_token.request(flow)
+        self.assertEqual(flow.request.headers.get("Authorization"), "Bearer my_oauth_token")
+
+    def test_token_routes_json_to_oauth(self):
+        """Test that web JSON requests (e.g. Alien Blue) are routed to oauth.reddit.com with Bearer token."""
+        proxy_with_token = RedditProxy(token="my_oauth_token")
+        flow = self._create_flow("https://www.reddit.com/.json?limit=25", method="GET", headers={"User-Agent": "AlienBlue/2.9.0"})
+        proxy_with_token.request(flow)
+        self.assertEqual(flow.request.url, "https://oauth.reddit.com/.json?limit=25")
+        self.assertEqual(flow.request.headers.get("Authorization"), "Bearer my_oauth_token")
+
+    def test_reddit_image_url_ampersand_unescaping(self):
+        """Test that &amp; in image preview URLs is fixed to &."""
+        flow = self._create_flow("https://preview.redd.it/7lznj9rec9kh1.jpeg?width=140&amp;height=140&amp;s=abc", method="GET")
+        result = self.proxy.request(flow)
+        self.assertFalse(result)
+        self.assertEqual(flow.request.url, "https://preview.redd.it/7lznj9rec9kh1.jpeg?width=140&height=140&s=abc")
+        self.assertIn("Mozilla/5.0", flow.request.headers.get("User-Agent", ""))
+        self.assertIn("image/jpeg", flow.request.headers.get("Accept", ""))
+
+    def test_reddit_json_response_ampersand_unescaping(self):
+        """Test that &amp; in JSON API responses is unescaped to &."""
+        flow = self._create_flow("https://oauth.reddit.com/.json", method="GET")
+        flow.response = MagicMock(spec=http.Response)
+        flow.response.headers = {"Content-Type": "application/json; charset=UTF-8"}
+        flow.response.text = '{"url": "https://preview.redd.it/xyz.jpg?width=140&amp;height=140&amp;s=123"}'
+        result = self.proxy.response(flow)
+        self.assertTrue(result)
+        self.assertIn("&height=140&s=123", flow.response.text)
+        self.assertNotIn("&amp;", flow.response.text)
 
 if __name__ == "__main__":
     unittest.main()

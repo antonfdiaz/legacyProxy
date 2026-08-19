@@ -58,7 +58,10 @@ class InterceptAddon:
         self.github = GitHubProxy() if config.services.github else None
         self.google = GoogleScraper(
             chrome_headless=self.config.general.chrome_headless) if config.services.google else None
-        self.reddit = RedditProxy() if config.services.reddit else None
+        self.reddit = RedditProxy(
+            cookie=getattr(self.config.services,"reddit_cookie",""),
+            token=getattr(self.config.services,"reddit_token",""),
+        ) if config.services.reddit else None
         self.wikipedia = WikipediaProxy() if config.services.wikipedia else None
 
     async def request(self,flow):
@@ -339,6 +342,7 @@ def start_menu(image):
         pystray.Menu.SEPARATOR,
         pystray.MenuItem("Google",lambda: set_config_value("services","google",config),checked=lambda item: config.services.google),
         pystray.MenuItem("Reddit",lambda: set_config_value("services","reddit",config),checked=lambda item: config.services.reddit),
+        pystray.MenuItem("Reddit Cookie...",lambda: set_config_value("services","reddit_cookie",config)),
         pystray.MenuItem("Wikipedia",lambda: set_config_value("services","wikipedia",config),checked=lambda item: config.services.wikipedia),
         pystray.MenuItem("GitHub",lambda: set_config_value("services","github",config),checked=lambda item: config.services.github),
         pystray.Menu.SEPARATOR,

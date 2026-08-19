@@ -15,6 +15,8 @@ class ServicesConfig:
     reddit: bool
     wikipedia: bool
     github: bool
+    reddit_cookie: str = ""
+    reddit_token: str = ""
 
 class Config:
     def __init__(self):
@@ -33,7 +35,9 @@ class Config:
             google=services_config.get("google",True),
             reddit=services_config.get("reddit",True),
             wikipedia=services_config.get("wikipedia",True),
-            github=services_config.get("github",True)
+            github=services_config.get("github",True),
+            reddit_cookie=services_config.get("reddit_cookie",""),
+            reddit_token=services_config.get("reddit_token",""),
         )
 
     def load_config(self):
@@ -59,6 +63,8 @@ class Config:
                 "reddit": True,
                 "wikipedia": True,
                 "github": True,
+                "reddit_cookie": "",
+                "reddit_token": "",
             }
         }
         return default_config
