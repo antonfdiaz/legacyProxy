@@ -49,7 +49,7 @@ Go to Settings -> Wi-Fi -> The button next to the selected network -> Go to the 
 - Port: `8080`
 - Authentication: OFF
 
-Then open Safari and go to `mitm.it` and install the iOS certificate.
+Then open Safari, go to `mitm.it` and install the iOS certificate.
 
 That's it! You can now use Google, Reddit, GitHub and more on your old iDevice!
 
