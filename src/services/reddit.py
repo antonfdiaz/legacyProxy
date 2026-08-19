@@ -11,7 +11,8 @@ REDDIT_API_HOSTS = {
 }
 REDDIT_HOSTS = REDDIT_WEB_HOSTS | REDDIT_API_HOSTS
 
-REDDIT_APP_CONFIG_JSON = b'{"experiments":{},"variables":{}}'
+REDDIT_APP_CONFIG_JSON = b'{"experiments":{},"variables":{},"status":"ok"}'
+REDDIT_APP_AUTH_TOKEN_JSON = b'{"access_token":"legacy_proxy_token","token_type":"bearer","expires_in":86400,"scope":"*"}'
 
 REDDIT_APP_USER_AGENTS = (
     "Reddit/",
@@ -33,15 +34,31 @@ class RedditProxy:
         url = flow.request.url
         parts = urlsplit(url)
 
-        #handle Reddit mobile app config requests
-        if host in (REDDIT_HOSTS | {"old.reddit.com"}) and parts.path.startswith("/redditmobile/"):
-            print(f"[INFO] serving mocked Reddit mobile config for: {url}")
+        #handle Reddit mobile app config and handshake requests (v1.0 - v2.x+)
+        if host in (REDDIT_HOSTS | {"old.reddit.com"}) and (
+            parts.path.startswith("/redditmobile/") or parts.path.startswith("/mobile/")
+        ):
+            print(f"[INFO] serving mocked Reddit mobile config/handshake for: {url}")
             flow.response = http.Response.make(
                 200,
                 REDDIT_APP_CONFIG_JSON,
                 {
                     "Content-Type": "application/json; charset=utf-8",
                     "Cache-Control": "max-age=3600",
+                    "Access-Control-Allow-Origin": "*",
+                },
+            )
+            return True
+
+        #handle Reddit first-party auth token requests (v1.0 guest/login)
+        if host in (REDDIT_HOSTS | {"old.reddit.com"}) and parts.path.startswith("/api/fp/"):
+            print(f"[INFO] serving mocked Reddit FP auth token for: {url}")
+            flow.response = http.Response.make(
+                200,
+                REDDIT_APP_AUTH_TOKEN_JSON,
+                {
+                    "Content-Type": "application/json; charset=utf-8",
+                    "Cache-Control": "no-store",
                     "Access-Control-Allow-Origin": "*",
                 },
             )
@@ -96,6 +113,7 @@ class RedditProxy:
             flow.request.method not in {"GET","HEAD"}
             or path.startswith("/api/")
             or path.startswith("/redditmobile/")
+            or path.startswith("/mobile/")
             or path.startswith("/svc/")
             or path.startswith("/graphql")
             or path.endswith(".json")

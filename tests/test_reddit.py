@@ -54,6 +54,28 @@ class TestRedditProxy(unittest.TestCase):
         self.assertEqual(flow.response.status_code, 200)
         self.assertEqual(flow.response.raw_content, REDDIT_APP_CONFIG_JSON)
 
+    def test_mobile_handshake_get(self):
+        """Test GET https://www.reddit.com/mobile/ios/1/handshake (v1.0) is intercepted and returns 200 JSON."""
+        flow = self._create_flow("https://www.reddit.com/mobile/ios/1/handshake", method="GET")
+        result = self.proxy.request(flow)
+
+        self.assertTrue(result)
+        self.assertIsNotNone(flow.response)
+        self.assertEqual(flow.response.status_code, 200)
+        self.assertEqual(flow.response.raw_content, REDDIT_APP_CONFIG_JSON)
+        self.assertIn("application/json", flow.response.headers.get("Content-Type", ""))
+
+    def test_fp_access_token_post(self):
+        """Test POST https://www.reddit.com/api/fp/1/auth/access_token is intercepted and returns 200 JSON token."""
+        flow = self._create_flow("https://www.reddit.com/api/fp/1/auth/access_token", method="POST")
+        result = self.proxy.request(flow)
+
+        self.assertTrue(result)
+        self.assertIsNotNone(flow.response)
+        self.assertEqual(flow.response.status_code, 200)
+        self.assertIn(b"access_token", flow.response.raw_content)
+        self.assertIn("application/json", flow.response.headers.get("Content-Type", ""))
+
     def test_browser_web_redirect(self):
         """Test standard web browsing to www.reddit.com redirects to old.reddit.com."""
         flow = self._create_flow(
