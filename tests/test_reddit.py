@@ -1,19 +1,19 @@
 import unittest
 from unittest.mock import MagicMock
 from mitmproxy import http
-from src.services.reddit import RedditProxy, REDDIT_APP_CONFIG_JSON
+from src.services.reddit import RedditProxy,REDDIT_APP_CONFIG_JSON
 
 class TestRedditProxy(unittest.IsolatedAsyncioTestCase):
     def setUp(self):
         self.proxy = RedditProxy()
 
-    def _create_flow(self, url, method="GET", headers=None):
+    def _create_flow(self,url,method="GET",headers=None):
         flow = MagicMock(spec=http.HTTPFlow)
         req = MagicMock(spec=http.Request)
         req.url = url
         req.method = method
         
-        # parse host from url
+        #parse host from url
         from urllib.parse import urlsplit
         parts = urlsplit(url)
         req.pretty_host = parts.hostname or ""
@@ -31,40 +31,40 @@ class TestRedditProxy(unittest.IsolatedAsyncioTestCase):
 
         self.assertTrue(result)
         self.assertIsNotNone(flow.response)
-        self.assertEqual(flow.response.status_code, 200)
-        self.assertEqual(flow.response.raw_content, REDDIT_APP_CONFIG_JSON)
-        self.assertIn("application/json", flow.response.headers.get("Content-Type", ""))
+        self.assertEqual(flow.response.status_code,200)
+        self.assertEqual(flow.response.raw_content,REDDIT_APP_CONFIG_JSON)
+        self.assertIn("application/json",flow.response.headers.get("Content-Type",""))
 
     async def test_mobile_config_www_get(self):
         """Test GET https://www.reddit.com/redditmobile/1/ios/config is intercepted and returns 200 JSON."""
-        flow = self._create_flow("https://www.reddit.com/redditmobile/1/ios/config", method="GET")
+        flow = self._create_flow("https://www.reddit.com/redditmobile/1/ios/config",method="GET")
         result = await self.proxy.request(flow)
 
         self.assertTrue(result)
         self.assertIsNotNone(flow.response)
-        self.assertEqual(flow.response.status_code, 200)
-        self.assertEqual(flow.response.raw_content, REDDIT_APP_CONFIG_JSON)
+        self.assertEqual(flow.response.status_code,200)
+        self.assertEqual(flow.response.raw_content,REDDIT_APP_CONFIG_JSON)
 
     async def test_mobile_config_old_reddit_get(self):
         """Test GET https://old.reddit.com/redditmobile/1/ios/config returns 200 JSON instead of 404."""
-        flow = self._create_flow("https://old.reddit.com/redditmobile/1/ios/config", method="GET")
+        flow = self._create_flow("https://old.reddit.com/redditmobile/1/ios/config",method="GET")
         result = await self.proxy.request(flow)
 
         self.assertTrue(result)
         self.assertIsNotNone(flow.response)
-        self.assertEqual(flow.response.status_code, 200)
-        self.assertEqual(flow.response.raw_content, REDDIT_APP_CONFIG_JSON)
+        self.assertEqual(flow.response.status_code,200)
+        self.assertEqual(flow.response.raw_content,REDDIT_APP_CONFIG_JSON)
 
     async def test_mobile_handshake_get(self):
         """Test GET https://www.reddit.com/mobile/ios/1/handshake (v1.0) is intercepted and returns 200 JSON."""
-        flow = self._create_flow("https://www.reddit.com/mobile/ios/1/handshake", method="GET")
+        flow = self._create_flow("https://www.reddit.com/mobile/ios/1/handshake",method="GET")
         result = await self.proxy.request(flow)
 
         self.assertTrue(result)
         self.assertIsNotNone(flow.response)
-        self.assertEqual(flow.response.status_code, 200)
-        self.assertEqual(flow.response.raw_content, REDDIT_APP_CONFIG_JSON)
-        self.assertIn("application/json", flow.response.headers.get("Content-Type", ""))
+        self.assertEqual(flow.response.status_code,200)
+        self.assertEqual(flow.response.raw_content,REDDIT_APP_CONFIG_JSON)
+        self.assertIn("application/json",flow.response.headers.get("Content-Type",""))
 
     async def test_fp_access_token_post(self):
         """Test POST https://www.reddit.com/api/fp/1/auth/access_token is intercepted and returns 200 JSON token."""
@@ -73,9 +73,9 @@ class TestRedditProxy(unittest.IsolatedAsyncioTestCase):
 
         self.assertTrue(result)
         self.assertIsNotNone(flow.response)
-        self.assertEqual(flow.response.status_code, 200)
-        self.assertIn(b"access_token", flow.response.raw_content)
-        self.assertIn("application/json", flow.response.headers.get("Content-Type", ""))
+        self.assertEqual(flow.response.status_code,200)
+        self.assertIn(b"access_token",flow.response.raw_content)
+        self.assertIn("application/json",flow.response.headers.get("Content-Type",""))
 
     async def test_browser_web_page_rendered(self):
         """Test standard web browsing to www.reddit.com routes to oauth and transforms JSON to HTML."""
@@ -88,8 +88,8 @@ class TestRedditProxy(unittest.IsolatedAsyncioTestCase):
         result = await proxy.request(flow)
 
         self.assertFalse(result)
-        self.assertEqual(flow.request.url, "https://oauth.reddit.com/r/technology.json")
-        self.assertEqual(flow.request.headers.get("Authorization"), "Bearer test_token")
+        self.assertEqual(flow.request.url,"https://oauth.reddit.com/r/technology.json")
+        self.assertEqual(flow.request.headers.get("Authorization"),"Bearer test_token")
 
         # Mock JSON response from oauth.reddit.com
         flow.response = MagicMock(spec=http.Response)
