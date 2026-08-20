@@ -11,7 +11,7 @@ legacyProxy adapts the CSS and HTML of the websites you visit in real time, so i
 ## Website Fixes
 
 ### Reddit
-Uses a custom frontend that looks like old Reddit and gets the data from the Reddit API using the website token. The token is updated every 24 hours automatically so Reddit doesn't stop working on the device.
+Uses a custom frontend that looks like old Reddit and gets the data from the Reddit API using the website token. The token is updated every 24 hours automatically so Reddit doesn't stop working in the device.
 
 ### Google Search
 Scrapes Google Search results and builds the results page from a local *HTML template*.
@@ -30,7 +30,7 @@ GitHub works better on iOS 6+.
 ## App Fixes
 
 ### Reddit
-Fixes iReddit, Alien Blue and the modern Reddit app. Login not tested.
+Fixes iReddit, Alien Blue and the modern Reddit app. Uses the Reddit token for the API calls and fixes other stuff. Login not tested.
 
 ## Usage
 ### How to run
