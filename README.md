@@ -30,7 +30,7 @@ GitHub works better on iOS 6+.
 ## App Fixes
 
 ### Reddit
-Fixes iReddit, Alien Blue and the modern Reddit app. Uses the Reddit token for the API calls and fixes other stuff. Login not tested.
+Fixes iReddit, Alien Blue and the modern Reddit app. Uses the Reddit token for the API calls and fixes some other stuff. Login not tested.
 
 ## Usage
 ### How to run
