@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>{{title}} : {{subreddit_name}}</title>
+    <style id="legacy-proxy-mobile">
+{{css}}
+    </style>
+</head>
+<body class="comments-page">
+    <div id="header">
+        <div id="header-bottom-left">
+            <span class="pagename selected"><a href="{{subreddit_url}}">{{subreddit_name}}</a></span>
+            <ul class="tabmenu">
+                <li><a href="{{subreddit_url}}">front</a></li>
+                <li class="selected"><a href="#">comments</a></li>
+            </ul>
+        </div>
+    </div>
+    <div class="content">
+        <div id="siteTable" class="sitetable linklisting">
+            <div class="thing link">
+                <div class="midcol unvoted">
+                    <div class="arrow up"></div>
+                    <div class="score unvoted">{{score}}</div>
+                    <div class="arrow down"></div>
+                </div>
+                <div class="entry unvoted">
+                    <p class="title"><a class="title" href="{{url}}">{{title}}</a></p>
+                    <p class="tagline">submitted {{created}} by <a href="/user/{{author}}" class="author">{{author}}</a> to <a href="{{subreddit_url}}" class="subreddit">{{subreddit_name}}</a></p>
+                    {{media}}
+                    {{selftext}}
+                    <ul class="flat-list buttons">
+                        <li class="first"><a href="#" class="comments">{{num_comments}} comments</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="commentarea">
+{{comments}}
+        </div>
+    </div>
+</body>
+</html>

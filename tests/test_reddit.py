@@ -76,19 +76,29 @@ class TestRedditProxy(unittest.IsolatedAsyncioTestCase):
         self.assertIn(b"access_token", flow.response.raw_content)
         self.assertIn("application/json", flow.response.headers.get("Content-Type", ""))
 
-    async def test_browser_web_redirect(self):
-        """Test standard web browsing to www.reddit.com redirects to old.reddit.com."""
+    async def test_browser_web_page_rendered(self):
+        """Test standard web browsing to www.reddit.com routes to oauth and transforms JSON to HTML."""
         flow = self._create_flow(
             "https://www.reddit.com/r/technology",
             method="GET",
             headers={"User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 8_4_1 like Mac OS X) AppleWebKit/600.1.4 (KHTML, like Gecko) Version/8.0 Mobile/12H321 Safari/600.1.4"}
         )
-        result = await self.proxy.request(flow)
+        proxy = RedditProxy(token="test_token")
+        result = await proxy.request(flow)
 
-        self.assertTrue(result)
-        self.assertIsNotNone(flow.response)
-        self.assertEqual(flow.response.status_code, 302)
-        self.assertEqual(flow.response.headers["Location"], "https://old.reddit.com/r/technology")
+        self.assertFalse(result)
+        self.assertEqual(flow.request.url, "https://oauth.reddit.com/r/technology.json")
+        self.assertEqual(flow.request.headers.get("Authorization"), "Bearer test_token")
+
+        # Mock JSON response from oauth.reddit.com
+        flow.response = MagicMock(spec=http.Response)
+        flow.response.headers = {"Content-Type": "application/json; charset=UTF-8"}
+        flow.response.text = '{"kind": "Listing", "data": {"children": [{"data": {"title": "Tech News", "subreddit": "technology", "author": "user1", "score": 100, "num_comments": 20, "created_utc": 1700000000}}]}}'
+        resp_result = proxy.response(flow)
+        self.assertTrue(resp_result)
+        self.assertIn("text/html", flow.response.headers.get("Content-Type", ""))
+        self.assertIn("Tech News", flow.response.text)
+        self.assertIn("r/technology", flow.response.text)
 
     async def test_app_user_agent_not_redirected(self):
         """Test requests with Reddit App User-Agent are not redirected to old.reddit.com."""

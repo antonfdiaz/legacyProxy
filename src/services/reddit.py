@@ -40,9 +40,12 @@ REDDIT_APP_USER_AGENTS = (
 
 MODERN_USER_AGENT = "Mozilla/5.0 (iPhone; CPU iPhone OS 16_5 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/16.5 Mobile/15E148 Safari/604.1"
 
+LISTING_TEMPLATE = (Path(__package__).parent / "html" / "reddit_listing.html").read_text(encoding="utf-8")
+COMMENTS_TEMPLATE = (Path(__package__).parent / "html" / "reddit_comments.html").read_text(encoding="utf-8")
+REDDIT_CSS = (Path(__package__).parent / "css" / "reddit.css").read_text(encoding="utf-8")
 REDDIT_MOBILE_CSS = f"""
 <style id="legacy-proxy-mobile">
-{(Path(__package__).parent/"css"/"reddit.css").read_text(encoding="utf-8")}
+{REDDIT_CSS}
 </style>
 """
 
@@ -118,8 +121,14 @@ class RedditProxy:
                     user_agent="Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36"
                 )
                 page = context.pages[0] if context.pages else await context.new_page()
-                await page.goto("https://www.reddit.com",wait_until="networkidle",timeout=25000)
-                await asyncio.sleep(2)
+                for attempt in range(2):
+                    try:
+                        await page.goto("https://www.reddit.com", wait_until="domcontentloaded", timeout=15000)
+                        await asyncio.sleep(2)
+                        break
+                    except Exception:
+                        if attempt == 0:
+                            await asyncio.sleep(1)
 
                 cookies = await context.cookies()
                 token = None
@@ -296,20 +305,190 @@ class RedditProxy:
             flow.request.headers["User-Agent"] = MODERN_USER_AGENT
             return False
 
-        #standard web browser navigation on reddit.com/www.reddit.com -> redirect to old.reddit.com
-        if host in REDDIT_WEB_HOSTS:
-            print(f"intercepting Reddit request: {url}")
-            redirect_url = urlunsplit(
-                (parts.scheme,"old.reddit.com",parts.path,parts.query,parts.fragment)
-            )
-            flow.response = http.Response.make(
-                302,
-                b"",
-                {"Location": redirect_url,"Cache-Control": "no-store"},
-            )
-            return True
+        #handle web browser navigation on reddit.com/www.reddit.com/old.reddit.com (bypasses reddit's login popup)
+        if host in REDDIT_WEB_HOSTS or host == "old.reddit.com":
+            clean_path = parts.path
+            #if redirected to login?reason=lor2, extract destination path
+            if clean_path.startswith("/login"):
+                dest_match = re.search(r'dest=([^&]+)',parts.query)
+                if dest_match:
+                    from urllib.parse import unquote
+                    dest_url = unquote(dest_match.group(1))
+                    dest_parts = urlsplit(dest_url)
+                    clean_path = dest_parts.path or "/"
+
+            active_token = await self.get_token_async()
+            api_path = clean_path.rstrip("/") or "/"
+            if not api_path.endswith(".json"):
+                api_path = f"{api_path}.json" if api_path != "/" else "/.json"
+
+            flow.request.url = urlunsplit(("https","oauth.reddit.com",api_path,parts.query,parts.fragment))
+            if active_token:
+                flow.request.headers["Authorization"] = f"Bearer {active_token}"
+            flow.request.headers["User-Agent"] = MODERN_USER_AGENT
+            return False
 
         return False
+
+    def _time_ago(self,created_utc):
+        import datetime
+        diff = int(datetime.datetime.now(datetime.timezone.utc).timestamp()-(created_utc or 0))
+        if diff < 60:
+            return "just now"
+        elif diff < 3600:
+            return f"{diff//60} minutes ago"
+        elif diff < 86400:
+            return f"{diff//3600} hours ago"
+        else:
+            return f"{diff//86400} days ago"
+
+    def _render_comment_tree(self,comments):
+        import html
+        html_out = []
+        for c in comments:
+            if c.get("kind") != "t1":
+                continue
+            cd = c.get("data", {})
+            author = html.escape(cd.get("author","[deleted]"))
+            body = cd.get("body","")
+            body_html = "<br/>".join(html.escape(line) for line in body.split("\n"))
+            score = cd.get("score",0)
+            created = self._time_ago(cd.get("created_utc",0))
+
+            replies_data = cd.get("replies")
+            replies_html = ""
+            if isinstance(replies_data,dict):
+                child_comments = replies_data.get("data",{}).get("children",[])
+                if child_comments:
+                    replies_html = f'<div class="child">{self._render_comment_tree(child_comments)}</div>'
+
+            html_out.append(f'''
+            <div class="thing comment" data-fullname="{cd.get('name','')}">
+                <div class="entry unvoted">
+                    <p class="tagline">
+                        <a href="/user/{author}" class="author">{author}</a>
+                        <span class="score unvoted">{score} points</span>
+                        <time>{created}</time>
+                    </p>
+                    <div class="usertext-body">
+                        <div class="md"><p>{body_html}</p></div>
+                    </div>
+                    {replies_html}
+                </div>
+            </div>
+            ''')
+        return "".join(html_out)
+
+    def _render_listing(self,data,current_path,query):
+        import html
+        children = data.get("data", {}).get("children", [])
+        after = data.get("data", {}).get("after")
+
+        #detect subreddit from path
+        subreddit = "reddit"
+        if "/r/" in current_path:
+            parts = current_path.strip("/").split("/")
+            if len(parts) >= 2 and parts[0] == "r":
+                subreddit = f"r/{parts[1]}"
+
+        items_html = []
+        for i, child in enumerate(children, start=1):
+            p = child.get("data", {})
+            title = html.escape(p.get("title", ""))
+            url = html.escape(p.get("url", ""))
+            permalink = html.escape(p.get("permalink", ""))
+            author = html.escape(p.get("author", ""))
+            sub = html.escape(p.get("subreddit", ""))
+            score = p.get("score", 0)
+            num_comments = p.get("num_comments", 0)
+            domain = html.escape(p.get("domain", f"self.{sub}"))
+            created = self._time_ago(p.get("created_utc", 0))
+            thumbnail = p.get("thumbnail", "")
+
+            target_url = url if url.startswith("http") and not url.startswith("https://www.reddit.com") else permalink
+
+            thumb_html = ""
+            if thumbnail and thumbnail.startswith("http"):
+                thumb_html = f'<a class="thumbnail" href="{target_url}"><img src="{html.escape(thumbnail)}" width="70" height="50" /></a>'
+
+            item = f'''
+            <div class="thing link" data-fullname="{p.get('name', '')}">
+                <span class="rank">{i}</span>
+                <div class="midcol unvoted">
+                    <div class="arrow up"></div>
+                    <div class="score unvoted">{score}</div>
+                    <div class="arrow down"></div>
+                </div>
+                {thumb_html}
+                <div class="entry unvoted">
+                    <p class="title">
+                        <a class="title" href="{target_url}">{title}</a>
+                        <span class="domain">(<a href="/domain/{domain}/">{domain}</a>)</span>
+                    </p>
+                    <p class="tagline">submitted {created} by <a href="/user/{author}" class="author">{author}</a> to <a href="/r/{sub}/" class="subreddit">r/{sub}</a></p>
+                    <ul class="flat-list buttons">
+                        <li class="first"><a href="{permalink}" class="comments">{num_comments} comments</a></li>
+                    </ul>
+                </div>
+            </div>
+            '''
+            items_html.append(item)
+
+        nav_html = '<div class="nav-buttons">'
+        if after:
+            nav_html += f'<span class="nextprev">view more: <a href="?after={after}" rel="nofollow next">next &rsaquo;</a></span>'
+        nav_html += "</div>"
+
+        base_link = f"/{subreddit}" if subreddit != "reddit" else ""
+        return (
+            LISTING_TEMPLATE
+            .replace("{{title}}", f"{subreddit}: reddit.com")
+            .replace("{{css}}", REDDIT_CSS)
+            .replace("{{subreddit_name}}", subreddit)
+            .replace("{{subreddit_url}}", base_link or "/")
+            .replace("{{tab_hot_class}}", "selected" if "hot" in current_path or current_path.endswith(("/", subreddit)) else "")
+            .replace("{{tab_new_class}}", "selected" if "new" in current_path else "")
+            .replace("{{tab_top_class}}", "selected" if "top" in current_path else "")
+            .replace("{{items}}", "\n".join(items_html))
+            .replace("{{pagination}}", nav_html)
+        )
+
+    def _render_comments(self, data, current_path, query):
+        import html
+        post = data[0]["data"]["children"][0]["data"]
+        comments = data[1]["data"]["children"]
+
+        title = html.escape(post.get("title", ""))
+        author = html.escape(post.get("author", ""))
+        sub = html.escape(post.get("subreddit", ""))
+        score = post.get("score", 0)
+        num_comments = post.get("num_comments", 0)
+        created = self._time_ago(post.get("created_utc", 0))
+        selftext = post.get("selftext", "")
+        selftext_html = "<br/>".join(html.escape(line) for line in selftext.split("\n")) if selftext else ""
+        url = html.escape(post.get("url", ""))
+
+        media_html = ""
+        if url.endswith((".jpg", ".jpeg", ".png", ".gif", ".webp")):
+            media_html = f'<div class="media-preview"><a href="{url}"><img src="{url}" style="max-width:100%; height:auto; display:block; margin: 8px 0;" /></a></div>'
+
+        comments_html = self._render_comment_tree(comments)
+
+        return (
+            COMMENTS_TEMPLATE
+            .replace("{{title}}", title)
+            .replace("{{subreddit_name}}", f"r/{sub}")
+            .replace("{{subreddit_url}}", f"/r/{sub}")
+            .replace("{{css}}", REDDIT_CSS)
+            .replace("{{score}}", str(score))
+            .replace("{{url}}", url)
+            .replace("{{created}}", created)
+            .replace("{{author}}", author)
+            .replace("{{media}}", media_html)
+            .replace("{{selftext}}", f'<div class="usertext-body"><div class="md"><p>{selftext_html}</p></div></div>' if selftext_html else "")
+            .replace("{{num_comments}}", str(num_comments))
+            .replace("{{comments}}", comments_html)
+        )
 
     def is_api_request(self,flow,path):
         accept = flow.request.headers.get("Accept","").lower()
@@ -332,11 +511,36 @@ class RedditProxy:
 
     def response(self,flow):
         content_type = flow.response.headers.get("Content-Type","").lower()
+        accept = flow.request.headers.get("Accept","").lower()
+        user_agent = flow.request.headers.get("User-Agent","")
+        is_app = any(app_ua in user_agent for app_ua in REDDIT_APP_USER_AGENTS)
+
         if "application/json" in content_type:
+            #fix &amp; in json responses
             if "&amp;" in flow.response.text:
                 flow.response.text = flow.response.text.replace("&amp;","&")
-                return True
-            return False
+
+            #if a web browser requested HTML, transform JSON into legacy mobile HTML
+            if not is_app and ("text/html" in accept or "Mozilla" in user_agent):
+                try:
+                    data = json.loads(flow.response.text)
+                    parts = urlsplit(flow.request.url)
+                    path = parts.path
+                    if path.endswith(".json"):
+                        path = path[:-5]
+
+                    if isinstance(data, list) and len(data) >= 2:
+                        flow.response.text = self._render_comments(data, path, parts.query)
+                        flow.response.headers["Content-Type"] = "text/html; charset=utf-8"
+                        return True
+                    elif isinstance(data, dict) and "data" in data:
+                        flow.response.text = self._render_listing(data, path, parts.query)
+                        flow.response.headers["Content-Type"] = "text/html; charset=utf-8"
+                        return True
+                except Exception as e:
+                    print(f"[WARN] Failed to transform Reddit JSON to HTML: {e}")
+
+            return True
 
         if flow.request.pretty_host != "old.reddit.com" or "text/html" not in content_type:
             return False
