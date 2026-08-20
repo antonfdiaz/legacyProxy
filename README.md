@@ -11,8 +11,7 @@ legacyProxy adapts the CSS and HTML of the websites you visit in real time, so i
 ## Website Fixes
 
 ### Reddit
-Redirects `reddit.com` URLs to `old.reddit.com` and modifies its CSS to work better on old Safari/WebKit.  
-Reddit looks a bit better on iOS 8+ than on iOS 3 and 6.
+Uses a custom frontend that looks like old Reddit and gets the data from the Reddit API using the website token. The token is updated every 24 hours automatically so Reddit doesn't stop working on the device.
 
 ### Google Search
 Scrapes Google Search results and builds the results page from a local *HTML template*.
@@ -31,9 +30,7 @@ GitHub works better on iOS 6+.
 ## App Fixes
 
 ### Reddit
-Fixes iReddit, Alien Blue and the modern Reddit app. Login not tested.  
-
-**Note**: To fix iReddit and Alien Blue, you need the Reddit cookie. You can get it by going to `reddit.com` in a modern browser, going to the dev tools, clicking Storage/Application and search for the cookie called `token_v2`. Copy its value and paste it into the "Reddit cookie" value in the proxy settings.
+Fixes iReddit, Alien Blue and the modern Reddit app. Login not tested.
 
 ## Usage
 ### How to run
