@@ -190,7 +190,7 @@ class InterceptAddon:
             if flow.request.path == "/images/reddit.png" and host in {"reddit.com","www.reddit.com"}:
                 flow.response = http.Response.make(
                     200,
-                    (Path(__file__).parent/"images"/"reddit.png").read_bytes(),
+                    (Path(__file__).parent/"images"/"reddit2.png").read_bytes(),
                     {"Content-Type": "image/png","Cache-Control": "public,max-age=86400"},
                 )
                 return
