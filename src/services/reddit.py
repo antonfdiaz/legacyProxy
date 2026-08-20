@@ -307,6 +307,7 @@ class RedditProxy:
 
         #handle web browser navigation on reddit.com/www.reddit.com/old.reddit.com (bypasses reddit's login popup)
         if host in REDDIT_WEB_HOSTS or host == "old.reddit.com":
+            flow.metadata["reddit_render_html"] = True
             clean_path = parts.path
             #if redirected to login?reason=lor2, extract destination path
             if clean_path.startswith("/login"):
@@ -511,17 +512,14 @@ class RedditProxy:
 
     def response(self,flow):
         content_type = flow.response.headers.get("Content-Type","").lower()
-        accept = flow.request.headers.get("Accept","").lower()
-        user_agent = flow.request.headers.get("User-Agent","")
-        is_app = any(app_ua in user_agent for app_ua in REDDIT_APP_USER_AGENTS)
 
         if "application/json" in content_type:
             #fix &amp; in json responses
             if "&amp;" in flow.response.text:
                 flow.response.text = flow.response.text.replace("&amp;","&")
 
-            #if a web browser requested HTML, transform JSON into legacy mobile HTML
-            if not is_app and ("text/html" in accept or "Mozilla" in user_agent):
+            #only transform to HTML if explicitly marked for web browser rendering
+            if getattr(flow, "metadata", {}).get("reddit_render_html"):
                 try:
                     data = json.loads(flow.response.text)
                     parts = urlsplit(flow.request.url)

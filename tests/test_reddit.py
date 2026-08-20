@@ -21,6 +21,7 @@ class TestRedditProxy(unittest.IsolatedAsyncioTestCase):
         req.headers = headers or {}
         flow.request = req
         flow.response = None
+        flow.metadata = {}
         return flow
 
     async def test_mobile_config_gateway_post(self):
