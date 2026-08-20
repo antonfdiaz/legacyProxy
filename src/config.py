@@ -17,6 +17,8 @@ class ServicesConfig:
     github: bool
     reddit_cookie: str = ""
     reddit_token: str = ""
+    reddit_client_id: str = ""
+    reddit_client_secret: str = ""
 
 class Config:
     def __init__(self):
@@ -38,6 +40,8 @@ class Config:
             github=services_config.get("github",True),
             reddit_cookie=services_config.get("reddit_cookie",""),
             reddit_token=services_config.get("reddit_token",""),
+            reddit_client_id=services_config.get("reddit_client_id",""),
+            reddit_client_secret=services_config.get("reddit_client_secret",""),
         )
 
     def load_config(self):
@@ -65,6 +69,8 @@ class Config:
                 "github": True,
                 "reddit_cookie": "",
                 "reddit_token": "",
+                "reddit_client_id": "",
+                "reddit_client_secret": "",
             }
         }
         return default_config

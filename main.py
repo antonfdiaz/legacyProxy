@@ -60,6 +60,10 @@ class InterceptAddon:
         self.reddit = RedditProxy(
             cookie=getattr(self.config.services,"reddit_cookie",""),
             token=getattr(self.config.services,"reddit_token",""),
+            client_id=getattr(self.config.services,"reddit_client_id",""),
+            client_secret=getattr(self.config.services,"reddit_client_secret",""),
+            chrome_headless=self.config.general.chrome_headless,
+            config=self.config,
         ) if config.services.reddit else None
         self.wikipedia = WikipediaProxy() if config.services.wikipedia else None
 
@@ -182,7 +186,7 @@ class InterceptAddon:
                         {"Content-Type": "text/html; charset=utf-8"},
                     )
                 
-        if self.reddit and self.reddit.request(flow):
+        if self.reddit and await self.reddit.request(flow):
             return
         
         if self.wikipedia and self.wikipedia.request(flow):
@@ -242,6 +246,9 @@ async def start_proxy(host,port):
     master = DumpMaster(opts)
     addon = InterceptAddon()
     master.addons.add(addon)
+
+    if addon.reddit:
+        asyncio.create_task(addon.reddit.start_auto_refresh())
     
     try:
         print(r""" _                               ___                     
@@ -314,7 +321,6 @@ def start_menu(image):
         pystray.Menu.SEPARATOR,
         pystray.MenuItem("Google",lambda: set_config_value("services","google",config),checked=lambda item: config.services.google),
         pystray.MenuItem("Reddit",lambda: set_config_value("services","reddit",config),checked=lambda item: config.services.reddit),
-        pystray.MenuItem("Reddit Cookie...",lambda: set_config_value("services","reddit_cookie",config)),
         pystray.MenuItem("Wikipedia",lambda: set_config_value("services","wikipedia",config),checked=lambda item: config.services.wikipedia),
         pystray.MenuItem("GitHub",lambda: set_config_value("services","github",config),checked=lambda item: config.services.github),
         pystray.Menu.SEPARATOR,
