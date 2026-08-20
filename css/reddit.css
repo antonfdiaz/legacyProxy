@@ -9,7 +9,7 @@
     body {
         background: #fff !important;
         color: #222 !important;
-        font-family: Arial,Helvetica,sans-serif !important;
+        font: normal x-small verdana,arial,helvetica,sans-serif;
         font-size: 13px;
         line-height: 18px;
         -webkit-text-size-adjust: 100%;
@@ -48,7 +48,13 @@
         line-height: 24px !important;
         vertical-align: middle;
     }
-    .pagename a { color: #000 !important; }
+    .pagename a {
+        color: #000 !important;
+        text-transform: uppercase;
+        font-variant: small-caps;
+        font-weight: bold;
+        text-decoration: none;
+    }
     #header-bottom-left .tabmenu {
         display: block;
         margin: 0;
@@ -62,6 +68,10 @@
         margin: 0 2px 0 0;
         padding: 3px 6px;
         background: #eff7ff;
+        border-left: 1px solid #5f99cf !important;
+        border-top: 1px solid #5f99cf !important;
+        border-right: 1px solid #5f99cf !important;
+        border-bottom: 1px solid #fff !important;
     }
     #header-bottom-left .tabmenu li.selected {
         background: #fff;
@@ -70,6 +80,9 @@
         font-size: 13px;
         font-weight: bold;
         text-decoration: none;
+    }
+    #header-bottom-left .tabmenu li.selected a {
+        color: orangered;
     }
     #header-bottom-right {
         position: static;

@@ -389,7 +389,7 @@ class RedditProxy:
         if "/r/" in current_path:
             parts = current_path.strip("/").split("/")
             if len(parts) >= 2 and parts[0] == "r":
-                subreddit = f"r/{parts[1]}"
+                subreddit = parts[1]
 
         items_html = []
         for i, child in enumerate(children, start=1):
@@ -476,18 +476,18 @@ class RedditProxy:
 
         return (
             COMMENTS_TEMPLATE
-            .replace("{{title}}", title)
-            .replace("{{subreddit_name}}", f"r/{sub}")
-            .replace("{{subreddit_url}}", f"/r/{sub}")
-            .replace("{{css}}", REDDIT_CSS)
-            .replace("{{score}}", str(score))
-            .replace("{{url}}", url)
-            .replace("{{created}}", created)
-            .replace("{{author}}", author)
-            .replace("{{media}}", media_html)
-            .replace("{{selftext}}", f'<div class="usertext-body"><div class="md"><p>{selftext_html}</p></div></div>' if selftext_html else "")
-            .replace("{{num_comments}}", str(num_comments))
-            .replace("{{comments}}", comments_html)
+            .replace("{{title}}",title)
+            .replace("{{subreddit_name}}",sub)
+            .replace("{{subreddit_url}}",sub)
+            .replace("{{css}}",REDDIT_CSS)
+            .replace("{{score}}",str(score))
+            .replace("{{url}}",url)
+            .replace("{{created}}",created)
+            .replace("{{author}}",author)
+            .replace("{{media}}",media_html)
+            .replace("{{selftext}}",f'<div class="usertext-body"><div class="md"><p>{selftext_html}</p></div></div>' if selftext_html else "")
+            .replace("{{num_comments}}",str(num_comments))
+            .replace("{{comments}}",comments_html)
         )
 
     def is_api_request(self,flow,path):

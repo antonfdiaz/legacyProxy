@@ -185,6 +185,15 @@ class InterceptAddon:
                         ).encode("utf-8"),
                         {"Content-Type": "text/html; charset=utf-8"},
                     )
+                    
+        if self.reddit:
+            if flow.request.path == "/images/reddit.png" and host in {"reddit.com","www.reddit.com"}:
+                flow.response = http.Response.make(
+                    200,
+                    (Path(__file__).parent/"images"/"reddit.png").read_bytes(),
+                    {"Content-Type": "image/png","Cache-Control": "public,max-age=86400"},
+                )
+                return
                 
         if self.reddit and await self.reddit.request(flow):
             return

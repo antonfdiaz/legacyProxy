@@ -4,6 +4,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
     <title>{{title}}</title>
+    <link rel="shortcut icon" href="http://www.redditstatic.com/favicon.ico" type="image/x-icon">
+    <link rel="apple-touch-icon-precomposed" href="http://www.redditstatic.com/icon-touch.png">
     <style id="legacy-proxy-mobile">
 {{css}}
     </style>
@@ -11,10 +13,12 @@
 <body class="listing-page">
     <div id="header">
         <div id="header-bottom-left">
+            <a href="https://reddit.com"><img src="/images/reddit.png" alt="Reddit"></a>
             <span class="pagename selected"><a href="{{subreddit_url}}">{{subreddit_name}}</a></span>
             <ul class="tabmenu">
-                <li class="{{tab_hot_class}}"><a href="{{subreddit_url}}/hot">hot</a></li>
+                <li class="{{tab_hot_class}}"><a href="{{subreddit_url}}/hot">what's hot</a></li>
                 <li class="{{tab_new_class}}"><a href="{{subreddit_url}}/new">new</a></li>
+                <li class="{{tab_new_class}}"><a href="{{subreddit_url}}/controversial">controversial</a></li>
                 <li class="{{tab_top_class}}"><a href="{{subreddit_url}}/top">top</a></li>
             </ul>
         </div>
