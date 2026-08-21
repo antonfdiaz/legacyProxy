@@ -1,7 +1,6 @@
 import re
 from pathlib import Path
 from urllib.parse import urlsplit,urlunsplit
-import src.compat as compat
 
 ROOT = Path(__file__).resolve().parents[2]
 WIKIPEDIA_CSS = f"""

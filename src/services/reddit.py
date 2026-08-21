@@ -517,6 +517,10 @@ class RedditProxy:
         )
 
     def response(self,flow):
+        host = flow.request.pretty_host.lower()
+        if host not in REDDIT_HOSTS and not host.endswith(".reddit.com") and not host.endswith(".redd.it"):
+            return
+
         content_type = flow.response.headers.get("Content-Type","").lower()
 
         if "application/json" in content_type:

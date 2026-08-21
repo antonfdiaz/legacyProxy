@@ -2,6 +2,7 @@ from mitmproxy import http,options
 from mitmproxy.tools.dump import DumpMaster
 from src.services.github import GitHubProxy
 from src.services.google import GoogleCaptchaError,GoogleScraper
+from src.services.imdb import IMDbProxy
 from src.services.reddit import RedditProxy
 from src.services.wikipedia import WikipediaProxy
 from src.config import Config
@@ -25,7 +26,11 @@ COMPAT_EXCEPTIONS = {
     "www.google.com",
     "github.com",
     "www.github.com",
-    "wikipedia.org"
+    "wikipedia.org",
+    "imdb.com",
+    "media-imdb.com",
+    "imdbws.com",
+    "amazon-adsystem.com",
 }
 IGNORE_HOSTS = [
     r"(^|\.)apple\.com:443$",
@@ -57,6 +62,7 @@ class InterceptAddon:
         self.github = GitHubProxy() if config.services.github else None
         self.google = GoogleScraper(
             chrome_headless=self.config.general.chrome_headless) if config.services.google else None
+        self.imdb = IMDbProxy(config=self.config) if config.services.imdb else None
         self.reddit = RedditProxy(
             cookie=getattr(self.config.services,"reddit_cookie",""),
             token=getattr(self.config.services,"reddit_token",""),
@@ -195,6 +201,9 @@ class InterceptAddon:
                 )
                 return
                 
+        if self.imdb and await self.imdb.request(flow):
+            return
+
         if self.reddit and await self.reddit.request(flow):
             return
         
@@ -225,6 +234,7 @@ class InterceptAddon:
         self.github.response(flow) if self.github else None
         self.wikipedia.response(flow) if self.wikipedia else None
         self.reddit.response(flow) if self.reddit else None
+        self.imdb.response(flow) if self.imdb else None
         
         if self.should_ignore_response(content_type):
             return
@@ -258,6 +268,8 @@ async def start_proxy(host,port):
 
     if addon.reddit:
         asyncio.create_task(addon.reddit.start_auto_refresh())
+    if addon.imdb:
+        asyncio.create_task(addon.imdb.start_auto_refresh())
     
     try:
         print(r""" _                               ___                     
@@ -332,6 +344,7 @@ def start_menu(image):
         pystray.MenuItem("Reddit",lambda: set_config_value("services","reddit",config),checked=lambda item: config.services.reddit),
         pystray.MenuItem("Wikipedia",lambda: set_config_value("services","wikipedia",config),checked=lambda item: config.services.wikipedia),
         pystray.MenuItem("GitHub",lambda: set_config_value("services","github",config),checked=lambda item: config.services.github),
+        pystray.MenuItem("IMDb",lambda: set_config_value("services","imdb",config),checked=lambda item: config.services.imdb),
         pystray.Menu.SEPARATOR,
         pystray.MenuItem("Exit",on_exit)
     ))

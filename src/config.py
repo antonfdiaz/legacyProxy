@@ -15,6 +15,7 @@ class ServicesConfig:
     reddit: bool
     wikipedia: bool
     github: bool
+    imdb: bool = True
     reddit_cookie: str = ""
     reddit_token: str = ""
     reddit_client_id: str = ""
@@ -38,6 +39,7 @@ class Config:
             reddit=services_config.get("reddit",True),
             wikipedia=services_config.get("wikipedia",True),
             github=services_config.get("github",True),
+            imdb=services_config.get("imdb",True),
             reddit_cookie=services_config.get("reddit_cookie",""),
             reddit_token=services_config.get("reddit_token",""),
             reddit_client_id=services_config.get("reddit_client_id",""),
@@ -67,6 +69,7 @@ class Config:
                 "reddit": True,
                 "wikipedia": True,
                 "github": True,
+                "imdb": True,
                 "reddit_cookie": "",
                 "reddit_token": "",
                 "reddit_client_id": "",
