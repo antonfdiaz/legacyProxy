@@ -4,4 +4,3 @@ beautifulsoup4
 pillow
 pystray
 tinycss2
-dukpy

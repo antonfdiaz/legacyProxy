@@ -8,6 +8,7 @@ from pathlib import Path
 from urllib.parse import urlsplit,urlunsplit
 from mitmproxy import http
 from patchright.async_api import async_playwright
+import platform
 
 REDDIT_WEB_HOSTS = {"reddit.com","www.reddit.com"}
 REDDIT_API_HOSTS = {
@@ -49,7 +50,13 @@ REDDIT_MOBILE_CSS = f"""
 </style>
 """
 
-CHROME_PATH = Path("/Applications/Google Chrome.app")
+if platform.system() == "Darwin":
+    CHROME_PATH = Path("/Applications/Google Chrome.app")
+elif platform.system() == "Linux":
+    CHROME_PATH = Path("/usr/bin/google-chrome")
+else:
+    CHROME_PATH = Path()
+    
 REDDIT_PROFILE_PATH = Path.home() / ".legacyProxy-reddit-profile"
 
 def decode_jwt_exp(token: str) -> float:
@@ -106,7 +113,6 @@ class RedditProxy:
                     "user_data_dir": str(REDDIT_PROFILE_PATH),
                     "headless": self.chrome_headless,
                     "no_viewport": True,
-                    "chromium_sandbox": True,
                     "args": [
                         "--disable-blink-features=AutomationControlled",
                         "--no-sandbox",
