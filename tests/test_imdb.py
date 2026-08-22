@@ -1,7 +1,7 @@
 import asyncio
 import json
 import unittest
-from unittest.mock import MagicMock, patch
+from unittest.mock import AsyncMock, MagicMock, patch
 
 from src.services.imdb import IMDB_AMAZON_AD_CONFIG_JSON, IMDbProxy
 
@@ -26,6 +26,7 @@ class IMDbProxyTests(unittest.IsolatedAsyncioTestCase):
             "data": {
                 "device_config": {
                     "features": {
+                        "app_service_is_alive": {"enabled": False},
                         "contentSymphonyWidgets": {"enabled": True},
                         "reportAdMetrics": {"enabled": True},
                     },
@@ -59,6 +60,7 @@ class IMDbProxyTests(unittest.IsolatedAsyncioTestCase):
 
         cleaned_config = json.loads(cleaned)
         device_config = cleaned_config["data"]["device_config"]
+        self.assertTrue(device_config["features"]["app_service_is_alive"]["enabled"])
         self.assertFalse(device_config["features"]["contentSymphonyWidgets"]["enabled"])
         self.assertFalse(device_config["features"]["reportAdMetrics"]["enabled"])
         self.assertEqual(device_config["content_symphony_page_map"], {})
@@ -79,14 +81,25 @@ class IMDbProxyTests(unittest.IsolatedAsyncioTestCase):
         self.assertTrue(await proxy.request(flow))
         self.assertEqual(flow.response.headers["Cache-Control"], "no-store")
 
-    async def test_ad_config_uses_the_legacy_empty_placements_schema(self):
+    async def test_ad_config_is_forwarded_with_fresh_signature(self):
         proxy = IMDbProxy()
         flow = MagicMock()
         flow.request.pretty_host = "api.imdbws.com"
         flow.request.path = "/template/imdb-ios-writable/ad-config-v2.jstl/render"
+        flow.request.url = (
+            "https://api.imdbws.com/template/imdb-ios-writable/"
+            "ad-config-v2.jstl/render?appversion=5.9.1"
+        )
+        flow.request.method = "GET"
+        flow.request.raw_content = b""
+        flow.request.headers = {"Authorization": "legacy signature"}
+        proxy.get_credentials_async = AsyncMock()
+        proxy.is_token_valid = MagicMock(return_value=True)
+        proxy.sign_sigv4 = MagicMock(return_value={"Authorization": "fresh signature"})
 
-        self.assertTrue(await proxy.request(flow))
-        self.assertEqual(flow.response.raw_content, b'{"adPlacements":[]}')
+        self.assertFalse(await proxy.request(flow))
+        self.assertEqual(flow.request.headers["Authorization"], "fresh signature")
+        proxy.sign_sigv4.assert_called_once_with("GET", flow.request.url, b"")
 
     async def test_amazon_ad_sdk_receives_a_valid_legacy_config(self):
         proxy = IMDbProxy()

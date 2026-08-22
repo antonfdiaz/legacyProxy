@@ -238,6 +238,9 @@ class IMDbProxy:
                 if "device_config" in data["data"] and isinstance(data["data"]["device_config"],dict):
                     dev = data["data"]["device_config"]
                     features = dev.get("features", {})
+                    app_service = features.get("app_service_is_alive", {})
+                    if isinstance(app_service, dict):
+                        app_service["enabled"] = True
                     content_symphony = features.get("contentSymphonyWidgets", {})
                     if isinstance(content_symphony, dict):
                         content_symphony["enabled"] = False
@@ -361,15 +364,6 @@ class IMDbProxy:
 
             if "ad-config-v2.jstl" in path or "ad-config" in path:
                 print(f"[INFO] IMDb legacy ad-config request: {flow.request.url}")
-                flow.response = http.Response.make(
-                    200,
-                    b'{"adPlacements":[]}',
-                    {
-                        "Content-Type": "application/json; charset=utf-8",
-                        "Cache-Control": "public, max-age=86400",
-                    },
-                )
-                return True
 
             # Handle news fallback endpoints
             if path.startswith("/news/"):
@@ -453,13 +447,23 @@ class IMDbProxy:
     def response(self,flow):
         host = flow.request.pretty_host.lower()
         if host in IMDB_API_HOSTS:
-            response_body = flow.response.raw_content or b""
+            path = flow.request.path.split("?", 1)[0]
+            response_body = flow.response.get_content(strict=False) or b""
             body_lower = response_body.lower()
             if any(term in body_lower for term in (b'"error"', b'"message"', b"unsupported", b"upgrade")):
                 print(
                     f"[WARN] IMDb API error payload from {flow.request.url}: "
                     f"{response_body[:2000].decode('utf-8', errors='replace')}"
                 )
+            elif path != "/metrics/client/report" and len(response_body) <= 2048:
+                try:
+                    json.loads(response_body)
+                    print(
+                        f"[DEBUG] IMDb small API response from {flow.request.url}: "
+                        f"{response_body.decode('utf-8', errors='replace')}"
+                    )
+                except (TypeError, ValueError):
+                    pass
             if flow.response.status_code == 403:
                 body = flow.response.text.lower()
                 if "expired" in body or "security token" in body:

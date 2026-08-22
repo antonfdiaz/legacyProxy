@@ -250,8 +250,26 @@ class InterceptAddon:
         print(f"[INFO] intercepted response from: {url}")
 
     def error(self,flow):
-        if self.imdb:
-            self.imdb.error(flow)
+        handled = self.imdb.error(flow) if self.imdb else False
+        if not handled:
+            request = getattr(flow, "request", None)
+            method = getattr(request, "method", "UNKNOWN")
+            url = getattr(request, "url", "unknown URL")
+            print(f"[WARN] Unhandled proxy error for {method} {url}: {flow.error}")
+
+    def server_connect_error(self, data):
+        server = data.server
+        print(
+            f"[WARN] Server connection failed for address={server.address}, "
+            f"sni={server.sni!r}: {server.error}"
+        )
+
+    def tls_failed_server(self, data):
+        server = data.conn
+        print(
+            f"[WARN] Server TLS failed for address={server.address}, "
+            f"sni={server.sni!r}: {server.error}"
+        )
 
     async def close(self):
         if self.google:
