@@ -9,6 +9,8 @@ Tested on iOS 3 (iPhone 3G), iOS 6 (iPhone 4S) and iOS 8 (iPod touch 5). It work
 <img height="250" alt="IMG_0037" src="https://github.com/user-attachments/assets/e890473c-9b1c-4ca9-86d1-ea236d2992de" />
 <img height="250" alt="IMG_0035" src="https://github.com/user-attachments/assets/f3e8866e-9720-49ff-b224-52bd9391024d" />
 
+*(click the screenshots for zoom)*
+
 ## Layout Patches
 legacyProxy adapts the CSS and HTML of the websites you visit in real time, so it fixes the layout a bit on old Safari/WebKit. It isn't perfect, but most sites look better thanks to this.
 
