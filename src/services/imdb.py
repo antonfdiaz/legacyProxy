@@ -11,6 +11,31 @@ from mitmproxy import http
 
 IMDB_APP_KEY = "c2a5f61b-8dea-44bc-b739-db7937519f4e"
 CREDENTIALS_URL = "https://api.imdbws.com/authentication/credentials/temporary/android860"
+IMDB_AMAZON_AD_CONFIG_JSON = json.dumps(
+    {
+        "aaxHostname": "aax-us-east.amazon-adsystem.com",
+        "madsHostname": "mads.amazon.com",
+        "identifyUserRetryInterval": 3600000,
+        "featureUseGPSAID": False,
+        "viewableJavascriptCDNURL": "https://dwxjayoxbnyrr.cloudfront.net/amazon-ads-v2.viewablejs",
+        "sisURL": "s.amazon-adsystem.com",
+        "identifyUserSessionIdInterval": 28800000,
+        "metricHostname": "fls-na.amazon.com/1/action-impressions/1/OE/mobile-ads-sas/action",
+        "sendGeo": False,
+        "ttl": "86400",
+        "viewableJSVersion": 4,
+        "adResourcePath": "/e/msdk/ads",
+        "truncateLatLon": True,
+        "gpsDistance": 800,
+        "viewableInterval": 200,
+        "adPrefURL": "https://s.amazon-adsystem.com/gp/aw/aap/app",
+        "region": "us",
+        "whitelistedCustomer": False,
+        "sisDomain": "3p",
+        "identifyUserInterval": 86400000,
+    },
+    separators=(",", ":"),
+).encode("utf-8")
 
 IMDB_API_HOSTS = {
     "api.imdbws.com",
@@ -23,11 +48,14 @@ IMDB_CONFIG_HOSTS = {
 
 IMDB_AD_HOSTS = {
     "mads.amazon-adsystem.com",
+    "mads.amazon.com",
     "aax-us-east.amazon-adsystem.com",
     "aax.amazon-adsystem.com",
+    "dwxjayoxbnyrr.cloudfront.net",
 }
 
 IMDB_TELEMETRY_HOSTS = {
+    "applab-sdk.amazon.com",
     "fls-na.amazon.com",
     "unagi.amazon.com",
     "unagi-na.amazon.com",
@@ -187,6 +215,7 @@ class IMDbProxy:
 
             dead_classes = {
                 "IMNativeAdArticlePhoneWidget",
+                "IMTitlePageNativeAdWidget",
                 "IMDb.ContentSymphonyWidget",
                 "IMAwardResultsWidget",
             }
@@ -206,6 +235,20 @@ class IMDbProxy:
                 return new_sections
 
             if "data" in data:
+                if "device_config" in data["data"] and isinstance(data["data"]["device_config"],dict):
+                    dev = data["data"]["device_config"]
+                    features = dev.get("features", {})
+                    content_symphony = features.get("contentSymphonyWidgets", {})
+                    if isinstance(content_symphony, dict):
+                        content_symphony["enabled"] = False
+                    ad_metrics = features.get("reportAdMetrics", {})
+                    if isinstance(ad_metrics, dict):
+                        ad_metrics["enabled"] = False
+                    dev["content_symphony_page_map"] = {}
+                    dev["liveEvents"] = {}
+                    dev["AB_testing_projects"] = []
+                    dev["quincy_crash_url"] = ""
+
                 for page_key in [
                     "home_page",
                     "movies_home_page",
@@ -214,6 +257,8 @@ class IMDbProxy:
                     "watch_today_home_page",
                     "trending_home_page",
                     "best_and_worst_home_page",
+                    "name_page",
+                    "title_page",
                 ]:
                     if page_key in data["data"] and isinstance(data["data"][page_key], dict):
                         page = data["data"][page_key]
@@ -241,12 +286,34 @@ class IMDbProxy:
                     {
                         "Content-Type": "application/json; charset=utf-8",
                         "Content-Length": str(len(cleaned_data)),
-                        "Cache-Control": "public, max-age=86400",
+                        "Cache-Control": "no-store",
                     },
                 )
                 return True
 
         # 2. Handle ad hosts
+        if host in {"mads.amazon-adsystem.com", "mads.amazon.com"} and path == "/msdk/getConfig":
+            flow.response = http.Response.make(
+                200,
+                IMDB_AMAZON_AD_CONFIG_JSON,
+                {
+                    "Content-Type": "application/json; charset=utf-8",
+                    "Cache-Control": "public, max-age=86400",
+                },
+            )
+            return True
+
+        if host == "dwxjayoxbnyrr.cloudfront.net" and path.endswith(".viewablejs"):
+            flow.response = http.Response.make(
+                200,
+                b"",
+                {
+                    "Content-Type": "application/javascript; charset=utf-8",
+                    "Cache-Control": "public, max-age=86400",
+                },
+            )
+            return True
+
         if host in IMDB_AD_HOSTS or host.endswith(".amazon-adsystem.com"):
             flow.response = http.Response.make(
                 200,
@@ -273,6 +340,15 @@ class IMDbProxy:
         # 4. Handle IMDb API telemetry & ad endpoints
         if host in IMDB_API_HOSTS:
             if path.startswith("/metrics/"):
+                metrics_body = flow.request.raw_content or b""
+                if metrics_body:
+                    try:
+                        metrics_text = metrics_body.decode("utf-8", errors="replace")
+                        error_terms = ("error", "fail", "network", "unsupported", "upgrade")
+                        if any(term in metrics_text.lower() for term in error_terms):
+                            print(f"[WARN] IMDb client error metric: {metrics_text[:2000]}")
+                    except Exception:
+                        pass
                 flow.response = http.Response.make(
                     200,
                     b'{"status":"ok"}',
@@ -284,6 +360,7 @@ class IMDbProxy:
                 return True
 
             if "ad-config-v2.jstl" in path or "ad-config" in path:
+                print(f"[INFO] IMDb legacy ad-config request: {flow.request.url}")
                 flow.response = http.Response.make(
                     200,
                     b'{"adPlacements":[]}',
@@ -345,10 +422,10 @@ class IMDbProxy:
                 return False
 
         # 5. Handle web app content fallback (e.g. m.imdb.com/app/content/homepage)
-        if host in {"m.imdb.com", "www.imdb.com"} and path.startswith("/app/content/"):
+        if (host in {"m.imdb.com","www.imdb.com"} or host.endswith(".imdb.com")) and path.startswith("/app/content/"):
             flow.response = http.Response.make(
                 200,
-                b"{}",
+                b'{"status":"ok","slots":{},"widgets":[],"page":"homepage"}',
                 {
                     "Content-Type": "application/json; charset=utf-8",
                     "Cache-Control": "no-store",
@@ -358,9 +435,31 @@ class IMDbProxy:
 
         return False
 
-    def response(self, flow):
+    def error(self,flow):
+        host = (flow.request.pretty_host if flow.request else "").lower()
+        if host in IMDB_ALL_HOSTS or any(host.endswith("."+h) for h in IMDB_ALL_HOSTS):
+            print(f"[INFO] Handling IMDb error gracefully for {host}")
+            flow.response = http.Response.make(
+                200,
+                b'{"status":"ok"}',
+                {
+                    "Content-Type": "application/json; charset=utf-8",
+                    "Cache-Control": "no-store",
+                },
+            )
+            return True
+        return False
+
+    def response(self,flow):
         host = flow.request.pretty_host.lower()
         if host in IMDB_API_HOSTS:
+            response_body = flow.response.raw_content or b""
+            body_lower = response_body.lower()
+            if any(term in body_lower for term in (b'"error"', b'"message"', b"unsupported", b"upgrade")):
+                print(
+                    f"[WARN] IMDb API error payload from {flow.request.url}: "
+                    f"{response_body[:2000].decode('utf-8', errors='replace')}"
+                )
             if flow.response.status_code == 403:
                 body = flow.response.text.lower()
                 if "expired" in body or "security token" in body:

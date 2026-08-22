@@ -18,7 +18,7 @@ from src.utils import set_config_value
 import os
 import sys
 
-VERSION = "0.9.0"
+VERSION = "0.9.1"
 
 GOOGLE_HOSTS = {"google.com","www.google.com"}
 COMPAT_EXCEPTIONS = {
@@ -249,6 +249,10 @@ class InterceptAddon:
 
         print(f"[INFO] intercepted response from: {url}")
 
+    def error(self,flow):
+        if self.imdb:
+            self.imdb.error(flow)
+
     async def close(self):
         if self.google:
             await self.google.close()
@@ -259,7 +263,7 @@ async def start_proxy(host,port):
         listen_port=port,
     )
 
-    opts.update(ignore_hosts=IGNORE_HOSTS)
+    opts.update(ignore_hosts=IGNORE_HOSTS, ssl_insecure=True)
     opts.update_defer(tls_version_client_min="TLS1")
     
     master = DumpMaster(opts)
