@@ -43,7 +43,7 @@ Fixes iReddit, Alien Blue and the modern Reddit app. Uses the Reddit token for t
 <img height="350" alt="IMG_0220" src="https://github.com/user-attachments/assets/00ff439f-74a7-4d5f-b569-32703612030f" />
 
 ### IMDb App
-Work in progress. Most things work but there are some blank sections and there's an error popup constantly showing up.
+Work in progress. Most things work but there are some blank sections and there's an error popup constantly showing up. Tested with IMDb 5.9.1.
 
 ## Requirements
 - Python 3
