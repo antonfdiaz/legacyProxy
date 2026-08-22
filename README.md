@@ -40,6 +40,10 @@ Fixes iReddit, Alien Blue and the modern Reddit app. Uses the Reddit token for t
 ### IMDb App
 Work in progress. Most things work but there are some blank sections and there's an error popup constantly showing up.
 
+## Requirements
+- Python 3
+- Linux or macOS (Windows support soon)
+  
 ## Usage
 ### How to run
 - Make a venv inside the proxy folder: `python -m venv .venv`
