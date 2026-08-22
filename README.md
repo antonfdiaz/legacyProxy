@@ -4,7 +4,12 @@ legacyProxy is a MITM proxy that fixes some websites on legacy iOS devices.
 Currently it fixes Reddit, Google Search, Wikipedia image loading and GitHub.
 Tested on iOS 3 (iPhone 3G), iOS 6 (iPhone 4S) and iOS 8 (iPod touch 5). It works with every browser that uses WebKit on iOS (Chrome, Opera Mini, Safari, etc).
 
-<img height="200" alt="iPhones" src="https://github.com/user-attachments/assets/b3a6d616-9ea6-4073-afdb-962b30dc3ccd" />
+<img height="250" alt="IMG_0040" src="https://github.com/user-attachments/assets/0d1ca776-de72-4435-ac21-155876e0d7ac" />
+<img height="250" alt="IMG_0038" src="https://github.com/user-attachments/assets/cd1d3bde-5b5b-4bee-9d2e-505c51ef8ce1" />
+<img height="250" alt="IMG_0037" src="https://github.com/user-attachments/assets/e890473c-9b1c-4ca9-86d1-ea236d2992de" />
+<img height="250" alt="IMG_0035" src="https://github.com/user-attachments/assets/f3e8866e-9720-49ff-b224-52bd9391024d" />
+
+*(click the screenshots for zoom)*
 
 ## Layout Patches
 legacyProxy adapts the CSS and HTML of the websites you visit in real time, so it fixes the layout a bit on old Safari/WebKit. It isn't perfect, but most sites look better thanks to this.
@@ -37,6 +42,13 @@ Fixes iReddit, Alien Blue and the modern Reddit app. Uses the Reddit token for t
 <img height="350" alt="IMG_0219" src="https://github.com/user-attachments/assets/bc0d3e37-41c8-479b-8c8f-7cb72063b75d" />
 <img height="350" alt="IMG_0220" src="https://github.com/user-attachments/assets/00ff439f-74a7-4d5f-b569-32703612030f" />
 
+### IMDb App
+Work in progress. Most things work but there are some blank sections and there's an error popup constantly showing up. Tested with IMDb 5.9.1.
+
+## Requirements
+- Python 3
+- Linux or macOS (Windows support soon)
+  
 ## Usage
 ### How to run
 - Make a venv inside the proxy folder: `python -m venv .venv`
