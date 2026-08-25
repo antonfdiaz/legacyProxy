@@ -2,7 +2,7 @@
 legacyProxy is a MITM proxy that fixes some websites on legacy iOS devices.
 
 Currently it fixes Reddit, Google Search, Wikipedia image loading and GitHub.
-Tested on iOS 3 (iPhone 3G), iOS 6 (iPhone 4S) and iOS 8 (iPod touch 5). It works with every browser that uses WebKit on iOS (Chrome, Opera Mini, Safari, etc).
+Tested on iOS 3 (iPhone 3G), iOS 5 (iPhone 4S), iOS 6 (iPhone 4S) and iOS 8 (iPod touch 5). It works with every browser that uses WebKit on iOS (Chrome, Opera Mini, Safari, etc).
 
 <img height="250" alt="IMG_0040" src="https://github.com/user-attachments/assets/0d1ca776-de72-4435-ac21-155876e0d7ac" />
 <img height="250" alt="IMG_0038" src="https://github.com/user-attachments/assets/cd1d3bde-5b5b-4bee-9d2e-505c51ef8ce1" />
@@ -22,7 +22,7 @@ Uses a custom frontend that looks like old Reddit and gets the data from the Red
 ### Google Search
 Scrapes Google Search results and builds the results page from a local *HTML template*.
 The CSS applied is like the modern Google search.
-Google looks better on iOS 6+.  
+Google looks better on iOS 5+.  
 **Note**: if Google Search doesn't work, **uncheck** "Chrome Headless" in the proxy settings.
 
 ### Wikipedia
@@ -43,7 +43,7 @@ Fixes iReddit, Alien Blue and the modern Reddit app. Uses the Reddit token for t
 <img height="350" alt="IMG_0220" src="https://github.com/user-attachments/assets/00ff439f-74a7-4d5f-b569-32703612030f" />
 
 ### IMDb App
-Work in progress. Most things work but there are some blank sections and there's an error popup constantly showing up. Tested with IMDb 5.9.1.
+Work in progress. Most things work but there are some blank sections in the homepage. Tested with IMDb 5.9.1.
 
 ## Requirements
 - Python 3
