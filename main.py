@@ -14,11 +14,11 @@ from PIL import Image
 import PIL
 import pystray
 from threading import Thread
-from src.utils import set_config_value
+from src.utils import set_config_value,get_ip_address
 import os
 import sys
 
-VERSION = "0.9.1"
+VERSION = "0.9.2"
 
 GOOGLE_HOSTS = {"google.com","www.google.com"}
 COMPAT_EXCEPTIONS = {
@@ -302,6 +302,8 @@ async def start_proxy(host,port):
         |___/            |___/                     |___/""")
         print(f"legacyProxy v{VERSION} - MITM proxy for legacy iOS devices")
         print(f"[INFO] starting proxy at {host}:{port}...")
+        ip_address = get_ip_address()
+        print(f"[INFO] set the server to {ip_address}!")
         await master.run()
     except KeyboardInterrupt:
         print("[INFO] stopping proxy...")

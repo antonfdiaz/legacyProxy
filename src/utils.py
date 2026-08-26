@@ -1,6 +1,7 @@
 import json
 import sys
 import subprocess
+import socket
 
 def update_config_file(config):
     with open("config.json","w") as f:
@@ -53,3 +54,8 @@ def set_config_value(section,key,config):
     setattr(getattr(config,section),key,new_value)
     update_config_file(config)
     print(f"[INFO] updated {section}.{key} to {new_value}")
+    
+def get_ip_address():
+    hostname = socket.gethostname()
+    local_ip = socket.gethostbyname(hostname)
+    return local_ip
