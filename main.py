@@ -5,7 +5,6 @@ from src.services.google import GoogleCaptchaError,GoogleScraper
 from src.services.imdb import IMDbProxy
 from src.services.reddit import RedditProxy
 from src.services.wikipedia import WikipediaProxy
-from src.services.netflix import NetflixProxy
 from src.config import Config
 import src.compat as compat
 import asyncio
@@ -78,7 +77,6 @@ class InterceptAddon:
             config=self.config,
         ) if config.services.reddit else None
         self.wikipedia = WikipediaProxy() if config.services.wikipedia else None
-        self.netflix = NetflixProxy(config=self.config) if getattr(config.services, "netflix", True) else None
 
     async def request(self,flow):
         path = urlparse(flow.request.url).path.lower()
@@ -217,9 +215,6 @@ class InterceptAddon:
         if self.wikipedia and self.wikipedia.request(flow):
             return
         
-        if self.netflix and self.netflix.request(flow):
-            return
-        
     def should_ignore_response(self,content_type):
         return any(
             content_type.startswith(prefix)
@@ -245,7 +240,6 @@ class InterceptAddon:
         self.wikipedia.response(flow) if self.wikipedia else None
         self.reddit.response(flow) if self.reddit else None
         self.imdb.response(flow) if self.imdb else None
-        self.netflix.response(flow) if self.netflix else None
         
         if self.should_ignore_response(content_type):
             return
@@ -382,7 +376,6 @@ def start_menu(image):
         pystray.MenuItem("Wikipedia",lambda: set_config_value("services","wikipedia",config),checked=lambda item: config.services.wikipedia),
         pystray.MenuItem("GitHub",lambda: set_config_value("services","github",config),checked=lambda item: config.services.github),
         pystray.MenuItem("IMDb",lambda: set_config_value("services","imdb",config),checked=lambda item: config.services.imdb),
-        pystray.MenuItem("Netflix",lambda: set_config_value("services","netflix",config),checked=lambda item: getattr(config.services,"netflix",True)),
         pystray.Menu.SEPARATOR,
         pystray.MenuItem("Exit",on_exit)
     ))
