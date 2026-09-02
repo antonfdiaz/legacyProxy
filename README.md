@@ -43,7 +43,7 @@ Fixes iReddit, Alien Blue and the modern Reddit app. Uses the Reddit token for t
 <img height="350" alt="IMG_0220" src="https://github.com/user-attachments/assets/00ff439f-74a7-4d5f-b569-32703612030f" />
 
 ### IMDb App
-Work in progress. Most things work but there are some blank sections in the homepage. Tested with IMDb 5.9.1.
+Most things work but there are some blank sections in the homepage. Tested with IMDb 5.9.1.
 
 ## Requirements
 - Python 3
@@ -70,7 +70,7 @@ Then open Safari, go to `mitm.it` and install the iOS certificate.
 That's it! You can now use Google, Reddit, GitHub and more on your old iDevice!
 
 ## TODO
-To-do for website fixing. I will not be fixing websites that already work well with an app, such as YouTube, Instagram, etc.
+To-do for website & app fixing. I will not be fixing websites that already work well with an app, such as YouTube, Instagram, etc.
 - [x] Google Search
   - [x] Modern homepage
   - [x] Web search
@@ -88,5 +88,6 @@ To-do for website fixing. I will not be fixing websites that already work well w
   - [x] PRs page
   - [x] User page
   - [ ] Home page
+- [x] IMDb App
+- [ ] Twitter App
 - [ ] Stack Overflow
-- [ ] IMDb
