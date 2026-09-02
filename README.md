@@ -89,5 +89,4 @@ To-do for website & app fixing. I will not be fixing websites that already work 
   - [x] User page
   - [ ] Home page
 - [x] IMDb App
-- [ ] Twitter App
 - [ ] Stack Overflow
