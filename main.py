@@ -256,8 +256,6 @@ class InterceptAddon:
 
     def error(self,flow):
         handled = self.imdb.error(flow) if self.imdb else False
-        if not handled and self.netflix:
-            handled = self.netflix.error(flow)
         if not handled:
             request = getattr(flow,"request",None)
             method = getattr(request,"method","UNKNOWN")
