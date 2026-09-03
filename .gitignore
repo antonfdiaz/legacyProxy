@@ -2,6 +2,7 @@
 __pycache__/
 output/
 .playwright-cli/
+.nova/
 .DS_Store
 config.json
 legacyProxy.app/
