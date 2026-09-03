@@ -1,7 +1,7 @@
 # <img height="120" alt="legacyproxy-banner" src="https://github.com/user-attachments/assets/e1cf10e7-55da-4c6b-aa39-49d88f2606b1" />
-legacyProxy is a MITM proxy that fixes some websites on legacy iOS devices.
+legacyProxy is a MITM proxy that fixes some websites & apps on legacy iOS devices.
 
-Currently it fixes Reddit, Google Search, Wikipedia image loading and GitHub.
+Currently it fixes Reddit, Google Search, Wikipedia image loading, GitHub and the IMDb app.
 Tested on iOS 3 (iPhone 3G), iOS 5 (iPhone 4S), iOS 6 (iPhone 4S) and iOS 8 (iPod touch 5). It works with every browser that uses WebKit on iOS (Chrome, Opera Mini, Safari, etc).
 
 <img height="250" alt="IMG_0040" src="https://github.com/user-attachments/assets/0d1ca776-de72-4435-ac21-155876e0d7ac" />
@@ -43,7 +43,7 @@ Fixes iReddit, Alien Blue and the modern Reddit app. Uses the Reddit token for t
 <img height="350" alt="IMG_0220" src="https://github.com/user-attachments/assets/00ff439f-74a7-4d5f-b569-32703612030f" />
 
 ### IMDb App
-Work in progress. Most things work but there are some blank sections in the homepage. Tested with IMDb 5.9.1.
+Most things work but there are some blank sections in the homepage. Tested with IMDb 5.9.1.
 
 ## Requirements
 - Python 3
@@ -70,7 +70,7 @@ Then open Safari, go to `mitm.it` and install the iOS certificate.
 That's it! You can now use Google, Reddit, GitHub and more on your old iDevice!
 
 ## TODO
-To-do for website fixing. I will not be fixing websites that already work well with an app, such as YouTube, Instagram, etc.
+To-do for website & app fixing. I will not be fixing websites that already work well with an app, such as YouTube, Instagram, etc.
 - [x] Google Search
   - [x] Modern homepage
   - [x] Web search
@@ -88,5 +88,5 @@ To-do for website fixing. I will not be fixing websites that already work well w
   - [x] PRs page
   - [x] User page
   - [ ] Home page
+- [x] IMDb App
 - [ ] Stack Overflow
-- [ ] IMDb
