@@ -5,7 +5,6 @@ from src.services.google import GoogleCaptchaError,GoogleScraper
 from src.services.imdb import IMDbProxy
 from src.services.reddit import RedditProxy
 from src.services.wikipedia import WikipediaProxy
-from src.services.yahoo_weather import YahooWeatherProxy
 from src.config import Config
 import src.compat as compat
 import asyncio
@@ -37,11 +36,6 @@ COMPAT_EXCEPTIONS = {
     "nflximg.net",
     "nflxvideo.net",
     "nflxso.net",
-    "yahoo.com",
-    "yahooapis.com",
-    "yimg.com",
-    "uservoice.com",
-    "crittercism.com",
 }
 IGNORE_HOSTS = [
     r"(^|\.)apple\.com:443$",
@@ -83,9 +77,6 @@ class InterceptAddon:
             config=self.config,
         ) if config.services.reddit else None
         self.wikipedia = WikipediaProxy() if config.services.wikipedia else None
-        self.yahoo_weather = YahooWeatherProxy(
-            config=self.config
-        ) if getattr(self.config.services, "yahoo_weather", True) else None
 
     async def request(self,flow):
         path = urlparse(flow.request.url).path.lower()
@@ -223,9 +214,6 @@ class InterceptAddon:
         
         if self.wikipedia and self.wikipedia.request(flow):
             return
-
-        if self.yahoo_weather and await self.yahoo_weather.request(flow):
-            return
         
     def should_ignore_response(self,content_type):
         return any(
@@ -268,8 +256,6 @@ class InterceptAddon:
 
     def error(self,flow):
         handled = self.imdb.error(flow) if self.imdb else False
-        if not handled and self.yahoo_weather:
-            handled = self.yahoo_weather.error(flow)
         if not handled:
             request = getattr(flow,"request",None)
             method = getattr(request,"method","UNKNOWN")
@@ -290,13 +276,6 @@ class InterceptAddon:
             f"sni={server.sni!r}: {server.error}"
         )
 
-    def tls_failed_client(self, data):
-        client = data.conn
-        addr = getattr(client, "peername", getattr(client, "address", None))
-        print(
-            f"[WARN] Client TLS failed for address={addr}: {client.error}"
-        )
-
     async def close(self):
         if self.google:
             await self.google.close()
@@ -308,11 +287,7 @@ async def start_proxy(host,port):
     )
 
     opts.update(ignore_hosts=IGNORE_HOSTS, ssl_insecure=True)
-    opts.update_defer(
-        tls_version_client_min="TLS1",
-        connection_strategy="lazy",
-        ciphers_client="ALL:!aNULL:!eNULL:@SECLEVEL=0",
-    )
+    opts.update_defer(tls_version_client_min="TLS1")
     
     master = DumpMaster(opts)
     addon = InterceptAddon()
@@ -399,7 +374,6 @@ def start_menu(image):
         pystray.MenuItem("Wikipedia",lambda: set_config_value("services","wikipedia",config),checked=lambda item: config.services.wikipedia),
         pystray.MenuItem("GitHub",lambda: set_config_value("services","github",config),checked=lambda item: config.services.github),
         pystray.MenuItem("IMDb",lambda: set_config_value("services","imdb",config),checked=lambda item: config.services.imdb),
-        pystray.MenuItem("Yahoo Weather",lambda: set_config_value("services","yahoo_weather",config),checked=lambda item: getattr(config.services, "yahoo_weather", True)),
         pystray.Menu.SEPARATOR,
         pystray.MenuItem("Exit",on_exit)
     ))
