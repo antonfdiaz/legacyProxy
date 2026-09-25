@@ -67,7 +67,7 @@ class InterceptAddon:
     async def request(self,flow):
         path = urlparse(flow.request.url).path.lower()
 
-        if path.endswith((".css",".html",".htm")):
+        if path.endswith((".css",".html",".htm",".js",".mjs")):
             flow.request.headers.pop("If-None-Match",None)
             flow.request.headers.pop("If-Modified-Since",None)
     
@@ -249,20 +249,20 @@ class InterceptAddon:
                   and not any(self.matches_domain(host,domain) for domain in SKIP_JS_HOSTS)):
                 user_agent = flow.request.headers.get("User-Agent","")
                 target = compat.detect_target(user_agent)
-                features = compat.analyze_js(flow.response.text)
-                unsupported_features = compat.unsupported_js_features(
-                    target,features)
-                if unsupported_features:
-                    target_name = (
-                        f"iOS {target.ios_major}"
-                        if target.ios_major is not None else "unknown"
-                    )
-                    print(
-                        f"[COMPAT] unsupported JS={','.join(sorted(unsupported_features))} "
-                        f"target={target_name}"
-                    )
-                flow.response.text = compat.adapt_js(
-                    flow.response.text,target=target)
+                if (getattr(flow.response,"status_code",200) not in {204,304}
+                        and flow.response.text):
+                    features = compat.analyze_js(flow.response.text)
+                    unsupported_features = compat.unsupported_js_features(
+                        target,features)
+                    if unsupported_features:
+                        target_name = (
+                            f"iOS {target.ios_major}"
+                            if target.ios_major is not None else "unknown"
+                        )
+                        print(
+                            f"[COMPAT] unsupported JS={','.join(sorted(unsupported_features))} "
+                            f"target={target_name}"
+                        )
 
         print(f"[INFO] intercepted response from: {url}")
 

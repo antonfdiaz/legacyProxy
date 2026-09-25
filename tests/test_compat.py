@@ -92,7 +92,7 @@ class JavaScriptCompatibilityTests(unittest.TestCase):
             6: features,
             7: features,
             8: features - {"promise", "object-assign"},
-            9: features - {"promise", "object-assign", "array-from"},
+            9: features - {"class", "template-literals", "promise", "object-assign", "array-from"},
         }
         for ios_major, unsupported in expected.items():
             with self.subTest(ios_major=ios_major):
@@ -157,18 +157,18 @@ class CompatibilityPipelineTests(unittest.TestCase):
             response=SimpleNamespace(
                 headers={"Content-Type": "application/javascript; charset=utf-8"},
                 text="const fn = item => fetch(item);",
+                status_code=200,
             ),
         )
 
         with patch("main.compat.analyze_js", return_value={"arrow-functions", "const", "fetch"}) as analyze:
-            with patch("main.compat.adapt_js", return_value="adapted") as adapter:
+            with patch("main.compat.adapt_js") as adapter:
                 with patch("builtins.print") as output:
                     addon.response(flow)
 
         analyze.assert_called_once_with("const fn = item => fetch(item);")
-        adapter.assert_called_once_with(
-            "const fn = item => fetch(item);",target=LegacyTarget(9))
-        self.assertEqual(flow.response.text, "adapted")
+        adapter.assert_not_called()
+        self.assertEqual(flow.response.text, "const fn = item => fetch(item);")
         compat_logs = [
             call.args[0] for call in output.call_args_list
             if call.args and call.args[0].startswith("[COMPAT] unsupported JS")
@@ -201,6 +201,50 @@ class CompatibilityPipelineTests(unittest.TestCase):
 
         analyze.assert_not_called()
         adapter.assert_not_called()
+
+    def test_main_does_not_analyze_empty_or_no_content_javascript(self):
+        addon = InterceptAddon.__new__(InterceptAddon)
+        addon.github = None
+        addon.wikipedia = None
+        addon.reddit = None
+        addon.imdb = None
+        for status_code, text in ((204,"const value = 1;"),(304,"const value = 1;"),(200,"")):
+            flow = SimpleNamespace(
+                request=SimpleNamespace(
+                    url="https://example.test/script.js",
+                    headers={"User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 9_3 like Mac OS X)"},
+                ),
+                response=SimpleNamespace(
+                    headers={"Content-Type": "application/javascript"},
+                    text=text,
+                    status_code=status_code,
+                ),
+            )
+            with patch("main.compat.analyze_js") as analyze:
+                with patch("main.compat.adapt_js") as adapter:
+                    addon.response(flow)
+            analyze.assert_not_called()
+            adapter.assert_not_called()
+
+
+class RequestCompatibilityTests(unittest.IsolatedAsyncioTestCase):
+    async def test_request_clears_cache_headers_for_script_paths(self):
+        addon = InterceptAddon.__new__(InterceptAddon)
+        addon.google = None
+        addon.imdb = None
+        addon.reddit = None
+        addon.wikipedia = None
+        for path in ("/style.css", "/page.html", "/page.htm", "/script.js", "/module.mjs"):
+            flow = SimpleNamespace(
+                request=SimpleNamespace(
+                    url=f"https://example.test{path}?v=1",
+                    headers={"If-None-Match": "etag", "If-Modified-Since": "yesterday"},
+                ),
+            )
+            await addon.request(flow)
+            with self.subTest(path=path):
+                self.assertNotIn("If-None-Match", flow.request.headers)
+                self.assertNotIn("If-Modified-Since", flow.request.headers)
 
 
 if __name__ == "__main__":
