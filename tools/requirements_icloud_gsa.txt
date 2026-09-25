@@ -1,0 +1,4 @@
+requests>=2.31
+srp>=1.0.20
+cryptography>=41
+truststore>=0.10

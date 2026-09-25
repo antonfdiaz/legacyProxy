@@ -22,27 +22,8 @@ VERSION = "0.9.2"
 
 GOOGLE_HOSTS = {"google.com","www.google.com"}
 COMPAT_EXCEPTIONS = {
-    "google.com",
-    "www.google.com",
-    "github.com",
-    "www.github.com",
-    "wikipedia.org",
-    "imdb.com",
-    "media-imdb.com",
-    "imdbws.com",
-    "amazon-adsystem.com",
-    "netflix.com",
-    "nflxext.com",
-    "nflximg.net",
-    "nflxvideo.net",
-    "nflxso.net",
 }
 IGNORE_HOSTS = [
-    r"(^|\.)apple\.com:443$",
-    r"(^|\.)icloud\.com:443$",
-    r"(^|\.)itunes\.apple\.com:443$",
-    r"(^|\.)apps\.apple\.com:443$",
-    r"(^|\.)mzstatic\.com:443$",
 ]
 IGNORE_CONTENT_TYPES = (
     "application/json",
