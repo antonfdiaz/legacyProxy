@@ -37,6 +37,11 @@ SKIP_JS_HOSTS = (
     "token.awswaf.com",
     "amazonaws.com",
 )
+JS_CONTENT_TYPES = (
+    "application/javascript",
+    "text/javascript",
+    "application/x-javascript",
+)
 
 config = Config()
 
@@ -240,6 +245,24 @@ class InterceptAddon:
                     print("[INFO] adapting CSS for legacy WebKit...")
                     flow.response.text = compat.adapt_css(
                         flow.response.text,target=target)
+            elif (any(content_type.startswith(prefix) for prefix in JS_CONTENT_TYPES)
+                  and not any(self.matches_domain(host,domain) for domain in SKIP_JS_HOSTS)):
+                user_agent = flow.request.headers.get("User-Agent","")
+                target = compat.detect_target(user_agent)
+                features = compat.analyze_js(flow.response.text)
+                unsupported_features = compat.unsupported_js_features(
+                    target,features)
+                if unsupported_features:
+                    target_name = (
+                        f"iOS {target.ios_major}"
+                        if target.ios_major is not None else "unknown"
+                    )
+                    print(
+                        f"[COMPAT] unsupported JS={','.join(sorted(unsupported_features))} "
+                        f"target={target_name}"
+                    )
+                flow.response.text = compat.adapt_js(
+                    flow.response.text,target=target)
 
         print(f"[INFO] intercepted response from: {url}")
 
