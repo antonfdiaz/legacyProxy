@@ -15,6 +15,10 @@ MIN_IOS_SUPPORT = {
     "fetch": 10, #10.3 only
     "object-assign": 8,
     "array-from": 9,
+    "object-entries": 10,
+    "object-values": 10,
+    "object-from-entries": 13,
+    "url-search-params": 10,
 }
 
 @dataclass(frozen=True)

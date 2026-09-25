@@ -8,3 +8,4 @@ legacyProxy.app/
 main.build/
 main.dist/
 main.app/
+node_modules/

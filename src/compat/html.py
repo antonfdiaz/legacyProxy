@@ -1,4 +1,11 @@
 import re
+from pathlib import Path
+from .runtime import POLYFILL_FEATURES, required_polyfills
+
+_POLYFILL_ORDER = (
+    "fetch", "object-entries", "object-values", "object-from-entries",
+    "url-search-params",
+)
 
 def adapt_html(html,target=None):
     #modern attributes that old webkit doesn't need
@@ -34,6 +41,30 @@ def adapt_html(html,target=None):
         html,
         flags=re.IGNORECASE | re.DOTALL,
     )
+
+    polyfills = required_polyfills(target,POLYFILL_FEATURES)
+    injections = []
+    for feature in _POLYFILL_ORDER:
+        marker = f"legacy-proxy-polyfill-{feature}"
+        if feature in polyfills and marker not in html:
+            polyfill = Path(__file__).resolve().parents[2]/"js"/"polyfills"/f"{feature}.js"
+            injections.append(
+                f'<script id="{marker}">\n'
+                f'{polyfill.read_text(encoding="utf-8")}\n'
+                "</script>"
+            )
+    if injections:
+        script = "".join(injections)
+        first_script = re.search(r"<script\b",html,re.IGNORECASE)
+        if first_script:
+            html = html[:first_script.start()]+script+html[first_script.start():]
+        else:
+            head = re.search(r"</head\s*>",html,re.IGNORECASE)
+            position = head.start() if head else 0
+            html = html[:position]+script+html[position:]
+        for feature in _POLYFILL_ORDER:
+            if feature in polyfills and f"legacy-proxy-polyfill-{feature}" in script:
+                print(f"[COMPAT] injecting polyfill={feature} target=iOS {target.ios_major}")
 
     return html
 

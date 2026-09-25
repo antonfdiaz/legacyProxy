@@ -252,17 +252,25 @@ class InterceptAddon:
                 if (getattr(flow.response,"status_code",200) not in {204,304}
                         and flow.response.text):
                     features = compat.analyze_js(flow.response.text)
+                    runtime_features = features & compat.RUNTIME_FEATURES
+                    if runtime_features:
+                        print(f"[COMPAT] runtime JS={','.join(sorted(runtime_features))}")
                     unsupported_features = compat.unsupported_js_features(
                         target,features)
+                    target_name = (
+                        f"iOS {target.ios_major}"
+                        if target.ios_major is not None else "unknown"
+                    )
                     if unsupported_features:
-                        target_name = (
-                            f"iOS {target.ios_major}"
-                            if target.ios_major is not None else "unknown"
-                        )
                         print(
                             f"[COMPAT] unsupported JS={','.join(sorted(unsupported_features))} "
                             f"target={target_name}"
                         )
+                    original = flow.response.text
+                    adapted = compat.adapt_js(original,target=target)
+                    if adapted != original:
+                        print(f"[COMPAT] transpiled JS target={target_name}")
+                        flow.response.text = adapted
 
         print(f"[INFO] intercepted response from: {url}")
 
