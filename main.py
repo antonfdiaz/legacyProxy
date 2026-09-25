@@ -226,12 +226,20 @@ class InterceptAddon:
             return
         
         if not self.is_compat_exception(host):
-            if "text/html" in content_type:
-                print("[INFO] adapting HTML for legacy WebKit...")
-                flow.response.text = compat.adapt_html(flow.response.text)
-            elif "text/css" in content_type:
-                print("[INFO] adapting CSS for legacy WebKit...")
-                flow.response.text = compat.adapt_css(flow.response.text)
+            if "text/html" in content_type or "text/css" in content_type:
+                user_agent = flow.request.headers.get("User-Agent","")
+                target = compat.detect_target(user_agent)
+                if target.ios_major is not None:
+                    print(f"[COMPAT] target=iOS {target.ios_major}")
+
+                if "text/html" in content_type:
+                    print("[INFO] adapting HTML for legacy WebKit...")
+                    flow.response.text = compat.adapt_html(
+                        flow.response.text,target=target)
+                elif "text/css" in content_type:
+                    print("[INFO] adapting CSS for legacy WebKit...")
+                    flow.response.text = compat.adapt_css(
+                        flow.response.text,target=target)
 
         print(f"[INFO] intercepted response from: {url}")
 

@@ -1,9 +1,11 @@
 import unittest
-
+from types import SimpleNamespace
+from unittest.mock import patch
 import src.compat as compat
 from src.compat.css import adapt_css
 from src.compat.html import adapt_html
 from src.compat.target import LegacyTarget, detect_target
+from main import InterceptAddon
 
 
 class CompatibilityTests(unittest.TestCase):
@@ -17,14 +19,14 @@ class CompatibilityTests(unittest.TestCase):
             '<picture><source srcset="new.webp"><img src="fallback.jpg"></picture>'
         )
         self.assertEqual(
-            adapt_html(html),
+            adapt_html(html,target=LegacyTarget(8)),
             '<img src="new.jpg"><img src="fallback.jpg">',
         )
 
     def test_adapt_css_preserves_current_transformations(self):
         css = ".card { display: flex; justify-content: start; transform: scale(1); }"
         self.assertEqual(
-            adapt_css(css),
+            adapt_css(css,target=LegacyTarget(8)),
             ".card { display: -webkit-flex; display: flex; "
             "-webkit-justify-content: flex-start; justify-content: flex-start; "
             "-webkit-transform: scale(1); transform: scale(1); }",
@@ -32,33 +34,56 @@ class CompatibilityTests(unittest.TestCase):
 
 
 class TargetDetectionTests(unittest.TestCase):
-    def test_detects_ios_target_buckets(self):
+    def test_detects_ios_major_version(self):
         cases = {
-            3: "ios_3_4",
-            4: "ios_3_4",
-            5: "ios_5_6",
-            6: "ios_5_6",
-            7: "ios_7",
-            8: "ios_8_plus",
-            17: "ios_8_plus",
+            "Mozilla/5.0 (iPhone; CPU iPhone OS 8_4_1 like Mac OS X)": 8,
+            "Mozilla/5.0 (iPhone; CPU iPhone OS 6_1 like Mac OS X)": 6,
+            "Reddit/2.0.1 (iOS 9.3.5)": 9,
         }
-        for version, expected_name in cases.items():
-            user_agent = (
-                "Mozilla/5.0 (iPhone; CPU iPhone OS "
-                f"{version}_0 like Mac OS X) AppleWebKit/605.1.15"
-            )
-            with self.subTest(version=version):
-                self.assertEqual(detect_target(user_agent).name, expected_name)
-
-    def test_detects_explicit_ios_app_user_agent(self):
-        self.assertEqual(
-            detect_target("Reddit/2.0.1 (iOS 8.4.1)").name,
-            "ios_8_plus",
-        )
+        for user_agent, expected_major in cases.items():
+            with self.subTest(user_agent=user_agent):
+                self.assertEqual(
+                    detect_target(user_agent),
+                    LegacyTarget(expected_major),
+                )
 
     def test_unknown_target(self):
-        self.assertEqual(detect_target("Mozilla/5.0 (Macintosh; Intel Mac OS X)"), LegacyTarget("unknown"))
-        self.assertEqual(detect_target(None), LegacyTarget("unknown"))
+        self.assertEqual(
+            detect_target("Mozilla/5.0 (Macintosh; Intel Mac OS X)"),
+            LegacyTarget(None),
+        )
+        self.assertEqual(detect_target(None), LegacyTarget(None))
+
+
+class CompatibilityPipelineTests(unittest.TestCase):
+    def test_main_passes_ios_target_and_logs_it(self):
+        addon = InterceptAddon.__new__(InterceptAddon)
+        addon.github = None
+        addon.wikipedia = None
+        addon.reddit = None
+        addon.imdb = None
+        flow = SimpleNamespace(
+            request=SimpleNamespace(
+                url="https://example.test/page",
+                headers={
+                    "User-Agent": "Mozilla/5.0 (iPhone; CPU iPhone OS 8_4_1 like Mac OS X)"
+                },
+            ),
+            response=SimpleNamespace(
+                headers={"Content-Type": "text/html; charset=utf-8"},
+                text="<html></html>",
+            ),
+        )
+
+        with patch("main.compat.adapt_html", return_value="adapted") as adapter:
+            with patch("builtins.print") as output:
+                addon.response(flow)
+
+        adapter.assert_called_once_with(
+            "<html></html>",target=LegacyTarget(8))
+        self.assertEqual(flow.response.text, "adapted")
+        log = "\n".join(call.args[0] for call in output.call_args_list)
+        self.assertIn("[COMPAT] target=iOS 8", log)
 
 
 if __name__ == "__main__":

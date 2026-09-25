@@ -1,6 +1,6 @@
 import re
 
-def adapt_html(html):
+def adapt_html(html,target=None):
     #modern attributes that old webkit doesn't need
     html = re.sub(
         r'\s+(?:srcset|loading|decoding|fetchpriority|inert)'

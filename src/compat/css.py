@@ -194,7 +194,7 @@ def _transform_rules(rules, variables):
             elif rule.lower_at_keyword in _RULE_AT_RULES:
                 _transform_rules(rule.content, variables)
 
-def adapt_css(css):
+def adapt_css(css,target=None):
     try:
         rules = tinycss2.parse_stylesheet(
             css,skip_comments=False,skip_whitespace=False)
