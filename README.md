@@ -1,7 +1,7 @@
 # <img height="120" alt="legacyproxy-banner" src="https://github.com/user-attachments/assets/e1cf10e7-55da-4c6b-aa39-49d88f2606b1" />
 legacyProxy is a MITM proxy that fixes some websites & apps on legacy iOS devices.
 
-Currently it fixes Reddit, Google Search, Wikipedia image loading, GitHub and the IMDb app.
+Currently it fixes Reddit, Google Search, Wikipedia image loading, GitHub, the IMDb app, and Google Earth.
 Tested on iOS 3 (iPhone 3G), iOS 5 (iPhone 4S), iOS 6 (iPhone 4S) and iOS 8 (iPod touch 5). It works with every browser that uses WebKit on iOS (Chrome, Opera Mini, Safari, etc).
 
 <img height="250" alt="IMG_0040" src="https://github.com/user-attachments/assets/0d1ca776-de72-4435-ac21-155876e0d7ac" />
@@ -44,6 +44,12 @@ Fixes iReddit, Alien Blue and the modern Reddit app. Uses the Reddit token for t
 
 ### IMDb App
 Most things work but there are some blank sections in the homepage. Tested with IMDb 5.9.1.
+
+### Google Earth
+Replicates the functionality of the [OpenEarthX](https://github.com/Epixx512/OpenEarthX) tweak directly through the proxy:
+- Spoofs the User-Agent on Keyhole servers (`kh.google.com`, etc.) to a modern Safari desktop User-Agent, bypassing Google's `403 Forbidden` response.
+- Strips the obsolete `type=embedded` parameter from `/dbRoot.v5` initialization requests, preventing `404 Not Found` errors and network connection failures.
+- Allows 3D globe, imagery, and building layers to initialize properly on legacy devices.
 
 ## Requirements
 - Python 3
@@ -89,4 +95,5 @@ To-do for website & app fixing. I will not be fixing websites that already work 
   - [x] User page
   - [ ] Home page
 - [x] IMDb App
+- [x] Google Earth App
 - [ ] Stack Overflow

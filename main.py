@@ -5,6 +5,7 @@ from src.services.google import GoogleCaptchaError,GoogleScraper
 from src.services.imdb import IMDbProxy
 from src.services.reddit import RedditProxy
 from src.services.wikipedia import WikipediaProxy
+from src.services.google_earth import GoogleEarthProxy
 from src.config import Config
 import src.compat as compat
 import asyncio
@@ -22,6 +23,8 @@ VERSION = "0.9.3"
 
 GOOGLE_HOSTS = {"google.com","www.google.com"}
 COMPAT_EXCEPTIONS = {
+    "kh.google.com",
+    "keyhole.com",
 }
 IGNORE_HOSTS = [
 ]
@@ -63,6 +66,7 @@ class InterceptAddon:
             config=self.config,
         ) if config.services.reddit else None
         self.wikipedia = WikipediaProxy() if config.services.wikipedia else None
+        self.google_earth = GoogleEarthProxy() if getattr(config.services, "google_earth", True) else None
 
     async def request(self,flow):
         path = urlparse(flow.request.url).path.lower()
@@ -199,6 +203,9 @@ class InterceptAddon:
             return
         
         if self.wikipedia and self.wikipedia.request(flow):
+            return
+
+        if getattr(self, "google_earth", None) and self.google_earth.request(flow):
             return
         
     def should_ignore_response(self,content_type):
@@ -394,6 +401,7 @@ def start_menu(image):
         pystray.MenuItem("Wikipedia",lambda: set_config_value("services","wikipedia",config),checked=lambda item: config.services.wikipedia),
         pystray.MenuItem("GitHub",lambda: set_config_value("services","github",config),checked=lambda item: config.services.github),
         pystray.MenuItem("IMDb",lambda: set_config_value("services","imdb",config),checked=lambda item: config.services.imdb),
+        pystray.MenuItem("Google Earth",lambda: set_config_value("services","google_earth",config),checked=lambda item: getattr(config.services,"google_earth",True)),
         pystray.Menu.SEPARATOR,
         pystray.MenuItem("Exit",on_exit)
     ))

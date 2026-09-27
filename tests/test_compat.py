@@ -479,6 +479,7 @@ class RequestCompatibilityTests(unittest.IsolatedAsyncioTestCase):
         addon.imdb = None
         addon.reddit = None
         addon.wikipedia = None
+        addon.google_earth = None
         for path in ("/style.css", "/page.html", "/page.htm", "/script.js", "/module.mjs"):
             flow = SimpleNamespace(
                 request=SimpleNamespace(

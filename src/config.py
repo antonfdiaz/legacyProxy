@@ -16,6 +16,7 @@ class ServicesConfig:
     wikipedia: bool
     github: bool
     imdb: bool = True
+    google_earth: bool = True
     reddit_cookie: str = ""
     reddit_token: str = ""
     reddit_client_id: str = ""
@@ -40,6 +41,7 @@ class Config:
             wikipedia=services_config.get("wikipedia",True),
             github=services_config.get("github",True),
             imdb=services_config.get("imdb",True),
+            google_earth=services_config.get("google_earth",True),
             reddit_cookie=services_config.get("reddit_cookie",""),
             reddit_token=services_config.get("reddit_token",""),
             reddit_client_id=services_config.get("reddit_client_id",""),
@@ -70,6 +72,7 @@ class Config:
                 "wikipedia": True,
                 "github": True,
                 "imdb": True,
+                "google_earth": True,
                 "reddit_cookie": "",
                 "reddit_token": "",
                 "reddit_client_id": "",
