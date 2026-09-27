@@ -6,6 +6,7 @@ from src.services.imdb import IMDbProxy
 from src.services.reddit import RedditProxy
 from src.services.wikipedia import WikipediaProxy
 from src.services.google_earth import GoogleEarthProxy
+from src.services.youtube import YouTubeProxy
 from src.config import Config
 import src.compat as compat
 import asyncio
@@ -25,6 +26,11 @@ GOOGLE_HOSTS = {"google.com","www.google.com"}
 COMPAT_EXCEPTIONS = {
     "kh.google.com",
     "keyhole.com",
+    "googlevideo.com",
+    "ytimg.com",
+    "ggpht.com",
+    "youtube.com",
+    "youtubei.googleapis.com",
 }
 IGNORE_HOSTS = [
 ]
@@ -67,6 +73,7 @@ class InterceptAddon:
         ) if config.services.reddit else None
         self.wikipedia = WikipediaProxy() if config.services.wikipedia else None
         self.google_earth = GoogleEarthProxy() if getattr(config.services, "google_earth", True) else None
+        self.youtube = YouTubeProxy(config=self.config) if getattr(config.services, "youtube", True) else None
 
     async def request(self,flow):
         path = urlparse(flow.request.url).path.lower()
@@ -207,6 +214,9 @@ class InterceptAddon:
 
         if getattr(self, "google_earth", None) and self.google_earth.request(flow):
             return
+
+        if getattr(self, "youtube", None) and await self.youtube.request(flow):
+            return
         
     def should_ignore_response(self,content_type):
         return any(
@@ -233,6 +243,7 @@ class InterceptAddon:
         self.wikipedia.response(flow) if self.wikipedia else None
         self.reddit.response(flow) if self.reddit else None
         self.imdb.response(flow) if self.imdb else None
+        self.youtube.response(flow) if getattr(self, "youtube", None) else None
         
         if self.should_ignore_response(content_type):
             return
@@ -402,6 +413,7 @@ def start_menu(image):
         pystray.MenuItem("GitHub",lambda: set_config_value("services","github",config),checked=lambda item: config.services.github),
         pystray.MenuItem("IMDb",lambda: set_config_value("services","imdb",config),checked=lambda item: config.services.imdb),
         pystray.MenuItem("Google Earth",lambda: set_config_value("services","google_earth",config),checked=lambda item: getattr(config.services,"google_earth",True)),
+        pystray.MenuItem("YouTube",lambda: set_config_value("services","youtube",config),checked=lambda item: getattr(config.services,"youtube",True)),
         pystray.Menu.SEPARATOR,
         pystray.MenuItem("Exit",on_exit)
     ))
