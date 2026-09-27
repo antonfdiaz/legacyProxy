@@ -55,6 +55,10 @@ Replicates the functionality of the [OpenEarthX](https://github.com/Epixx512/Ope
 Versions 10.07.11524+ work correctly. Fixes home feed, search, video playback and channels. Still got some things to fix
 such as likes, comments, channel tabs, etc but the rest works well. Login not tested, probably won't work.
 
+<img height="350" alt="IMG_0016" src="https://github.com/user-attachments/assets/3cc4f29a-24a3-4e7b-be7e-d27f8735cf57" />
+<img height="350" alt="IMG_0014" src="https://github.com/user-attachments/assets/e8a2fb75-7215-40ac-939c-a0cdbaceacb2" />
+<img height="350" alt="IMG_0013" src="https://github.com/user-attachments/assets/dcad3bf1-c390-46c8-a5fc-910f0813c07b" />
+
 ## Requirements
 - Python 3
 - Linux or macOS (Windows support soon)
