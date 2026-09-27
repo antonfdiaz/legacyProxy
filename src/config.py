@@ -18,10 +18,14 @@ class ServicesConfig:
     imdb: bool = True
     google_earth: bool = True
     youtube: bool = True
+    twitter: bool = True
     reddit_cookie: str = ""
     reddit_token: str = ""
     reddit_client_id: str = ""
     reddit_client_secret: str = ""
+    twitter_auth_token: str = ""
+    twitter_ct0: str = ""
+    twitter_bearer_token: str = ""
 
 class Config:
     def __init__(self):
@@ -44,10 +48,14 @@ class Config:
             imdb=services_config.get("imdb",True),
             google_earth=services_config.get("google_earth",True),
             youtube=services_config.get("youtube",True),
+            twitter=services_config.get("twitter",True),
             reddit_cookie=services_config.get("reddit_cookie",""),
             reddit_token=services_config.get("reddit_token",""),
             reddit_client_id=services_config.get("reddit_client_id",""),
             reddit_client_secret=services_config.get("reddit_client_secret",""),
+            twitter_auth_token=services_config.get("twitter_auth_token",""),
+            twitter_ct0=services_config.get("twitter_ct0",""),
+            twitter_bearer_token=services_config.get("twitter_bearer_token",""),
         )
 
     def load_config(self):
@@ -76,10 +84,14 @@ class Config:
                 "imdb": True,
                 "google_earth": True,
                 "youtube": True,
+                "twitter": True,
                 "reddit_cookie": "",
                 "reddit_token": "",
                 "reddit_client_id": "",
                 "reddit_client_secret": "",
+                "twitter_auth_token": "",
+                "twitter_ct0": "",
+                "twitter_bearer_token": "",
             }
         }
         return default_config

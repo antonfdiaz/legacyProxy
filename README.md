@@ -59,6 +59,16 @@ such as likes, comments, channel tabs, etc but the rest works well. Login not te
 <img height="350" alt="IMG_0014" src="https://github.com/user-attachments/assets/e8a2fb75-7215-40ac-939c-a0cdbaceacb2" />
 <img height="350" alt="IMG_0013" src="https://github.com/user-attachments/assets/dcad3bf1-c390-46c8-a5fc-910f0813c07b" />
 
+### Twitter App
+Tested with Twitter 5.12 on iOS 7 (iPhone 4S).
+- Requires installing the patched IPA (`twitter5.12_patched.ipa`) to remove client-side SSL Certificate Pinning.
+- For live data, configure the account's `auth_token` and `ct0` session cookies as `twitter_auth_token` and `twitter_ct0` in `config.json` (a developer API bearer token is a different credential).
+- If you have a separate API bearer token, it can be set as `twitter_bearer_token`; the proxy reuses one authenticated HTTP session for GraphQL reads.
+- Fixes xAuth login (`/oauth/access_token` and `/1.1/account/verify_credentials.json`).
+- Fixes `decider.json` and silences dead Crashlytics telemetry errors.
+- Feeds the home timeline and search results with Twitter/X data (via web cookies or Chrome session borrowing); image requests pass through to `twimg.com`.
+- Read paths are translated from the authenticated web session; write paths that the legacy API cannot authenticate are allowed to reach upstream instead of being faked.
+
 ## Requirements
 - Python 3
 - Linux or macOS (Windows support soon)

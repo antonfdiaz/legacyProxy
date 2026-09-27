@@ -7,6 +7,7 @@ from src.services.reddit import RedditProxy
 from src.services.wikipedia import WikipediaProxy
 from src.services.google_earth import GoogleEarthProxy
 from src.services.youtube import YouTubeProxy
+from src.services.twitter import TwitterProxy
 from src.config import Config
 import src.compat as compat
 import asyncio
@@ -31,8 +32,32 @@ COMPAT_EXCEPTIONS = {
     "ggpht.com",
     "youtube.com",
     "youtubei.googleapis.com",
+    "google.com",
+    "www.google.com",
+    "github.com",
+    "www.github.com",
+    "wikipedia.org",
+    "imdb.com",
+    "media-imdb.com",
+    "imdbws.com",
+    "amazon-adsystem.com",
+    "twitter.com",
+    "api.twitter.com",
+    "mobile.twitter.com",
+    "upload.twitter.com",
+    "cards.twitter.com",
+    "twimg.com",
+    "abs.twimg.com",
+    "pbs.twimg.com",
+    "settings.crashlytics.com",
+    "crashlytics.com",
 }
 IGNORE_HOSTS = [
+    r"(^|\.)apple\.com:443$",
+    r"(^|\.)icloud\.com:443$",
+    r"(^|\.)itunes\.apple\.com:443$",
+    r"(^|\.)apps\.apple\.com:443$",
+    r"(^|\.)mzstatic\.com:443$",
 ]
 IGNORE_CONTENT_TYPES = (
     "application/json",
@@ -74,6 +99,7 @@ class InterceptAddon:
         self.wikipedia = WikipediaProxy() if config.services.wikipedia else None
         self.google_earth = GoogleEarthProxy() if getattr(config.services, "google_earth", True) else None
         self.youtube = YouTubeProxy(config=self.config) if getattr(config.services, "youtube", True) else None
+        self.twitter = TwitterProxy(config=self.config) if getattr(config.services, "twitter", True) else None
 
     async def request(self,flow):
         path = urlparse(flow.request.url).path.lower()
@@ -217,6 +243,9 @@ class InterceptAddon:
 
         if getattr(self, "youtube", None) and await self.youtube.request(flow):
             return
+
+        if getattr(self, "twitter", None) and await self.twitter.request(flow):
+            return
         
     def should_ignore_response(self,content_type):
         return any(
@@ -244,6 +273,7 @@ class InterceptAddon:
         self.reddit.response(flow) if self.reddit else None
         self.imdb.response(flow) if self.imdb else None
         self.youtube.response(flow) if getattr(self, "youtube", None) else None
+        self.twitter.response(flow) if getattr(self, "twitter", None) else None
         
         if self.should_ignore_response(content_type):
             return
