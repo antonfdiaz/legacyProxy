@@ -51,6 +51,10 @@ Replicates the functionality of the [OpenEarthX](https://github.com/Epixx512/Ope
 - Strips the obsolete `type=embedded` parameter from `/dbRoot.v5` initialization requests, preventing `404 Not Found` errors and network connection failures.
 - Allows 3D globe, imagery, and building layers to initialize properly on legacy devices.
 
+### YouTube App
+Versions 10.07.11524+ work correctly. Fixes home feed, search, video playback and channels. Still got some things to fix
+such as likes, comments, channel tabs, etc but the rest works well. Login not tested, probably won't work.
+
 ## Requirements
 - Python 3
 - Linux or macOS (Windows support soon)
@@ -96,4 +100,5 @@ To-do for website & app fixing. I will not be fixing websites that already work 
   - [ ] Home page
 - [x] IMDb App
 - [x] Google Earth App
+- [x] YouTube App
 - [ ] Stack Overflow
