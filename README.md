@@ -1,7 +1,7 @@
 # <img height="120" alt="legacyproxy-banner" src="https://github.com/user-attachments/assets/e1cf10e7-55da-4c6b-aa39-49d88f2606b1" />
 legacyProxy is a MITM proxy that fixes some websites & apps on legacy iOS devices.
 
-Currently it fixes Reddit, Google Search, Wikipedia image loading, GitHub, the IMDb app, and Google Earth.
+Currently it fixes Reddit, Google Search, Wikipedia image loading, GitHub, the IMDb app, Google Earth, YouTube, and Twitter 5.12.
 Tested on iOS 3 (iPhone 3G), iOS 5 (iPhone 4S), iOS 6 (iPhone 4S) and iOS 8 (iPod touch 5). It works with every browser that uses WebKit on iOS (Chrome, Opera Mini, Safari, etc).
 
 <img height="250" alt="IMG_0040" src="https://github.com/user-attachments/assets/0d1ca776-de72-4435-ac21-155876e0d7ac" />
@@ -64,9 +64,11 @@ Tested with Twitter 5.12 on iOS 7 (iPhone 4S).
 - Requires installing the patched IPA (`twitter5.12_patched.ipa`) to remove client-side SSL Certificate Pinning.
 - For live data, configure the account's `auth_token` and `ct0` session cookies as `twitter_auth_token` and `twitter_ct0` in `config.json` (a developer API bearer token is a different credential).
 - If you have a separate API bearer token, it can be set as `twitter_bearer_token`; the proxy reuses one authenticated HTTP session for GraphQL reads.
-- Fixes xAuth login (`/oauth/access_token` and `/1.1/account/verify_credentials.json`).
+- Bridges the legacy xAuth handshake to the authenticated web session (`/oauth/access_token` and `/1.1/account/verify_credentials.json`).
 - Fixes `decider.json` and silences dead Crashlytics telemetry errors.
-- Feeds the home timeline and search results with Twitter/X data (via web cookies or Chrome session borrowing); image requests pass through to `twimg.com`.
+- Feeds the home timeline, search, profiles, tweets, followers, following, and favorites with Twitter/X data through a persistent HTTP GraphQL session; Chrome is only a fallback when no session cookies are configured.
+- The Home timeline contains tweets from accounts you follow. It can legitimately be empty when there are no recent tweets to show; it is separate from your profile's own tweets.
+- Image requests pass through to `twimg.com` and `pbs.twimg.com`.
 - Read paths are translated from the authenticated web session; write paths that the legacy API cannot authenticate are allowed to reach upstream instead of being faked.
 
 ## Requirements
@@ -115,4 +117,5 @@ To-do for website & app fixing. I will not be fixing websites that already work 
 - [x] IMDb App
 - [x] Google Earth App
 - [x] YouTube App
+- [x] Twitter App
 - [ ] Stack Overflow
