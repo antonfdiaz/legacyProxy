@@ -62,14 +62,9 @@ such as likes, comments, channel tabs, etc but the rest works well. Login not te
 ### Twitter App
 Tested with Twitter 5.12 on iOS 7 (iPhone 4S).
 - Requires installing the patched IPA (`twitter5.12_patched.ipa`) to remove client-side SSL Certificate Pinning.
-- For live data, configure the account's `auth_token` and `ct0` session cookies as `twitter_auth_token` and `twitter_ct0` in `config.json` (a developer API bearer token is a different credential).
-- If you have a separate API bearer token, it can be set as `twitter_bearer_token`; the proxy reuses one authenticated HTTP session for GraphQL reads.
-- Bridges the legacy xAuth handshake to the authenticated web session (`/oauth/access_token` and `/1.1/account/verify_credentials.json`).
-- Fixes `decider.json` and silences dead Crashlytics telemetry errors.
-- Feeds the home timeline, search, profiles, tweets, followers, following, and favorites with Twitter/X data through a persistent HTTP GraphQL session; Chrome is only a fallback when no session cookies are configured.
-- The Home timeline contains tweets from accounts you follow. It can legitimately be empty when there are no recent tweets to show; it is separate from your profile's own tweets.
-- Image requests pass through to `twimg.com` and `pbs.twimg.com`.
-- Read paths are translated from the authenticated web session; write paths that the legacy API cannot authenticate are allowed to reach upstream instead of being faked.
+- Configure the account's `auth_token` and `ct0` session cookies as `twitter_auth_token` and `twitter_ct0` in `config.json`. A separate bearer token can be set as `twitter_bearer_token`.
+- Uses one persistent HTTP GraphQL session for the home timeline, search, profiles, tweets, followers, following and favorites. Chrome is only a fallback when no cookies are configured.
+- The Home timeline can be empty when followed accounts have no recent tweets. Posting and other write actions are not yet translated.
 
 ## Requirements
 - Python 3
